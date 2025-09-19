@@ -1,0 +1,19 @@
+﻿<header>
+    <div class="logo">
+        MIRRORLY
+    </div>
+
+    <nav>
+        <a asp-page="/Index" class="@(ViewData["ActivePage"] as string == "Artist" ? "active" : "")">ARTIST</a>
+        <a asp-page="/Mua/MuaProfiles" class="@(ViewData["ActivePage"] as string == "Mua" ? "active" : "")">BOOKING</a>
+        <a asp-page="/Gallery" class="@(ViewData["ActivePage"] as string == "Gallery" ? "active" : "")">GALLERY</a>
+        <a asp-page="/ArFilter" class="@(ViewData["ActivePage"] as string == "ArFilter" ? "active" : "")">AR FILTER</a>
+    </nav>
+
+    <div class="right">
+        <div class="search-box">
+            <input type="text" placeholder="Search for an Item..." />
+        </div>
+        <div class="avatar"></div>
+    </div>
+</header>
