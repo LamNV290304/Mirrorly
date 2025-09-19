@@ -1,0 +1,186 @@
+﻿@page
+@model Mirrorly.Pages.Mua.MuaProfilesModel
+@using Mirrorly.Models;
+
+<p>Explore our talented Makeup Artists (MUAs) and their stunning portfolios. Click on a profile to view more details.</p>
+
+
+<body>
+<!-- Search bar -->
+<div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search Makeup Artists..." onkeyup="filterMua()" />
+</div>
+
+<div class="row" id="muaContainer">
+    @foreach (var mua in Model.MuaProfiles)
+    {
+        <div class="mua-profile-card">
+            <table class="mua-table">
+                <thead>
+                    <tr>
+                        <th>Mua ID</th>
+                        <th>Display Name</th>
+                        <th>Bio</th>
+                        <th>Address Line</th>
+                        <th>Experience Years</th>
+                        <th>Profile Public</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@mua.Muaid</td>
+                        <td>@mua.DisplayName</td>
+                        <td>@mua.Bio</td>
+                        <td>@mua.AddressLine</td>
+                        <td>@mua.ExperienceYears</td>
+                        <td>@mua.ProfilePublic</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="card-actions">
+                <a href="/Mua/Details/@mua.Muaid" class="btn-view">View Profile</a>
+            </div>
+        </div>
+    }
+</div>
+</body>
+
+<style>
+    body {
+        background: #fff0f6; /* nền hồng rất nhạt */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #6d214f;
+        margin: 0;
+        padding: 20px;
+    }
+
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #880e4f;
+    }
+
+    /* Search bar */
+    .search-bar {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+        .search-bar input {
+            width: 60%;
+            max-width: 400px;
+            padding: 10px 14px;
+            border: 1px solid #f8bbd0;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+
+            .search-bar input:focus {
+                border-color: #f48fb1;
+                box-shadow: 0 0 8px rgba(248, 187, 208, 0.4);
+            }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        justify-content: flex-start;
+    }
+
+    .mua-profile-card {
+        background: #ffffff;
+        border: 1px solid #f8bbd0;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(248, 187, 208, 0.15);
+        padding: 16px;
+        margin: 10px 0;
+        min-width: 320px;
+        max-width: 400px;
+        flex: 1 1 320px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden; /* fix table tràn ra ngoài */
+    }
+
+        .mua-profile-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(248, 187, 208, 0.3);
+        }
+
+    .mua-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .mua-table th,
+        .mua-table td {
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .mua-table th {
+            background: #fce4ec; /* hồng pastel */
+            color: #ad1457;
+            font-weight: 600;
+            border-bottom: 2px solid #f8bbd0;
+        }
+
+        .mua-table td {
+            background: #ffffff;
+            color: #6d214f;
+            border-bottom: 1px solid #f8bbd0;
+        }
+
+        .mua-table tr:last-child td {
+            border-bottom: none;
+        }
+
+    .card-actions {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .btn-view {
+        display: inline-block;
+        padding: 8px 16px;
+        background: #f8bbd0;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+        .btn-view:hover {
+            background: #f48fb1;
+            transform: scale(1.05);
+        }
+
+    .card-img-top {
+        object-fit: cover;
+        height: 200px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+</style>
+
+<script>
+    function filterMua() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const cards = document.querySelectorAll(".mua-profile-card");
+
+        cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            if (text.includes(input)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+</script>

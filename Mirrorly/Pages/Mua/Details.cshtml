@@ -1,0 +1,228 @@
+﻿@page "/Mua/Details/{id:int}"
+@model Mirrorly.Pages.Mua.DetailsModel
+@using Mirrorly.Models;
+
+<style>
+    .profile-container {
+        max-width: 1000px;
+        margin: auto;
+        padding: 30px;
+        font-family: 'Segoe UI', sans-serif;
+        color: #333;
+    }
+
+    .profile-section {
+        margin-bottom: 40px;
+    }
+
+        .profile-section h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #db2777;
+            border-bottom: 2px solid #fbcfe8;
+            padding-bottom: 6px;
+        }
+
+    /* Services */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .service-card {
+        background: #fff;
+        border: 1px solid #fbcfe8;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card h3 {
+            margin: 0 0 10px;
+            color: #be185d;
+        }
+
+        .service-card .price {
+            font-weight: bold;
+            color: #db2777;
+            margin-top: 8px;
+        }
+
+        .service-card .duration,
+        .service-card .category {
+            font-size: 13px;
+            color: #555;
+        }
+
+    /* Reviews */
+    .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .review-card {
+        background: #fff0f6;
+        border: 1px solid #fbcfe8;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .review-card .rating {
+        color: #f59e0b;
+    }
+
+    /* Portfolio */
+    .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .portfolio-card {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #fbcfe8;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+        .portfolio-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+    .portfolio-info {
+        padding: 12px;
+    }
+
+        .portfolio-info h4 {
+            margin: 0;
+            color: #be185d;
+        }
+
+    /* Working hours */
+    .workinghours-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .workinghour-item {
+        background: #ffe4f1;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        min-width: 160px;
+    }
+
+        .workinghour-item .day {
+            font-weight: 600;
+            color: #db2777;
+        }
+
+        .workinghour-item .time {
+            color: #333;
+        }
+</style>
+
+<div class="profile-container">
+
+    <!-- Services -->
+    <section class="profile-section">
+        <h2>Dịch vụ cung cấp</h2>
+        <div class="services-grid">
+            @foreach (var se in Model.Services)
+            {
+                <div class="service-card">
+                    <h3>@se.Name</h3>
+                    <p>@se.Description</p>
+                    <p class="price">@se.BasePrice @se.Currency</p>
+                    <p class="duration">⏱ @se.DurationMin phút</p>
+                    <p class="category">📂 @se.Category.CategoryName</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="profile-section">
+        <h2>Đánh giá từ khách hàng</h2>
+        <div class="reviews-list">
+            @foreach (var review in Model.Reviews)
+            {
+                <div class="review-card">
+                    <div class="review-header">
+                        <strong>@review.Customer.DisplayName</strong>
+                        <span class="rating">⭐ @review.Rating</span>
+                    </div>
+                    <p>@review.Comment</p>
+                    <small>@review.CreatedAt.ToString("f")</small>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Portfolios -->
+    <section class="profile-section">
+        <h2>Portfolio</h2>
+        <div class="portfolio-grid">
+            @foreach (var po in Model.Portfolios)
+            {
+                <div class="portfolio-card">
+                    <img src="@po.MediaUrl" alt="@po.Title" />
+                    <div class="portfolio-info">
+                        <h4>@po.Title</h4>
+                        <p>@po.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Working Hours -->
+    <section class="profile-section">
+        <h2>Lịch làm việc</h2>
+        <div class="workinghours-list">
+            @foreach (var wo in Model.WorkingHours)
+            {
+                <div class="workinghour-item">
+                    <span class="day">
+                        @{
+                            string dayName = wo.DayOfWeek switch
+                            {
+                                1 => "Monday ",
+                                2 => "Tuesday ",
+                                3 => "Wednesday ",
+                                4 => "Thursday ",
+                                5 => "Friday ",
+                                6 => "Saturday ",
+                                7 => "Sunday ",
+                                _ => "Unknown "
+                            };
+                        }
+                        @dayName
+                    </span>
+                    <span class="time">@wo.StartTime - @wo.EndTime</span>
+                </div>
+            }
+        </div>
+    </section>
+
+</div>

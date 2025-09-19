@@ -20,3 +20,59 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+/* --- HEADER STYLE --- */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 30px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+    header .logo {
+        font-weight: bold;
+        font-size: 18px;
+        color: black;
+        text-decoration: none;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    }
+
+    header nav {
+        display: flex;
+        gap: 30px;
+    }
+
+        header nav a {
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+            font-weight: 500, bold;
+        }
+
+            header nav a.active {
+                border-bottom: 1px solid black;
+            }
+
+    header .right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    header .search-box input {
+        padding: 6px 10px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        outline: none;
+        font-size: 14px;
+    }
+
+    header .avatar {
+        width: 36px;
+        height: 36px;
+        background: #ccc;
+        border-radius: 50%;
+    }
