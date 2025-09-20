@@ -1,0 +1,118 @@
+﻿@page "/Auth/Login"
+@model Mirrorly.Pages.Auth.LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<style>
+    .auth-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(248, 187, 208, 0.2);
+        border: 1px solid #f8bbd0;
+    }
+
+    .auth-title {
+        text-align: center;
+        color: #db2777;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #be185d;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #f8bbd0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #db2777;
+        box-shadow: 0 0 8px rgba(219, 39, 119, 0.2);
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        background: #db2777;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+        background: #be185d;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .auth-links a {
+        color: #db2777;
+        text-decoration: none;
+    }
+
+    .auth-links a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="auth-container">
+    <h1 class="auth-title">Đăng nhập</h1>
+    
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="form-control" type="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Password">Mật khẩu</label>
+            <input asp-for="Password" class="form-control" type="password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        
+        <button type="submit" class="btn-primary">Đăng nhập</button>
+        
+        <div class="auth-links">
+            <p>Chưa có tài khoản? <a href="/Auth/Register">Đăng ký ngay</a></p>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

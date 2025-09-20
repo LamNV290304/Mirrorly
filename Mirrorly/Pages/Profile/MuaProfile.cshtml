@@ -1,0 +1,270 @@
+﻿@page "/Profile/MuaProfile"
+@model Mirrorly.Pages.Profile.MuaProfileModel
+@{
+    ViewData["Title"] = "Hồ sơ Makeup Artist";
+}
+
+<style>
+    .profile-container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(248, 187, 208, 0.2);
+        border: 1px solid #f8bbd0;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #fbcfe8;
+    }
+
+    .profile-title {
+        color: #db2777;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .profile-sections {
+        display: grid;
+        gap: 30px;
+    }
+
+    .section {
+        background: #fdf2f8;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #fbcfe8;
+    }
+
+    .section-title {
+        color: #be185d;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .profile-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group-full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #be185d;
+            font-weight: 500;
+        }
+
+    .form-control, .form-control-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #f8bbd0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .form-control-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+        .form-control:focus, .form-control-textarea:focus {
+            outline: none;
+            border-color: #db2777;
+            box-shadow: 0 0 8px rgba(219, 39, 119, 0.2);
+        }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        padding: 12px 30px;
+        background: #db2777;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .btn-primary:hover {
+            background: #be185d;
+        }
+
+    .btn-secondary {
+        padding: 10px 20px;
+        background: #f8bbd0;
+        color: #be185d;
+        border: 1px solid #f8bbd0;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+        .btn-secondary:hover {
+            background: #fbcfe8;
+            border-color: #fbcfe8;
+        }
+
+    .text-success {
+        color: #16a34a;
+        font-weight: 500;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .profile-status {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .profile-public {
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
+        color: #047857;
+    }
+
+    .profile-private {
+        background: #fef3c7;
+        border: 1px solid #fbbf24;
+        color: #92400e;
+    }
+
+    @media (max-width: 768px) {
+        .profile-form
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h1 class="profile-title">Hồ sơ Makeup Artist</h1>
+        <p>Quản lý thông tin chuyên nghiệp và dịch vụ của bạn</p>
+
+        @if (Model.ProfilePublic)
+        {
+            <div class="profile-status profile-public">
+                ✅ Hồ sơ của bạn đang được công khai và có thể được tìm thấy bởi khách hàng
+            </div>
+        }
+        else
+        {
+            <div class="profile-status profile-private">
+                ⚠️ Hồ sơ của bạn đang ở chế độ riêng tư. Hãy hoàn thiện thông tin để công khai hồ sơ
+            </div>
+        }
+    </div>
+
+    <div class="profile-sections">
+        <!-- Basic Information -->
+        <div class="section">
+            <h2 class="section-title">
+                👤 Thông tin cơ bản
+            </h2>
+
+            <form method="post" asp-page-handler="UpdateBasicInfo">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="text-success form-group-full">@TempData["SuccessMessage"]</div>
+                }
+
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label asp-for="DisplayName">Tên hiển thị *</label>
+                        <input asp-for="DisplayName" class="form-control" />
+                        <span asp-validation-for="DisplayName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ExperienceYears">Số năm kinh nghiệm</label>
+                        <input asp-for="ExperienceYears" class="form-control" type="number" min="0" max="50" />
+                        <span asp-validation-for="ExperienceYears" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group-full">
+                        <label asp-for="Bio">Giới thiệu bản thân</label>
+                        <textarea asp-for="Bio" class="form-control-textarea" placeholder="Hãy chia sẻ về kinh nghiệm, phong cách làm việc và những gì đặc biệt ở bạn..."></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group-full">
+                        <label asp-for="AddressLine">Địa chỉ làm việc</label>
+                        <input asp-for="AddressLine" class="form-control" placeholder="123 Đường ABC, Quận XYZ, TP.HCM" />
+                        <span asp-validation-for="AddressLine" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group-full">
+                        <div class="checkbox-group">
+                            <input asp-for="ProfilePublic" type="checkbox" id="profilePublic" />
+                            <label for="profilePublic">Công khai hồ sơ cho khách hàng tìm kiếm</label>
+                        </div>
+                        <small style="color: #6b7280; font-size: 13px;">Chỉ công khai khi bạn đã hoàn thiện đầy đủ thông tin</small>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="submit" class="btn-primary">Cập nhật thông tin</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section">
+            <h2 class="section-title">
+                ⚡ Quản lý nhanh
+            </h2>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                <a href="/Mua/Services" class="btn-secondary">📋 Quản lý dịch vụ</a>
+                <a href="/Mua/Portfolio" class="btn-secondary">🎨 Quản lý portfolio</a>
+                <a href="/Mua/WorkingHours" class="btn-secondary">⏰ Lịch làm việc</a>
+                <a href="/Mua/Bookings" class="btn-secondary">📅 Đơn đặt lịch</a>
+                <a href="/Mua/Reviews" class="btn-secondary">⭐ Đánh giá</a>
+                <a href="/Auth/Logout" class="btn-secondary">🚪 Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,214 @@
+﻿@page "/Auth/Register"
+@model Mirrorly.Pages.Auth.RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(248, 187, 208, 0.2);
+        border: 1px solid #f8bbd0;
+    }
+
+    .auth-title {
+        text-align: center;
+        color: #db2777;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #be185d;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #f8bbd0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #db2777;
+        box-shadow: 0 0 8px rgba(219, 39, 119, 0.2);
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        background: #db2777;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+        background: #be185d;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .auth-links a {
+        color: #db2777;
+        text-decoration: none;
+    }
+
+    .auth-links a:hover {
+        text-decoration: underline;
+    }
+
+    .role-selection {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .role-option {
+        flex: 1;
+        padding: 15px;
+        border: 2px solid #f8bbd0;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .role-option.selected {
+        border-color: #db2777;
+        background: #fdf2f8;
+    }
+
+    .role-option input[type="radio"] {
+        display: none;
+    }
+
+    .role-option label {
+        cursor: pointer;
+        font-weight: 600;
+        color: #be185d;
+    }
+</style>
+
+<div class="auth-container">
+    <h1 class="auth-title">Đăng ký tài khoản</h1>
+    
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group">
+            <label>Loại tài khoản</label>
+            <div class="role-selection">
+                <div class="role-option">
+                    <input type="radio" asp-for="RoleId" value="1" id="customer" />
+                    <label for="customer">Khách hàng</label>
+                </div>
+                <div class="role-option">
+                    <input type="radio" asp-for="RoleId" value="2" id="mua" />
+                    <label for="mua">Makeup Artist</label>
+                </div>
+            </div>
+            <span asp-validation-for="RoleId" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Username">Tên đăng nhập</label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="form-control" type="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="FullName">Họ và tên</label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="PhoneNumber">Số điện thoại</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Password">Mật khẩu</label>
+            <input asp-for="Password" class="form-control" type="password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
+            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        
+        <button type="submit" class="btn-primary">Đăng ký</button>
+        
+        <div class="auth-links">
+            <p>Đã có tài khoản? <a href="/Auth/Login">Đăng nhập ngay</a></p>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleOptions = document.querySelectorAll('.role-option');
+        
+        roleOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Remove selected class from all options
+                roleOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+            });
+        });
+        
+        // Set initial state
+        const checkedRadio = document.querySelector('input[type="radio"]:checked');
+        if (checkedRadio) {
+            checkedRadio.closest('.role-option').classList.add('selected');
+        }
+    });
+</script>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
