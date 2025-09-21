@@ -12,5 +12,6 @@ namespace Mirrorly.Services.Interfaces
         Task<bool> IsUsernameExists(string username);
         Task<bool> VerifyPassword(string password, byte[] passwordHash);
         byte[] HashPassword(string password);
+        Task<bool> ChangePassword(int userId, string oldPassword, string newPassword);
     }
 }
