@@ -1,4 +1,4 @@
-using WebCozyShop.Infrastructure;
+﻿using WebCozyShop.Infrastructure;
 
 namespace Mirrorly
 {
@@ -17,7 +17,12 @@ namespace Mirrorly
             builder.Services.AddApplicationServices();
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddSession();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             var app = builder.Build();
 
@@ -33,6 +38,7 @@ namespace Mirrorly
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

@@ -1,4 +1,5 @@
-﻿using Mirrorly.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Mirrorly.Models;
 using Mirrorly.Repositories.Interfaces;
 
 namespace Mirrorly.Repositories
@@ -14,7 +15,7 @@ namespace Mirrorly.Repositories
 
         public List<Muaprofile> GetAll()
         {
-            return _context.Muaprofiles.ToList();
+            return _context.Muaprofiles.Include(m => m.Services).Include(m => m.Reviews).ToList();
         }
     }
 }
