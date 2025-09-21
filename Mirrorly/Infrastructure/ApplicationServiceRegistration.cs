@@ -15,12 +15,15 @@ namespace WebCozyShop.Infrastructure
             services.AddScoped<IServiceRepo, ServiceRepo>();
             services.AddScoped<IPortfoRepo, PortfoRepo>();
             services.AddScoped<IWorkingHoursRepo, WorkingHoursRepo>();
+            services.AddScoped<IBookingService, BookingService>();
+
             // Register services
             services.AddScoped<IMuaServices, MuaServices>();
             services.AddScoped<IReviewServices, ReviewServices>();
             services.AddScoped<ISeServices, SeServices>();
             services.AddScoped<IPortfoServices, PortfoServices>();
             services.AddScoped<IWorkingHoursServices, WorkingHoursServices>();
+            services.AddScoped<IBookingRepo, BookingRepo>();
 
             return services;
         }
