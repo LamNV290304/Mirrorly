@@ -22,6 +22,11 @@ namespace Mirrorly.Services
             _bookingRepo.ChangeBookingStatus(bookingId, status);
         }
 
+        public Booking GetBookingById(int cusId, int muaId)
+        {
+            return _bookingRepo.GetBookingById(cusId, muaId);
+        }
+
         public List<Booking> GetBookingsByCustomerId(int cusId)
         {
             return _bookingRepo.GetBookingsByCustomerId(cusId);

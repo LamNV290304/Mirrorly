@@ -16,7 +16,7 @@ namespace Mirrorly
             builder.Services.AddThirdPartyIntegrations(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddHttpContextAccessor();
-
+            builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
@@ -25,7 +25,6 @@ namespace Mirrorly
             });
 
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -39,7 +38,6 @@ namespace Mirrorly
 
             app.UseRouting();
             app.UseSession();
-
             app.UseAuthorization();
 
             app.MapRazorPages();

@@ -17,5 +17,13 @@ namespace Mirrorly.Repositories
         {
             return _context.Muaprofiles.Include(m => m.Services).Include(m => m.Reviews).ToList();
         }
+
+        public Muaprofile? GetById(int id)
+        {
+            return _context.Muaprofiles
+                .Include(m => m.Services)
+                .Include(m => m.Reviews)
+                .FirstOrDefault(m => m.Muaid == id);
+        }
     }
 }

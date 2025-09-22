@@ -21,7 +21,7 @@ public partial class Booking
 
     public string? Notes { get; set; }
 
-    public int? Status { get; set; }
+    public int Status { get; set; }
 
     public virtual ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>();
 
