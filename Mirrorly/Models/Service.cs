@@ -26,6 +26,6 @@ public partial class Service
 
     public virtual Category? Category { get; set; }
 
-    public virtual Muaprofile Mua { get; set; } = null!;
+    public virtual Muaprofile? Mua { get; set; } = null!;
    
 }
