@@ -1,4 +1,5 @@
-﻿using Mirrorly.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Mirrorly.Models;
 using Mirrorly.Repositories.Interfaces;
 
 namespace Mirrorly.Repositories
@@ -24,6 +25,11 @@ namespace Mirrorly.Repositories
                 booking.Status = status;
                 _context.SaveChanges();
             }
+        }
+
+        public Booking GetBookingById(int cusId, int muaId)
+        {
+           return _context.Bookings.FirstOrDefault(b => b.CustomerId == cusId && b.MuaId == muaId) ;
         }
 
         public List<Booking> GetBookingsByCustomerId(int cusId)

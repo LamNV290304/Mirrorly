@@ -17,5 +17,10 @@ namespace Mirrorly.Services
         {
             return _muaProfiles.GetAll();
         }
+
+        public Muaprofile? GetMuaProfileById(int id)
+        {
+            return _muaProfiles.GetById(id);
+        }
     }
 }

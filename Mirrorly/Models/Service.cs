@@ -16,7 +16,6 @@ public partial class Service
     public decimal BasePrice { get; set; }
 
     public string Currency { get; set; } = null!;
-
     public int DurationMin { get; set; }
 
     public bool Active { get; set; }
@@ -25,5 +24,6 @@ public partial class Service
 
     public virtual Category? Category { get; set; }
 
-    public virtual Muaprofile Mua { get; set; } = null!;
+    public virtual Muaprofile? Mua { get; set; } = null!;
+   
 }

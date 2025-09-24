@@ -13,9 +13,9 @@ public partial class PortfolioItem
 
     public string? Description { get; set; }
 
-    public string MediaUrl { get; set; } = null!;
+    public string? MediaUrl { get; set; } = null!;
 
     public DateTime CreatedAtUtc { get; set; }
 
-    public virtual Muaprofile Mua { get; set; } = null!;
+    public virtual Muaprofile? Mua { get; set; } = null!;
 }
