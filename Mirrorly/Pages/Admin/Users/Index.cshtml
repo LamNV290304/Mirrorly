@@ -1,0 +1,317 @@
+﻿@page "/Admin/Users"
+@model Mirrorly.Pages.Admin.Users.IndexModel
+@{
+    ViewData["Title"] = "Quản lý Users";
+    Layout = "~/Pages/Admin/_AdminLayout.cshtml";
+}
+
+<style>
+    .filter-bar {
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr auto;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #374151;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .filter-input {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+    .users-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .results-info {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .export-btn {
+        background: #10b981;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f472b6, #ec4899);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        margin-right: 12px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 2px;
+    }
+
+    .user-email {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .pagination .current {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .pagination a:hover {
+            background: #f3f4f6;
+        }
+</style>
+
+<div class="users-header">
+    <div>
+        <h2 style="color: #1e293b; margin: 0;">Quản lý Users</h2>
+        <p class="results-info">Tổng cộng @Model.TotalUsers users (@Model.FilteredCount kết quả hiển thị)</p>
+    </div>
+    <div>
+        <a href="/Admin/Users/Export" class="export-btn">📥 Xuất Excel</a>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <form method="get">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Tìm kiếm</label>
+                <input type="text" name="search" value="@Model.SearchTerm" placeholder="Tên, email, username..." class="filter-input" />
+            </div>
+            <div class="filter-group">
+                <label>Role</label>
+                <select name="role" class="filter-input">
+                    <option value="">Tất cả</option>
+                    <option value="1" selected="@(Model.SelectedRole == 1 ? "selected" : null)">Customer</option>
+                    <option value="2" selected="@(Model.SelectedRole == 2 ? "selected" : null)">MUA</option>
+                    <option value="3" selected="@(Model.SelectedRole == 3 ? "selected" : null)">Admin</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Trạng thái</label>
+                <select name="status" class="filter-input">
+                    <option value="">Tất cả</option>
+                    <option value="active" selected="@(Model.SelectedStatus == "active" ? "selected" : null)">Active</option>
+                    <option value="inactive" selected="@(Model.SelectedStatus == "inactive" ? "selected" : null)">Inactive</option>
+                    <option value="verified" selected="@(Model.SelectedStatus == "verified" ? "selected" : null)">Đã xác minh</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sắp xếp</label>
+                <select name="sort" class="filter-input">
+                    <option value="newest" selected="@(Model.SortBy == "newest" ? "selected" : null)">Mới nhất</option>
+                    <option value="oldest" selected="@(Model.SortBy == "oldest" ? "selected" : null)">Cũ nhất</option>
+                    <option value="name" selected="@(Model.SortBy == "name" ? "selected" : null)">Tên A-Z</option>
+                    <option value="email" selected="@(Model.SortBy == "email" ? "selected" : null)">Email A-Z</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">🔍 Lọc</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Users Table -->
+<table class="data-table">
+    <thead>
+        <tr>
+            <th style="width: 40%;">User</th>
+            <th>Role</th>
+            <th>Trạng thái</th>
+            <th>Ngày tạo</th>
+            <th>Hoạt động cuối</th>
+            <th style="width: 200px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            @user.Username.Substring(0, 1).ToUpper()
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">@user.FullName</div>
+                            <div class="user-email">@user.Email</div>
+                            <div style="font-size: 12px; color: #9ca3af;">@@user.Username</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span class="status-badge @(user.RoleId == 2 ? "status-verified" : user.RoleId == 3 ? "status-pending" : "")">
+                        @(user.RoleId == 1 ? "Customer" : user.RoleId == 2 ? "MUA" : "Admin")
+                    </span>
+                </td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span class="status-badge @(user.IsActive ? "status-active" : "status-inactive")">
+                            @(user.IsActive ? "Active" : "Inactive")
+                        </span>
+                        @if (user.RoleId == 2)
+                        {
+                            var isVerified = Model.VerifiedMuaIds.Contains(user.UserId);
+                            <span class="status-badge @(isVerified ? "status-verified" : "status-pending")" style="font-size: 10px;">
+                                @(isVerified ? "✅ Verified" : "⏳ Pending")
+                            </span>
+                        }
+                    </div>
+                </td>
+                <td>@DateTime.Now.AddDays(-new Random().Next(1, 365)).ToString("dd/MM/yyyy")</td>
+                <td>@DateTime.Now.AddDays(-new Random().Next(0, 30)).ToString("dd/MM")</td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="/Admin/Users/Details/@user.UserId" class="btn btn-primary btn-sm">👁️ Xem</a>
+                        <a href="/Admin/Users/Edit/@user.UserId" class="btn btn-warning btn-sm">✏️ Sửa</a>
+                        @if (user.IsActive)
+                        {
+                            <button onclick="toggleUserStatus(@user.UserId, false)" class="btn btn-danger btn-sm">🚫 Block</button>
+                        }
+                        else
+                        {
+                            <button onclick="toggleUserStatus(@user.UserId, true)" class="btn btn-success btn-sm">✅ Unblock</button>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Users.Any())
+{
+    <div style="text-align: center; padding: 60px; color: #9ca3af;">
+        <div style="font-size: 48px; margin-bottom: 16px;">👤</div>
+        <h3 style="color: #6b7280; margin-bottom: 8px;">Không tìm thấy user nào</h3>
+        <p>Thử thay đổi bộ lọc để tìm kiếm user khác</p>
+    </div>
+}
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <div class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <a href="?page=@(Model.CurrentPage - 1)&search=@Model.SearchTerm&role=@Model.SelectedRole&status=@Model.SelectedStatus&sort=@Model.SortBy">‹ Trước</a>
+        }
+
+        @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <span class="current">@i</span>
+            }
+            else
+            {
+                <a href="?page=@i&search=@Model.SearchTerm&role=@Model.SelectedRole&status=@Model.SelectedStatus&sort=@Model.SortBy">@i</a>
+            }
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a href="?page=@(Model.CurrentPage + 1)&search=@Model.SearchTerm&role=@Model.SelectedRole&status=@Model.SelectedStatus&sort=@Model.SortBy">Tiếp ›</a>
+        }
+    </div>
+}
+
+<script>
+    async function toggleUserStatus(userId, isActive) {
+        const action = isActive ? 'kích hoạt' : 'vô hiệu hóa';
+        if (confirm(`Bạn có chắc muốn ${action} user này?`)) {
+            try {
+                const response = await fetch(`/Admin/Users/ToggleStatus`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, isActive })
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Có lỗi xảy ra khi cập nhật trạng thái user');
+                }
+            } catch (error) {
+                alert('Có lỗi xảy ra: ' + error.message);
+            }
+        }
+    }
+</script>

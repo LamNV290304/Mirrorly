@@ -43,10 +43,9 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<WorkingHour> WorkingHours { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=123abc@A;database=project_Exe;TrustServerCertificate=True");
+    public virtual DbSet<IdentityVerification> IdentityVerifications { get; set; }
 
+    public virtual DbSet<TwoFactorAuth> TwoFactorAuths { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
@@ -271,6 +270,33 @@ public partial class ProjectExeContext : DbContext
                 .HasForeignKey(d => d.MuaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_WorkingHours_MUA");
+        });
+
+        modelBuilder.Entity<IdentityVerification>(entity =>
+        {
+            entity.HasKey(e => e.VerificationId);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+
+            entity.HasOne(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.ProcessedByAdmin)
+                .WithMany()
+                .HasForeignKey(d => d.ProcessedByAdminId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<TwoFactorAuth>(entity =>
+        {
+            entity.HasKey(e => e.TwoFactorId);
+            entity.HasIndex(e => e.UserId).IsUnique();
+
+            entity.HasOne(d => d.User)
+                .WithOne()
+                .HasForeignKey<TwoFactorAuth>(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
