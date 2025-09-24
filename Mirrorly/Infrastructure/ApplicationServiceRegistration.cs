@@ -17,6 +17,7 @@ namespace WebCozyShop.Infrastructure
             services.AddScoped<IPortfoRepo, PortfoRepo>();
             services.AddScoped<IWorkingHoursRepo, WorkingHoursRepo>();
             services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
 
             // Register services
             services.AddScoped<IMuaServices, MuaServices>();
@@ -25,6 +26,7 @@ namespace WebCozyShop.Infrastructure
             services.AddScoped<IPortfoServices, PortfoServices>();
             services.AddScoped<IWorkingHoursServices, WorkingHoursServices>();
             services.AddScoped<IBookingRepo, BookingRepo>();
+            services.AddScoped<ICategoryServices, CategoryServices>();
 
             // Register new Auth and Profile services
             services.AddScoped<IAuthServices, AuthServices>();

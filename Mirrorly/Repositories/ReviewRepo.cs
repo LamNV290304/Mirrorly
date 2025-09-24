@@ -13,6 +13,12 @@ namespace Mirrorly.Repositories
             _context = context;
         }
 
+        public void addReview(Review review)
+        {
+            _context.Add(review);
+            _context.SaveChanges();
+        }
+
         public List<Review> getReviewsById(int muaId)
         {
             return _context.Reviews.Include(c => c.Customer).Where(r => r.MuaId == muaId).ToList();

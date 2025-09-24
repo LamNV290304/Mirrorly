@@ -13,6 +13,11 @@ namespace Mirrorly.Services
             _reviewRepo = reviewRepo;
         }
 
+        public void addReview(Review review)
+        {
+            _reviewRepo.addReview(review);
+        }
+
         public List<Review> getReviewsById(int muaId)
         {
             return _reviewRepo.getReviewsById(muaId);

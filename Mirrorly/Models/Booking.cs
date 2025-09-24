@@ -17,7 +17,7 @@ public partial class Booking
 
     public string? Notes { get; set; }
 
-    public int? Status { get; set; }
+    public int Status { get; set; }
 
     public TimeSpan? TimeM { get; set; }
 
