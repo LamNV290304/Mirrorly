@@ -272,16 +272,6 @@ namespace Mirrorly.Pages.Profile
                     return RedirectToPage();
                 }
 
-                // Check if service has bookings
-                var hasBookings = await _context.BookingItems
-                    .AnyAsync(bi => bi.ServiceId == serviceId);
-
-                if (hasBookings)
-                {
-                    TempData["ErrorMessage"] = "Không thể xóa dịch vụ đã có booking. Bạn có thể tắt dịch vụ thay thế.";
-                    return RedirectToPage();
-                }
-
                 _context.Services.Remove(service);
                 await _context.SaveChangesAsync();
 

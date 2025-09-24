@@ -1,0 +1,60 @@
+﻿@page
+@model Mirrorly.Pages.Books.BookByScheduleModel
+@{
+    ViewData["Title"] = "Lịch Tuần";
+}
+
+<section class="week-calendar">
+    <h2>📅 Lịch Makeup Tuần (@Model.WeekStart.ToString("dd/MM") - @Model.WeekEnd.ToString("dd/MM/yyyy"))</h2>
+
+    <form method="get">
+        <label for="weekPicker">Chọn tuần:</label>
+        <input type="week" id="weekPicker" name="Week" value="@Model.Week" />
+        <button type="submit" class="btn-submit">Xem</button>
+    </form>
+
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th>Giờ</th>
+                <th>Thứ 2</th>
+                <th>Thứ 3</th>
+                <th>Thứ 4</th>
+                <th>Thứ 5</th>
+                <th>Thứ 6</th>
+                <th>Thứ 7</th>
+                <th>CN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int hour = 0; hour < 24; hour++)
+            {
+                <tr>
+                    <td class="hour-col">@hour:00</td>
+                    @for (int d = 1; d <= 7; d++)
+                    {
+                        var booking = Model.AcceptedBookings
+                        .FirstOrDefault(b => (int)b.Day == (d == 7 ? 0 : d) && b.StartHour == hour);
+
+                        if (booking != null)
+                        {
+                            <td class="booking-cell" rowspan="@booking.Duration">
+                                <div class="booking-block">
+                                    <strong>@booking.Title</strong><br />
+                                    @booking.StartHour:00 - @(booking.StartHour + booking.Duration):00
+                                    <div class="booking-actions">
+                                        <a href="#" class="btn-details">Xem chi tiết</a>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                        else if (!Model.AcceptedBookings.Any(b => (int)b.Day == (d == 7 ? 0 : d) && hour > b.StartHour && hour < b.StartHour + b.Duration))
+                        {
+                            <td></td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

@@ -65,12 +65,6 @@ namespace Mirrorly.Services
                 var service = await GetServiceAsync(serviceId, muaId);
                 if (service == null) return false;
 
-                // Check if service has bookings
-                var hasBookings = await _context.BookingItems
-                    .AnyAsync(bi => bi.ServiceId == serviceId);
-
-                if (hasBookings) return false; // Cannot delete service with bookings
-
                 _context.Services.Remove(service);
                 await _context.SaveChangesAsync();
                 return true;
