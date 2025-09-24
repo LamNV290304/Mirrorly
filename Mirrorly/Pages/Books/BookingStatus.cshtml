@@ -1,43 +1,45 @@
-﻿@* @page *@
-@* @model BookingStatusModel *@
-@* @{ *@
-@*     ViewData["Title"] = "Booking Status"; *@
-@*     ViewData["ActivePage"] = "BookingStatus"; *@
-@* } *@
+﻿@page
+<section class="booking-status">
+    <h2>Booking Status</h2>
 
-@* <section class="booking-status"> *@
-@*     <h2>Booking Status</h2> *@
+    <div class="status-list">
+        <!-- Booking 1 -->
+        <div class="status-card confirmed">
+            <div class="status-info">
+                <h3>Nguyễn Văn A</h3>
+                <p><strong>Service:</strong> Haircut</p>
+                <p><strong>Date:</strong> 2025-09-25</p>
+                <p><strong>Time:</strong> 10:00 AM</p>
+            </div>
+            <div class="status-footer">
+                <span class="status-label">CONFIRMED</span>
+            </div>
+        </div>
 
-@*     <div class="status-list"> *@
-@*         @foreach (var item in Model.Bookings) *@
-@*         { *@
-@*             var statusClass = item.Status switch *@
-@*             { *@
-@*                 1 => "confirmed", *@
-@*                 2 => "pending", *@
-@*                 3 => "cancelled", *@
-@*                 _ => "" *@
-@*             }; *@
+        <!-- Booking 2 -->
+        <div class="status-card pending">
+            <div class="status-info">
+                <h3>Trần Thị B</h3>
+                <p><strong>Service:</strong> Massage</p>
+                <p><strong>Date:</strong> 2025-09-26</p>
+                <p><strong>Time:</strong> 02:30 PM</p>
+            </div>
+            <div class="status-footer">
+                <span class="status-label">PENDING</span>
+            </div>
+        </div>
 
-@*             var statusText = item.Status switch *@
-@*             { *@
-@*                 1 => "CONFIRMED", *@
-@*                 2 => "PENDING", *@
-@*                 3 => "CANCELLED", *@
-@*                 _ => "UNKNOWN" *@
-@*             }; *@
-
-@*             <div class="status-card @statusClass"> *@
-@*                 <div class="status-info"> *@
-@*                     <h3>@item.Name</h3> *@
-@*                     <p><strong>Service:</strong> @item.Service</p> *@
-@*                     <p><strong>Date:</strong> @item.Date</p> *@
-@*                     <p><strong>Time:</strong> @item.Time</p> *@
-@*                 </div> *@
-@*                 <div class="status-footer"> *@
-@*                     <span class="status-label">@statusText</span> *@
-@*                 </div> *@
-@*             </div> *@
-@*         } *@
-@*     </div> *@
-@* </section> *@
+        <!-- Booking 3 -->
+        <div class="status-card cancelled">
+            <div class="status-info">
+                <h3>Lê Văn C</h3>
+                <p><strong>Service:</strong> Spa</p>
+                <p><strong>Date:</strong> 2025-09-27</p>
+                <p><strong>Time:</strong> 05:00 PM</p>
+            </div>
+            <div class="status-footer">
+                <span class="status-label">CANCELLED</span>
+            </div>
+        </div>
+    </div>
+</section>
