@@ -299,3 +299,48 @@ GO
 CREATE INDEX IX_Reviews_MuaId ON [dbo].[Reviews] ([MuaId])
 CREATE INDEX IX_Reviews_CustomerId ON [dbo].[Reviews] ([CustomerId])
 GO
+
+-- Add IdentityVerification table
+CREATE TABLE [dbo].[IdentityVerifications] (
+    [VerificationId] BIGINT IDENTITY(1,1) NOT NULL,
+    [UserId] INT NOT NULL,
+    [FullName] NVARCHAR(100) NOT NULL,
+    [IdNumber] VARCHAR(12) NOT NULL,
+    [DateOfBirth] DATE NOT NULL,
+    [Address] NVARCHAR(500) NOT NULL,
+    [FrontIdImageUrl] NVARCHAR(500) NOT NULL,
+    [BackIdImageUrl] NVARCHAR(500) NOT NULL,
+    [SelfieImageUrl] NVARCHAR(500) NULL,
+    [Status] TINYINT DEFAULT 0 NOT NULL, -- 0=Pending, 1=Approved, 2=Rejected
+    [AdminNotes] NVARCHAR(MAX) NULL,
+    [ProcessedByAdminId] INT NULL,
+    [CreatedAt] DATETIME2(3) DEFAULT GETUTCDATE() NOT NULL,
+    [ProcessedAt] DATETIME2(3) NULL,
+    CONSTRAINT PK_IdentityVerifications PRIMARY KEY CLUSTERED ([VerificationId]),
+    CONSTRAINT FK_IdentityVerifications_User FOREIGN KEY ([UserId]) REFERENCES [Users] ([UserId]),
+    CONSTRAINT FK_IdentityVerifications_Admin FOREIGN KEY ([ProcessedByAdminId]) REFERENCES [Users] ([UserId])
+);
+GO
+
+-- Add TwoFactorAuth table  
+CREATE TABLE [dbo].[TwoFactorAuth] (
+    [TwoFactorId] INT IDENTITY(1,1) NOT NULL,
+    [UserId] INT NOT NULL,
+    [IsEnabled] BIT DEFAULT 0 NOT NULL,
+    [SecretKey] VARCHAR(32) NULL,
+    [BackupCodes] NVARCHAR(MAX) NULL,
+    [EnabledAt] DATETIME2(3) NULL,
+    [LastUsedAt] DATETIME2(3) NULL,
+    [FailedAttempts] INT DEFAULT 0 NOT NULL,
+    [LockedUntil] DATETIME2(3) NULL,
+    CONSTRAINT PK_TwoFactorAuth PRIMARY KEY CLUSTERED ([TwoFactorId]),
+    CONSTRAINT FK_TwoFactorAuth_User FOREIGN KEY ([UserId]) REFERENCES [Users] ([UserId]),
+    CONSTRAINT UQ_TwoFactorAuth_UserId UNIQUE ([UserId])
+);
+GO
+
+-- Create indexes
+CREATE INDEX IX_IdentityVerifications_UserId ON [IdentityVerifications] ([UserId]);
+CREATE INDEX IX_IdentityVerifications_Status ON [IdentityVerifications] ([Status]);
+CREATE INDEX IX_TwoFactorAuth_UserId ON [TwoFactorAuth] ([UserId]);
+GO
