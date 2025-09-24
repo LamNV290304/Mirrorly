@@ -1,4 +1,5 @@
-﻿using Mirrorly.Repositories;
+﻿using Microsoft.Win32;
+using Mirrorly.Repositories;
 using Mirrorly.Repositories.Interfaces;
 using Mirrorly.Services;
 using Mirrorly.Services.Interfaces;
@@ -25,6 +26,11 @@ namespace WebCozyShop.Infrastructure
             services.AddScoped<IWorkingHoursServices, WorkingHoursServices>();
             services.AddScoped<IBookingRepo, BookingRepo>();
 
+            // Register new Auth and Profile services
+            services.AddScoped<IAuthServices, AuthServices>();
+            services.AddScoped<IProfileServices, ProfileServices>();
+
+            services.AddScoped<IComprehensiveProfileServices, ComprehensiveProfileServices>();
             return services;
         }
     }
