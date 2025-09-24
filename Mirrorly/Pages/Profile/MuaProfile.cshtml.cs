@@ -7,20 +7,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mirrorly.Pages.Profile
 {
-    public class MuaProfileModel : PageModel
+    public class MuaProfileModel : BasePageModel
     {
         private readonly IProfileServices _profileServices;
         private readonly IAuthServices _authServices;
-        private readonly ProjectExeContext _context;
 
-        public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices, ProjectExeContext context)
+        public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices,
+            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices)
+            : base(context, verificationServices, twoFactorServices)
         {
             _profileServices = profileServices;
             _authServices = authServices;
-            _context = context;
         }
 
-        // Basic Info Properties
         [BindProperty]
         [Required(ErrorMessage = "Tên hiển thị là bắt buộc")]
         [StringLength(120, ErrorMessage = "Tên hiển thị không được quá 120 ký tự")]
@@ -56,20 +55,13 @@ namespace Mirrorly.Pages.Profile
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue)
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            if (!RequireMUA()) return Page();
 
-            var user = await _authServices.GetUserById(userId.Value);
-            if (user == null || user.RoleId != 2)
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            var user = await _authServices.GetUserById(CurrentUserId!.Value);
+            if (user == null) return RedirectToPage("/Auth/Login");
 
             // Load basic info
-            var muaProfile = await _profileServices.GetMuaProfile(userId.Value);
+            var muaProfile = await _profileServices.GetMuaProfile(CurrentUserId.Value);
             if (muaProfile != null)
             {
                 DisplayName = muaProfile.DisplayName;
@@ -88,7 +80,7 @@ namespace Mirrorly.Pages.Profile
             Username = user.Username;
 
             // Load related data
-            await LoadRelatedDataAsync(userId.Value);
+            await LoadRelatedDataAsync(CurrentUserId.Value);
 
             return Page();
         }
@@ -123,11 +115,7 @@ namespace Mirrorly.Pages.Profile
         // Update Basic Information
         public async Task<IActionResult> OnPostUpdateBasicInfoAsync()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue)
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            if (!RequireMUA()) return Page();
 
             if (string.IsNullOrWhiteSpace(DisplayName))
             {
@@ -136,19 +124,19 @@ namespace Mirrorly.Pages.Profile
 
             if (!ModelState.IsValid)
             {
-                await LoadRelatedDataAsync(userId.Value);
+                await LoadRelatedDataAsync(CurrentUserId!.Value);
                 return Page();
             }
 
             try
             {
-                var muaProfile = await _profileServices.GetMuaProfile(userId.Value);
+                var muaProfile = await _profileServices.GetMuaProfile(CurrentUserId.Value);
 
                 if (muaProfile == null)
                 {
                     muaProfile = new Muaprofile
                     {
-                        Muaid = userId.Value,
+                        Muaid = CurrentUserId.Value,
                         DisplayName = DisplayName,
                         Bio = Bio,
                         AddressLine = AddressLine,

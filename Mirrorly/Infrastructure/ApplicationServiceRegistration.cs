@@ -27,6 +27,10 @@ namespace WebCozyShop.Infrastructure
             services.AddScoped<IAuthServices, AuthServices>();
             services.AddScoped<IProfileServices, ProfileServices>();
 
+            services.AddScoped<IVerificationServices, VerificationServices>();
+            services.AddScoped<ITwoFactorServices, TwoFactorServices>();
+            services.AddScoped<IAdminServices, AdminServices>();
+
             services.AddScoped<IComprehensiveProfileServices, ComprehensiveProfileServices>();
             return services;
         }

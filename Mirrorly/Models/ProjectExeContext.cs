@@ -41,6 +41,9 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<WorkingHour> WorkingHours { get; set; }
 
+    public virtual DbSet<IdentityVerification> IdentityVerifications { get; set; }
+
+    public virtual DbSet<TwoFactorAuth> TwoFactorAuths { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
@@ -263,6 +266,33 @@ public partial class ProjectExeContext : DbContext
                 .HasForeignKey(d => d.MuaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_WorkingHours_MUA");
+        });
+
+        modelBuilder.Entity<IdentityVerification>(entity =>
+        {
+            entity.HasKey(e => e.VerificationId);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+
+            entity.HasOne(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.ProcessedByAdmin)
+                .WithMany()
+                .HasForeignKey(d => d.ProcessedByAdminId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<TwoFactorAuth>(entity =>
+        {
+            entity.HasKey(e => e.TwoFactorId);
+            entity.HasIndex(e => e.UserId).IsUnique();
+
+            entity.HasOne(d => d.User)
+                .WithOne()
+                .HasForeignKey<TwoFactorAuth>(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
