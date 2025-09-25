@@ -360,9 +360,9 @@ function createBeautyShaderMaterial() {
     return new THREE.ShaderMaterial({
         uniforms: {
             u_texture: { value: videoTexture },
-            u_smoothing: { value: parseFloat(smoothingSlider.value) },
-            u_brightening: { value: parseFloat(brighteningSlider.value) },
-            u_pinking: { value: parseFloat(pinkingSlider.value) },
+            u_smoothing: { value: 0.3 },
+            u_brightening: { value: 0.02 },
+            u_pinking: { value: 0.03 },
             u_resolution: { value: new THREE.Vector2(VIDEO_WIDTH, VIDEO_HEIGHT) },
         },
         vertexShader: `
