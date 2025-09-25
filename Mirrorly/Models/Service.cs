@@ -16,14 +16,16 @@ public partial class Service
     public decimal BasePrice { get; set; }
 
     public string Currency { get; set; } = null!;
+
     public int DurationMin { get; set; }
 
     public bool Active { get; set; }
 
     public int? CategoryId { get; set; }
 
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
     public virtual Category? Category { get; set; }
 
-    public virtual Muaprofile? Mua { get; set; } = null!;
-   
+    public virtual Muaprofile Mua { get; set; } = null!;
 }

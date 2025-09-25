@@ -42,14 +42,14 @@ namespace Mirrorly.Services
                 .CountAsync(b => b.ScheduledStart >= startOfToday && b.ScheduledStart < startOfToday.AddDays(1));
 
             // Revenue statistics (placeholder calculations)
-            var bookings = await _context.Bookings
-                .Include(b => b.BookingItems)
-                .ToListAsync();
+            //var bookings = await _context.Bookings
+            //    .Include(b => b.BookingItems)
+            //    .ToListAsync();
 
-            stats.TotalRevenue = bookings.Sum(b => b.BookingItems.Sum(bi => bi.UnitPrice * bi.Quantity));
-            stats.RevenueThisMonth = bookings
-                .Where(b => b.ScheduledStart >= startOfMonth)
-                .Sum(b => b.BookingItems.Sum(bi => bi.UnitPrice * bi.Quantity));
+            //stats.TotalRevenue = bookings.Sum(b => b.BookingItems.Sum(bi => bi.UnitPrice * bi.Quantity));
+            //stats.RevenueThisMonth = bookings
+            //    .Where(b => b.ScheduledStart >= startOfMonth)
+            //    .Sum(b => b.BookingItems.Sum(bi => bi.UnitPrice * bi.Quantity));
 
             // Pending items
             stats.PendingVerifications = 5; // Placeholder
@@ -270,60 +270,62 @@ namespace Mirrorly.Services
 
         public async Task<BookingFilterResult> GetFilteredBookingsAsync(BookingFilterDto filter)
         {
-            var query = _context.Bookings
-                .Include(b => b.Customer)
-                .Include(b => b.Mua)
-                .Include(b => b.BookingItems)
-                .ThenInclude(bi => bi.Service)
-                .AsQueryable();
+            //var query = _context.Bookings
+            //    .Include(b => b.Customer)
+            //    .Include(b => b.Mua)
+            //    .Include(b => b.BookingItems)
+            //    .ThenInclude(bi => bi.Service)
+            //    .AsQueryable();
 
-            // Apply filters
-            if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
-            {
-                var search = filter.SearchTerm.ToLower();
-                query = query.Where(b =>
-                    b.Customer.DisplayName.ToLower().Contains(search) ||
-                    b.Mua.DisplayName.ToLower().Contains(search));
-            }
+            //// Apply filters
+            //if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
+            //{
+            //    var search = filter.SearchTerm.ToLower();
+            //    query = query.Where(b =>
+            //        b.Customer.DisplayName.ToLower().Contains(search) ||
+            //        b.Mua.DisplayName.ToLower().Contains(search));
+            //}
 
-            if (filter.Status.HasValue)
-            {
-                query = query.Where(b => b.Status == filter.Status.Value);
-            }
+            //if (filter.Status.HasValue)
+            //{
+            //    query = query.Where(b => b.Status == filter.Status.Value);
+            //}
 
-            if (filter.StartDate.HasValue)
-            {
-                query = query.Where(b => b.ScheduledStart >= filter.StartDate.Value);
-            }
+            //if (filter.StartDate.HasValue)
+            //{
+            //    query = query.Where(b => b.ScheduledStart >= filter.StartDate.Value);
+            //}
 
-            if (filter.EndDate.HasValue)
-            {
-                query = query.Where(b => b.ScheduledStart <= filter.EndDate.Value);
-            }
+            //if (filter.EndDate.HasValue)
+            //{
+            //    query = query.Where(b => b.ScheduledStart <= filter.EndDate.Value);
+            //}
 
-            var totalBookings = await _context.Bookings.CountAsync();
-            var filteredCount = await query.CountAsync();
+            //var totalBookings = await _context.Bookings.CountAsync();
+            //var filteredCount = await query.CountAsync();
 
-            // Apply sorting and pagination
-            query = filter.SortBy switch
-            {
-                "oldest" => query.OrderBy(b => b.ScheduledStart),
-                "customer" => query.OrderBy(b => b.Customer.DisplayName),
-                "mua" => query.OrderBy(b => b.Mua.DisplayName),
-                _ => query.OrderByDescending(b => b.ScheduledStart)
-            };
+            //// Apply sorting and pagination
+            //query = filter.SortBy switch
+            //{
+            //    "oldest" => query.OrderBy(b => b.ScheduledStart),
+            //    "customer" => query.OrderBy(b => b.Customer.DisplayName),
+            //    "mua" => query.OrderBy(b => b.Mua.DisplayName),
+            //    _ => query.OrderByDescending(b => b.ScheduledStart)
+            //};
 
-            var bookings = await query
-                .Skip((filter.Page - 1) * filter.PageSize)
-                .Take(filter.PageSize)
-                .ToListAsync();
+            //var bookings = await query
+            //    .Skip((filter.Page - 1) * filter.PageSize)
+            //    .Take(filter.PageSize)
+            //    .ToListAsync();
 
-            return new BookingFilterResult
-            {
-                Bookings = bookings,
-                TotalBookings = totalBookings,
-                FilteredCount = filteredCount
-            };
+            //return new BookingFilterResult
+            //{
+            //    Bookings = bookings,
+            //    TotalBookings = totalBookings,
+            //    FilteredCount = filteredCount
+            //};
+
+            return new BookingFilterResult();
         }
 
         public async Task<bool> UpdateBookingStatusAsync(long bookingId, byte status)

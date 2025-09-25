@@ -19,11 +19,9 @@ public partial class Booking
 
     public int Status { get; set; }
 
-    public TimeSpan? TimeM { get; set; }
+    public TimeOnly? TimeM { get; set; }
 
-    public int? ServiceId { get; set; }
-
-    public int? SlotHaveBookId { get; set; }
+    public long? ServiceId { get; set; }
 
     public virtual CustomerProfile Customer { get; set; } = null!;
 
@@ -31,5 +29,5 @@ public partial class Booking
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    public virtual SlotHaveBook? SlotHaveBook { get; set; }
+    public virtual Service? Service { get; set; }
 }

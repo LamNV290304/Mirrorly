@@ -21,6 +21,8 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<CustomerProfile> CustomerProfiles { get; set; }
 
+    public virtual DbSet<IdentityVerification> IdentityVerifications { get; set; }
+
     public virtual DbSet<Muaprofile> Muaprofiles { get; set; }
 
     public virtual DbSet<PortfolioItem> PortfolioItems { get; set; }
@@ -31,25 +33,28 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
-    public virtual DbSet<Slot> Slots { get; set; }
-
-    public virtual DbSet<SlotHaveBook> SlotHaveBooks { get; set; }
-
     public virtual DbSet<TimeOff> TimeOffs { get; set; }
 
     public virtual DbSet<Token> Tokens { get; set; }
+
+    public virtual DbSet<TwoFactorAuth> TwoFactorAuths { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<WorkingHour> WorkingHours { get; set; }
 
-    public virtual DbSet<IdentityVerification> IdentityVerifications { get; set; }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=123abc@A;database=project_Exe;TrustServerCertificate=True");
 
-    public virtual DbSet<TwoFactorAuth> TwoFactorAuths { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
         {
+            entity.HasIndex(e => e.CustomerId, "IX_Bookings_CustomerId");
+
+            entity.HasIndex(e => e.MuaId, "IX_Bookings_MuaId");
+
             entity.Property(e => e.AddressLine).HasMaxLength(255);
             entity.Property(e => e.ScheduledStart).HasPrecision(3);
 
@@ -63,9 +68,9 @@ public partial class ProjectExeContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Bookings_MUA");
 
-            entity.HasOne(d => d.SlotHaveBook).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.SlotHaveBookId)
-                .HasConstraintName("FK_Bookings_SlotHaveBook");
+            entity.HasOne(d => d.Service).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.ServiceId)
+                .HasConstraintName("FK_Bookings_Service");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -93,6 +98,25 @@ public partial class ProjectExeContext : DbContext
                 .HasConstraintName("FK_CustomerProfiles_User");
         });
 
+        modelBuilder.Entity<IdentityVerification>(entity =>
+        {
+            entity.HasKey(e => e.VerificationId);
+
+            entity.HasIndex(e => e.ProcessedByAdminId, "IX_IdentityVerifications_ProcessedByAdminId");
+
+            entity.HasIndex(e => e.UserId, "IX_IdentityVerifications_UserId");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+
+            entity.HasOne(d => d.ProcessedByAdmin).WithMany(p => p.IdentityVerificationProcessedByAdmins)
+                .HasForeignKey(d => d.ProcessedByAdminId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(d => d.User).WithMany(p => p.IdentityVerificationUsers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
         modelBuilder.Entity<Muaprofile>(entity =>
         {
             entity.HasKey(e => e.Muaid);
@@ -115,6 +139,8 @@ public partial class ProjectExeContext : DbContext
         modelBuilder.Entity<PortfolioItem>(entity =>
         {
             entity.HasKey(e => e.ItemId);
+
+            entity.HasIndex(e => e.Muaid, "IX_PortfolioItems_MUAId");
 
             entity.Property(e => e.CreatedAtUtc)
                 .HasPrecision(3)
@@ -167,6 +193,10 @@ public partial class ProjectExeContext : DbContext
 
         modelBuilder.Entity<Service>(entity =>
         {
+            entity.HasIndex(e => e.CategoryId, "IX_Services_CategoryId");
+
+            entity.HasIndex(e => e.MuaId, "IX_Services_MuaId");
+
             entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.BasePrice).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Currency)
@@ -186,28 +216,10 @@ public partial class ProjectExeContext : DbContext
                 .HasConstraintName("FK_Services_MUA");
         });
 
-        modelBuilder.Entity<Slot>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Slot__3214EC07A6EBC66C");
-
-            entity.ToTable("Slot");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-        });
-
-        modelBuilder.Entity<SlotHaveBook>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__SlotHave__3214EC07F1D9ACB9");
-
-            entity.ToTable("SlotHaveBook");
-
-            entity.HasOne(d => d.Slot).WithMany(p => p.SlotHaveBooks)
-                .HasForeignKey(d => d.SlotId)
-                .HasConstraintName("FK_SlotHaveBook_Slot");
-        });
-
         modelBuilder.Entity<TimeOff>(entity =>
         {
+            entity.HasIndex(e => e.MuaId, "IX_TimeOffs_MuaId");
+
             entity.Property(e => e.EndUtc).HasPrecision(3);
             entity.Property(e => e.Reason).HasMaxLength(200);
             entity.Property(e => e.StartUtc).HasPrecision(3);
@@ -233,8 +245,21 @@ public partial class ProjectExeContext : DbContext
                 .HasColumnName("Token");
         });
 
+        modelBuilder.Entity<TwoFactorAuth>(entity =>
+        {
+            entity.HasKey(e => e.TwoFactorId);
+
+            entity.HasIndex(e => e.UserId, "IX_TwoFactorAuths_UserId").IsUnique();
+
+            entity.HasOne(d => d.User).WithOne(p => p.TwoFactorAuth)
+                .HasForeignKey<TwoFactorAuth>(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
+            entity.HasIndex(e => e.RoleId, "IX_Users_RoleId");
+
             entity.HasIndex(e => e.Email, "UQ_Users_Email").IsUnique();
 
             entity.HasIndex(e => e.Username, "UQ_Users_Username").IsUnique();
@@ -266,37 +291,12 @@ public partial class ProjectExeContext : DbContext
 
         modelBuilder.Entity<WorkingHour>(entity =>
         {
+            entity.HasIndex(e => e.MuaId, "IX_WorkingHours_MuaId");
+
             entity.HasOne(d => d.Mua).WithMany(p => p.WorkingHours)
                 .HasForeignKey(d => d.MuaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_WorkingHours_MUA");
-        });
-
-        modelBuilder.Entity<IdentityVerification>(entity =>
-        {
-            entity.HasKey(e => e.VerificationId);
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-
-            entity.HasOne(d => d.User)
-                .WithMany()
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            entity.HasOne(d => d.ProcessedByAdmin)
-                .WithMany()
-                .HasForeignKey(d => d.ProcessedByAdminId)
-                .OnDelete(DeleteBehavior.SetNull);
-        });
-
-        modelBuilder.Entity<TwoFactorAuth>(entity =>
-        {
-            entity.HasKey(e => e.TwoFactorId);
-            entity.HasIndex(e => e.UserId).IsUnique();
-
-            entity.HasOne(d => d.User)
-                .WithOne()
-                .HasForeignKey<TwoFactorAuth>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);

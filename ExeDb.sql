@@ -5,342 +5,915 @@
  Source Server Type    : SQL Server
  Source Server Version : 16004210 (16.00.4210)
  Source Host           : localhost:1433
- Source Catalog        : Test9
+ Source Catalog        : project_Exe
  Source Schema         : dbo
 
  Target Server Type    : SQL Server
  Target Server Version : 16004210 (16.00.4210)
  File Encoding         : 65001
 
- Date: 12/09/2025
+ Date: 25/09/2025 15:58:23
 */
 
--- ==========================
--- TABLE STRUCTURE
--- ==========================
 
--- BookingItems
-IF OBJECT_ID(N'[dbo].[BookingItems]', 'U') IS NOT NULL DROP TABLE [dbo].[BookingItems]
+-- ----------------------------
+-- Table structure for __EFMigrationsHistory
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[__EFMigrationsHistory]') AND type IN ('U'))
+	DROP TABLE [dbo].[__EFMigrationsHistory]
 GO
-CREATE TABLE [dbo].[BookingItems] (
-  [BookingItemId] BIGINT IDENTITY(1,1) NOT NULL,
-  [BookingId] BIGINT NOT NULL,
-  [ServiceId] BIGINT NOT NULL,
-  [Quantity] INT DEFAULT 1 NOT NULL,
-  [UnitPrice] DECIMAL(18,2) NOT NULL,
-  CONSTRAINT PK_BookingItems PRIMARY KEY CLUSTERED ([BookingItemId])
+
+CREATE TABLE [dbo].[__EFMigrationsHistory] (
+  [MigrationId] nvarchar(150) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [ProductVersion] nvarchar(32) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL
 )
 GO
 
--- Bookings
-IF OBJECT_ID(N'[dbo].[Bookings]', 'U') IS NOT NULL DROP TABLE [dbo].[Bookings]
+ALTER TABLE [dbo].[__EFMigrationsHistory] SET (LOCK_ESCALATION = TABLE)
 GO
+
+
+-- ----------------------------
+-- Records of __EFMigrationsHistory
+-- ----------------------------
+INSERT INTO [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20250924144637_InitialCreate', N'9.0.9')
+GO
+
+
+-- ----------------------------
+-- Table structure for Bookings
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Bookings]') AND type IN ('U'))
+	DROP TABLE [dbo].[Bookings]
+GO
+
 CREATE TABLE [dbo].[Bookings] (
-  [BookingId] BIGINT IDENTITY(1,1) NOT NULL,
-  [CustomerId] INT NOT NULL,
-  [MuaId] INT NOT NULL,
-  [ScheduledStart] DATETIME2(3) NULL,
-  [ScheduledEnd] DATETIME2(3) NULL,
-  [AddressLine] NVARCHAR(255) NULL,
-  [Currency] CHAR(3) DEFAULT 'VND' NOT NULL,
-  [Notes] NVARCHAR(MAX) NULL,
-  [Status] TINYINT NULL,
-  CONSTRAINT PK_Bookings PRIMARY KEY CLUSTERED ([BookingId])
+  [BookingId] bigint  IDENTITY(1,1) NOT NULL,
+  [CustomerId] int  NOT NULL,
+  [MuaId] int  NOT NULL,
+  [ScheduledStart] datetime2(3)  NULL,
+  [AddressLine] nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [Notes] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [Status] int  NOT NULL,
+  [TimeM] time(7)  NULL,
+  [ServiceId] bigint  NULL
 )
 GO
 
--- Categories
-IF OBJECT_ID(N'[dbo].[Categories]', 'U') IS NOT NULL DROP TABLE [dbo].[Categories]
+ALTER TABLE [dbo].[Bookings] SET (LOCK_ESCALATION = TABLE)
 GO
+
+
+-- ----------------------------
+-- Records of Bookings
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[Bookings] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[Bookings] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for Categories
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Categories]') AND type IN ('U'))
+	DROP TABLE [dbo].[Categories]
+GO
+
 CREATE TABLE [dbo].[Categories] (
-  [CategoryId] INT IDENTITY(1,1) NOT NULL,
-  [CategoryName] NVARCHAR(100) NOT NULL,
-  [Description] NVARCHAR(255) NULL,
-  CONSTRAINT PK_Categories PRIMARY KEY CLUSTERED ([CategoryId]),
-  CONSTRAINT UQ_Categories_CategoryName UNIQUE ([CategoryName])
+  [CategoryId] int  IDENTITY(1,1) NOT NULL,
+  [CategoryName] nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [Description] nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL
 )
 GO
 
--- CustomerProfiles
-IF OBJECT_ID(N'[dbo].[CustomerProfiles]', 'U') IS NOT NULL DROP TABLE [dbo].[CustomerProfiles]
+ALTER TABLE [dbo].[Categories] SET (LOCK_ESCALATION = TABLE)
 GO
+
+
+-- ----------------------------
+-- Records of Categories
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[Categories] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[Categories] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for CustomerProfiles
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[CustomerProfiles]') AND type IN ('U'))
+	DROP TABLE [dbo].[CustomerProfiles]
+GO
+
 CREATE TABLE [dbo].[CustomerProfiles] (
-  [CustomerId] INT NOT NULL,
-  [DisplayName] NVARCHAR(120) NULL,
-  [AvatarUrl] NVARCHAR(500) NULL,
-  [PhoneNumber] VARCHAR(30) NULL,
-  CONSTRAINT PK_CustomerProfiles PRIMARY KEY CLUSTERED ([CustomerId])
+  [CustomerId] int  NOT NULL,
+  [DisplayName] nvarchar(120) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [AvatarUrl] nvarchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [PhoneNumber] varchar(30) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL
 )
 GO
 
--- MUAProfiles
-IF OBJECT_ID(N'[dbo].[MUAProfiles]', 'U') IS NOT NULL DROP TABLE [dbo].[MUAProfiles]
-GO
-CREATE TABLE [dbo].[MUAProfiles] (
-  [MUAId] INT NOT NULL,
-  [DisplayName] NVARCHAR(120) NOT NULL,
-  [Bio] NVARCHAR(MAX) NULL,
-  [AddressLine] NVARCHAR(255) NULL,
-  [ExperienceYears] INT NULL,
-  [ProfilePublic] BIT DEFAULT 1 NOT NULL,
-  CONSTRAINT PK_MUAProfiles PRIMARY KEY CLUSTERED ([MUAId])
-)
+ALTER TABLE [dbo].[CustomerProfiles] SET (LOCK_ESCALATION = TABLE)
 GO
 
--- Reviews
-IF OBJECT_ID(N'[dbo].[Reviews]', 'U') IS NOT NULL DROP TABLE [dbo].[Reviews]
-GO
-CREATE TABLE [dbo].[Reviews] (
-  [ReviewId] BIGINT IDENTITY(1,1) NOT NULL,
-  [BookingId] BIGINT NOT NULL,
-  [CustomerId] INT NOT NULL,
-  [MuaId] INT NOT NULL,
-  [Rating] TINYINT NOT NULL CHECK ([Rating] BETWEEN 1 AND 5),
-  [Comment] NVARCHAR(MAX) NULL,
-  [CreatedAt] DATETIME2(3) DEFAULT SYSDATETIME() NOT NULL,
-  CONSTRAINT PK_Reviews PRIMARY KEY CLUSTERED ([ReviewId])
-)
+
+-- ----------------------------
+-- Records of CustomerProfiles
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for IdentityVerifications
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[IdentityVerifications]') AND type IN ('U'))
+	DROP TABLE [dbo].[IdentityVerifications]
 GO
 
--- PortfolioItems
-IF OBJECT_ID(N'[dbo].[PortfolioItems]', 'U') IS NOT NULL DROP TABLE [dbo].[PortfolioItems]
-GO
-CREATE TABLE [dbo].[PortfolioItems] (
-  [ItemId] BIGINT IDENTITY(1,1) NOT NULL,
-  [MUAId] INT NOT NULL,
-  [Title] NVARCHAR(200) NULL,
-  [Description] NVARCHAR(MAX) NULL,
-  [MediaUrl] NVARCHAR(500) NOT NULL,
-  [CreatedAtUtc] DATETIME2(3) DEFAULT SYSUTCDATETIME() NOT NULL,
-  CONSTRAINT PK_PortfolioItems PRIMARY KEY CLUSTERED ([ItemId])
-)
-GO
-
--- Roles
-IF OBJECT_ID(N'[dbo].[Roles]', 'U') IS NOT NULL DROP TABLE [dbo].[Roles]
-GO
-CREATE TABLE [dbo].[Roles] (
-  [RoleId] TINYINT NOT NULL,
-  [RoleName] VARCHAR(30) NOT NULL,
-  CONSTRAINT PK_Roles PRIMARY KEY CLUSTERED ([RoleId]),
-  CONSTRAINT UQ_Roles_RoleName UNIQUE ([RoleName])
-)
-GO
-
--- Services
-IF OBJECT_ID(N'[dbo].[Services]', 'U') IS NOT NULL DROP TABLE [dbo].[Services]
-GO
-CREATE TABLE [dbo].[Services] (
-  [ServiceId] BIGINT IDENTITY(1,1) NOT NULL,
-  [MuaId] INT NOT NULL,
-  [Name] NVARCHAR(160) NOT NULL,
-  [Description] NVARCHAR(MAX) NULL,
-  [BasePrice] DECIMAL(18,2) NOT NULL,
-  [Currency] CHAR(3) DEFAULT 'VND' NOT NULL,
-  [DurationMin] INT NOT NULL,
-  [Active] BIT DEFAULT 1 NOT NULL,
-  [CategoryId] INT NULL,
-  CONSTRAINT PK_Services PRIMARY KEY CLUSTERED ([ServiceId])
-)
-GO
-
--- TimeOffs
-IF OBJECT_ID(N'[dbo].[TimeOffs]', 'U') IS NOT NULL DROP TABLE [dbo].[TimeOffs]
-GO
-CREATE TABLE [dbo].[TimeOffs] (
-  [TimeOffId] BIGINT IDENTITY(1,1) NOT NULL,
-  [MuaId] INT NOT NULL,
-  [StartUtc] DATETIME2(3) NOT NULL,
-  [EndUtc] DATETIME2(3) NOT NULL,
-  [Reason] NVARCHAR(200) NULL,
-  CONSTRAINT PK_TimeOffs PRIMARY KEY CLUSTERED ([TimeOffId])
-)
-GO
-
--- Tokens
-IF OBJECT_ID(N'[dbo].[Tokens]', 'U') IS NOT NULL DROP TABLE [dbo].[Tokens]
-GO
-CREATE TABLE [dbo].[Tokens] (
-  [Email] VARCHAR(255) NOT NULL,
-  [Token] CHAR(36) NOT NULL,
-  [Expired] DATETIME NOT NULL,
-  [Status] BIT DEFAULT 0 NOT NULL,
-  CONSTRAINT PK_Tokens PRIMARY KEY CLUSTERED ([Email])
-)
-GO
-
--- Users
-IF OBJECT_ID(N'[dbo].[Users]', 'U') IS NOT NULL DROP TABLE [dbo].[Users]
-GO
-CREATE TABLE [dbo].[Users] (
-  [UserId] INT IDENTITY(1,1) NOT NULL,
-  [Username] VARCHAR(50) NOT NULL,
-  [Email] VARCHAR(255) NOT NULL,
-  [PasswordHash] VARBINARY(256) NOT NULL,
-  [FullName] VARCHAR(100) NULL,
-  [PhoneNumber] VARCHAR(30) NULL,
-  [AvatarUrl] VARCHAR(500) NULL,
-  [IsActive] BIT DEFAULT 1 NOT NULL,
-  [IsEmailVerified] BIT DEFAULT 0 NOT NULL,
-  [RoleId] TINYINT DEFAULT 1 NOT NULL,
-  CONSTRAINT PK_Users PRIMARY KEY CLUSTERED ([UserId]),
-  CONSTRAINT UQ_Users_Username UNIQUE ([Username]),
-  CONSTRAINT UQ_Users_Email UNIQUE ([Email])
-)
-GO
-
--- WorkingHours
-IF OBJECT_ID(N'[dbo].[WorkingHours]', 'U') IS NOT NULL DROP TABLE [dbo].[WorkingHours]
-GO
-CREATE TABLE [dbo].[WorkingHours] (
-  [WorkingHourId] BIGINT IDENTITY(1,1) NOT NULL,
-  [MuaId] INT NOT NULL,
-  [DayOfWeek] TINYINT NOT NULL,
-  [StartTime] TIME NOT NULL,
-  [EndTime] TIME NOT NULL,
-  CONSTRAINT PK_WorkingHours PRIMARY KEY CLUSTERED ([WorkingHourId])
-)
-GO
-
--- ==========================
--- FOREIGN KEYS
--- ==========================
-
--- BookingItems
-ALTER TABLE [dbo].[BookingItems] 
-ADD CONSTRAINT FK_BookingItems_Booking FOREIGN KEY ([BookingId]) REFERENCES [dbo].[Bookings] ([BookingId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-
-ALTER TABLE [dbo].[BookingItems] 
-ADD CONSTRAINT FK_BookingItems_Service FOREIGN KEY ([ServiceId]) REFERENCES [dbo].[Services] ([ServiceId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- Bookings
-ALTER TABLE [dbo].[Bookings] 
-ADD CONSTRAINT FK_Bookings_Customer FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[CustomerProfiles] ([CustomerId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-
-ALTER TABLE [dbo].[Bookings] 
-ADD CONSTRAINT FK_Bookings_MUA FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- CustomerProfiles
-ALTER TABLE [dbo].[CustomerProfiles] 
-ADD CONSTRAINT FK_CustomerProfiles_User FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Users] ([UserId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- MUAProfiles
-ALTER TABLE [dbo].[MUAProfiles] 
-ADD CONSTRAINT FK_MUAProfiles_User FOREIGN KEY ([MUAId]) REFERENCES [dbo].[Users] ([UserId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- PortfolioItems
-ALTER TABLE [dbo].[PortfolioItems] 
-ADD CONSTRAINT FK_PortfolioItems_MUA FOREIGN KEY ([MUAId]) REFERENCES [dbo].[MUAProfiles] ([MUAId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- Services
-ALTER TABLE [dbo].[Services] 
-ADD CONSTRAINT FK_Services_MUA FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-
-ALTER TABLE [dbo].[Services] 
-ADD CONSTRAINT FK_Services_Category FOREIGN KEY ([CategoryId]) REFERENCES [dbo].[Categories] ([CategoryId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- TimeOffs
-ALTER TABLE [dbo].[TimeOffs] 
-ADD CONSTRAINT FK_TimeOffs_MUA FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- Users
-ALTER TABLE [dbo].[Users] 
-ADD CONSTRAINT FK_Users_Roles FOREIGN KEY ([RoleId]) REFERENCES [dbo].[Roles] ([RoleId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- WorkingHours
-ALTER TABLE [dbo].[WorkingHours] 
-ADD CONSTRAINT FK_WorkingHours_MUA FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- Reviews
-ALTER TABLE [dbo].[Reviews] 
-ADD CONSTRAINT FK_Reviews_Booking FOREIGN KEY ([BookingId]) REFERENCES [dbo].[Bookings] ([BookingId])
-ON DELETE CASCADE ON UPDATE NO ACTION
-
-ALTER TABLE [dbo].[Reviews] 
-ADD CONSTRAINT FK_Reviews_Customer FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[CustomerProfiles] ([CustomerId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-
-ALTER TABLE [dbo].[Reviews] 
-ADD CONSTRAINT FK_Reviews_MUA FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId])
-ON DELETE NO ACTION ON UPDATE NO ACTION
-GO
-
--- ==========================
--- UNIQUE CONSTRAINT FOR REVIEWS
--- ==========================
-ALTER TABLE [dbo].[Reviews]
-ADD CONSTRAINT UQ_Review_Booking_Customer UNIQUE ([BookingId], [CustomerId])
-GO
-
--- ==========================
--- INDEXES FOR REVIEWS
--- ==========================
-CREATE INDEX IX_Reviews_MuaId ON [dbo].[Reviews] ([MuaId])
-CREATE INDEX IX_Reviews_CustomerId ON [dbo].[Reviews] ([CustomerId])
-GO
-
--- Add IdentityVerification table
 CREATE TABLE [dbo].[IdentityVerifications] (
-    [VerificationId] BIGINT IDENTITY(1,1) NOT NULL,
-    [UserId] INT NOT NULL,
-    [FullName] NVARCHAR(100) NOT NULL,
-    [IdNumber] VARCHAR(12) NOT NULL,
-    [DateOfBirth] DATE NOT NULL,
-    [Address] NVARCHAR(500) NOT NULL,
-    [FrontIdImageUrl] NVARCHAR(500) NOT NULL,
-    [BackIdImageUrl] NVARCHAR(500) NOT NULL,
-    [SelfieImageUrl] NVARCHAR(500) NULL,
-    [Status] TINYINT DEFAULT 0 NOT NULL, -- 0=Pending, 1=Approved, 2=Rejected
-    [AdminNotes] NVARCHAR(MAX) NULL,
-    [ProcessedByAdminId] INT NULL,
-    [CreatedAt] DATETIME2(3) DEFAULT GETUTCDATE() NOT NULL,
-    [ProcessedAt] DATETIME2(3) NULL,
-    CONSTRAINT PK_IdentityVerifications PRIMARY KEY CLUSTERED ([VerificationId]),
-    CONSTRAINT FK_IdentityVerifications_User FOREIGN KEY ([UserId]) REFERENCES [Users] ([UserId]),
-    CONSTRAINT FK_IdentityVerifications_Admin FOREIGN KEY ([ProcessedByAdminId]) REFERENCES [Users] ([UserId])
-);
+  [VerificationId] bigint  IDENTITY(1,1) NOT NULL,
+  [UserId] int  NOT NULL,
+  [FullName] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [IdNumber] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [DateOfBirth] datetime2(7)  NOT NULL,
+  [Address] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [FrontIdImageUrl] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [BackIdImageUrl] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [SelfieImageUrl] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [Status] tinyint  NOT NULL,
+  [AdminNotes] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [ProcessedByAdminId] int  NULL,
+  [CreatedAt] datetime2(7) DEFAULT getutcdate() NOT NULL,
+  [ProcessedAt] datetime2(7)  NULL
+)
 GO
 
--- Add TwoFactorAuth table  
-CREATE TABLE [dbo].[TwoFactorAuth] (
-    [TwoFactorId] INT IDENTITY(1,1) NOT NULL,
-    [UserId] INT NOT NULL,
-    [IsEnabled] BIT DEFAULT 0 NOT NULL,
-    [SecretKey] VARCHAR(32) NULL,
-    [BackupCodes] NVARCHAR(MAX) NULL,
-    [EnabledAt] DATETIME2(3) NULL,
-    [LastUsedAt] DATETIME2(3) NULL,
-    [FailedAttempts] INT DEFAULT 0 NOT NULL,
-    [LockedUntil] DATETIME2(3) NULL,
-    CONSTRAINT PK_TwoFactorAuth PRIMARY KEY CLUSTERED ([TwoFactorId]),
-    CONSTRAINT FK_TwoFactorAuth_User FOREIGN KEY ([UserId]) REFERENCES [Users] ([UserId]),
-    CONSTRAINT UQ_TwoFactorAuth_UserId UNIQUE ([UserId])
-);
+ALTER TABLE [dbo].[IdentityVerifications] SET (LOCK_ESCALATION = TABLE)
 GO
 
--- Create indexes
-CREATE INDEX IX_IdentityVerifications_UserId ON [IdentityVerifications] ([UserId]);
-CREATE INDEX IX_IdentityVerifications_Status ON [IdentityVerifications] ([Status]);
-CREATE INDEX IX_TwoFactorAuth_UserId ON [TwoFactorAuth] ([UserId]);
+
+-- ----------------------------
+-- Records of IdentityVerifications
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[IdentityVerifications] ON
 GO
+
+SET IDENTITY_INSERT [dbo].[IdentityVerifications] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for MUAProfiles
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[MUAProfiles]') AND type IN ('U'))
+	DROP TABLE [dbo].[MUAProfiles]
+GO
+
+CREATE TABLE [dbo].[MUAProfiles] (
+  [MUAId] int  NOT NULL,
+  [DisplayName] nvarchar(120) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [Bio] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [AddressLine] nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [ExperienceYears] int  NULL,
+  [ProfilePublic] bit DEFAULT CONVERT([bit],(1)) NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[MUAProfiles] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of MUAProfiles
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for PortfolioItems
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[PortfolioItems]') AND type IN ('U'))
+	DROP TABLE [dbo].[PortfolioItems]
+GO
+
+CREATE TABLE [dbo].[PortfolioItems] (
+  [ItemId] bigint  IDENTITY(1,1) NOT NULL,
+  [MUAId] int  NOT NULL,
+  [Title] nvarchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [Description] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [MediaUrl] nvarchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [CreatedAtUtc] datetime2(3) DEFAULT sysutcdatetime() NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[PortfolioItems] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of PortfolioItems
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[PortfolioItems] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[PortfolioItems] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for Reviews
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Reviews]') AND type IN ('U'))
+	DROP TABLE [dbo].[Reviews]
+GO
+
+CREATE TABLE [dbo].[Reviews] (
+  [ReviewId] bigint  IDENTITY(1,1) NOT NULL,
+  [BookingId] bigint  NOT NULL,
+  [CustomerId] int  NOT NULL,
+  [MuaId] int  NOT NULL,
+  [Rating] tinyint  NOT NULL,
+  [Comment] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [CreatedAt] datetime2(3) DEFAULT sysdatetime() NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[Reviews] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of Reviews
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[Reviews] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[Reviews] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for Roles
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Roles]') AND type IN ('U'))
+	DROP TABLE [dbo].[Roles]
+GO
+
+CREATE TABLE [dbo].[Roles] (
+  [RoleId] tinyint  NOT NULL,
+  [RoleName] varchar(30) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[Roles] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of Roles
+-- ----------------------------
+INSERT INTO [dbo].[Roles] ([RoleId], [RoleName]) VALUES (N'1', N'Customer')
+GO
+
+INSERT INTO [dbo].[Roles] ([RoleId], [RoleName]) VALUES (N'2', N'Mua')
+GO
+
+
+-- ----------------------------
+-- Table structure for Services
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Services]') AND type IN ('U'))
+	DROP TABLE [dbo].[Services]
+GO
+
+CREATE TABLE [dbo].[Services] (
+  [ServiceId] bigint  IDENTITY(1,1) NOT NULL,
+  [MuaId] int  NOT NULL,
+  [Name] nvarchar(160) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [Description] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [BasePrice] decimal(18,2)  NOT NULL,
+  [Currency] char(3) COLLATE SQL_Latin1_General_CP1_CI_AS DEFAULT 'VND' NOT NULL,
+  [DurationMin] int  NOT NULL,
+  [Active] bit DEFAULT CONVERT([bit],(1)) NOT NULL,
+  [CategoryId] int  NULL
+)
+GO
+
+ALTER TABLE [dbo].[Services] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of Services
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[Services] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[Services] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for TimeOffs
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[TimeOffs]') AND type IN ('U'))
+	DROP TABLE [dbo].[TimeOffs]
+GO
+
+CREATE TABLE [dbo].[TimeOffs] (
+  [TimeOffId] bigint  IDENTITY(1,1) NOT NULL,
+  [MuaId] int  NOT NULL,
+  [StartUtc] datetime2(3)  NOT NULL,
+  [EndUtc] datetime2(3)  NOT NULL,
+  [Reason] nvarchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL
+)
+GO
+
+ALTER TABLE [dbo].[TimeOffs] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of TimeOffs
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[TimeOffs] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[TimeOffs] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for Tokens
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Tokens]') AND type IN ('U'))
+	DROP TABLE [dbo].[Tokens]
+GO
+
+CREATE TABLE [dbo].[Tokens] (
+  [Email] varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [Token] char(36) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [Expired] datetime  NOT NULL,
+  [Status] bit  NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[Tokens] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of Tokens
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for TwoFactorAuths
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[TwoFactorAuths]') AND type IN ('U'))
+	DROP TABLE [dbo].[TwoFactorAuths]
+GO
+
+CREATE TABLE [dbo].[TwoFactorAuths] (
+  [TwoFactorId] int  IDENTITY(1,1) NOT NULL,
+  [UserId] int  NOT NULL,
+  [IsEnabled] bit  NOT NULL,
+  [SecretKey] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [BackupCodes] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [EnabledAt] datetime2(7)  NULL,
+  [LastUsedAt] datetime2(7)  NULL,
+  [FailedAttempts] int  NOT NULL,
+  [LockedUntil] datetime2(7)  NULL
+)
+GO
+
+ALTER TABLE [dbo].[TwoFactorAuths] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of TwoFactorAuths
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[TwoFactorAuths] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[TwoFactorAuths] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for Users
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type IN ('U'))
+	DROP TABLE [dbo].[Users]
+GO
+
+CREATE TABLE [dbo].[Users] (
+  [UserId] int  IDENTITY(1,1) NOT NULL,
+  [Username] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [Email] varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
+  [PasswordHash] varbinary(256)  NOT NULL,
+  [FullName] varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [PhoneNumber] varchar(30) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [AvatarUrl] varchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL,
+  [IsActive] bit DEFAULT CONVERT([bit],(1)) NOT NULL,
+  [IsEmailVerified] bit  NOT NULL,
+  [RoleId] tinyint DEFAULT CONVERT([tinyint],(1)) NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[Users] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of Users
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[Users] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[Users] OFF
+GO
+
+
+-- ----------------------------
+-- Table structure for WorkingHours
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[WorkingHours]') AND type IN ('U'))
+	DROP TABLE [dbo].[WorkingHours]
+GO
+
+CREATE TABLE [dbo].[WorkingHours] (
+  [WorkingHourId] bigint  IDENTITY(1,1) NOT NULL,
+  [MuaId] int  NOT NULL,
+  [DayOfWeek] tinyint  NOT NULL,
+  [StartTime] time(7)  NOT NULL,
+  [EndTime] time(7)  NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[WorkingHours] SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+-- ----------------------------
+-- Records of WorkingHours
+-- ----------------------------
+SET IDENTITY_INSERT [dbo].[WorkingHours] ON
+GO
+
+SET IDENTITY_INSERT [dbo].[WorkingHours] OFF
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table __EFMigrationsHistory
+-- ----------------------------
+ALTER TABLE [dbo].[__EFMigrationsHistory] ADD CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED ([MigrationId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for Bookings
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[Bookings]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table Bookings
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_Bookings_CustomerId]
+ON [dbo].[Bookings] (
+  [CustomerId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Bookings_MuaId]
+ON [dbo].[Bookings] (
+  [MuaId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Bookings
+-- ----------------------------
+ALTER TABLE [dbo].[Bookings] ADD CONSTRAINT [PK_Bookings] PRIMARY KEY CLUSTERED ([BookingId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for Categories
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[Categories]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table Categories
+-- ----------------------------
+CREATE UNIQUE NONCLUSTERED INDEX [UQ_Categories_CategoryName]
+ON [dbo].[Categories] (
+  [CategoryName] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Categories
+-- ----------------------------
+ALTER TABLE [dbo].[Categories] ADD CONSTRAINT [PK_Categories] PRIMARY KEY CLUSTERED ([CategoryId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table CustomerProfiles
+-- ----------------------------
+ALTER TABLE [dbo].[CustomerProfiles] ADD CONSTRAINT [PK_CustomerProfiles] PRIMARY KEY CLUSTERED ([CustomerId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for IdentityVerifications
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[IdentityVerifications]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table IdentityVerifications
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_IdentityVerifications_ProcessedByAdminId]
+ON [dbo].[IdentityVerifications] (
+  [ProcessedByAdminId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_IdentityVerifications_UserId]
+ON [dbo].[IdentityVerifications] (
+  [UserId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table IdentityVerifications
+-- ----------------------------
+ALTER TABLE [dbo].[IdentityVerifications] ADD CONSTRAINT [PK_IdentityVerifications] PRIMARY KEY CLUSTERED ([VerificationId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table MUAProfiles
+-- ----------------------------
+ALTER TABLE [dbo].[MUAProfiles] ADD CONSTRAINT [PK_MUAProfiles] PRIMARY KEY CLUSTERED ([MUAId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for PortfolioItems
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[PortfolioItems]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table PortfolioItems
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_PortfolioItems_MUAId]
+ON [dbo].[PortfolioItems] (
+  [MUAId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table PortfolioItems
+-- ----------------------------
+ALTER TABLE [dbo].[PortfolioItems] ADD CONSTRAINT [PK_PortfolioItems] PRIMARY KEY CLUSTERED ([ItemId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for Reviews
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[Reviews]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table Reviews
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_Reviews_CustomerId]
+ON [dbo].[Reviews] (
+  [CustomerId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Reviews_MuaId]
+ON [dbo].[Reviews] (
+  [MuaId] ASC
+)
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [UQ_Review_Booking_Customer]
+ON [dbo].[Reviews] (
+  [BookingId] ASC,
+  [CustomerId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Reviews
+-- ----------------------------
+ALTER TABLE [dbo].[Reviews] ADD CONSTRAINT [PK_Reviews] PRIMARY KEY CLUSTERED ([ReviewId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table Roles
+-- ----------------------------
+CREATE UNIQUE NONCLUSTERED INDEX [UQ_Roles_RoleName]
+ON [dbo].[Roles] (
+  [RoleName] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Roles
+-- ----------------------------
+ALTER TABLE [dbo].[Roles] ADD CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED ([RoleId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for Services
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[Services]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table Services
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_Services_CategoryId]
+ON [dbo].[Services] (
+  [CategoryId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Services_MuaId]
+ON [dbo].[Services] (
+  [MuaId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Services
+-- ----------------------------
+ALTER TABLE [dbo].[Services] ADD CONSTRAINT [PK_Services] PRIMARY KEY CLUSTERED ([ServiceId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for TimeOffs
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[TimeOffs]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table TimeOffs
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_TimeOffs_MuaId]
+ON [dbo].[TimeOffs] (
+  [MuaId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table TimeOffs
+-- ----------------------------
+ALTER TABLE [dbo].[TimeOffs] ADD CONSTRAINT [PK_TimeOffs] PRIMARY KEY CLUSTERED ([TimeOffId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Tokens
+-- ----------------------------
+ALTER TABLE [dbo].[Tokens] ADD CONSTRAINT [PK_Tokens] PRIMARY KEY CLUSTERED ([Email])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for TwoFactorAuths
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[TwoFactorAuths]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table TwoFactorAuths
+-- ----------------------------
+CREATE UNIQUE NONCLUSTERED INDEX [IX_TwoFactorAuths_UserId]
+ON [dbo].[TwoFactorAuths] (
+  [UserId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table TwoFactorAuths
+-- ----------------------------
+ALTER TABLE [dbo].[TwoFactorAuths] ADD CONSTRAINT [PK_TwoFactorAuths] PRIMARY KEY CLUSTERED ([TwoFactorId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for Users
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[Users]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table Users
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_Users_RoleId]
+ON [dbo].[Users] (
+  [RoleId] ASC
+)
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [UQ_Users_Email]
+ON [dbo].[Users] (
+  [Email] ASC
+)
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [UQ_Users_Username]
+ON [dbo].[Users] (
+  [Username] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table Users
+-- ----------------------------
+ALTER TABLE [dbo].[Users] ADD CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Auto increment value for WorkingHours
+-- ----------------------------
+DBCC CHECKIDENT ('[dbo].[WorkingHours]', RESEED, 1)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table WorkingHours
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [IX_WorkingHours_MuaId]
+ON [dbo].[WorkingHours] (
+  [MuaId] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table WorkingHours
+-- ----------------------------
+ALTER TABLE [dbo].[WorkingHours] ADD CONSTRAINT [PK_WorkingHours] PRIMARY KEY CLUSTERED ([WorkingHourId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table Bookings
+-- ----------------------------
+ALTER TABLE [dbo].[Bookings] ADD CONSTRAINT [FK_Bookings_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[CustomerProfiles] ([CustomerId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Bookings] ADD CONSTRAINT [FK_Bookings_MUA] FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Bookings] ADD CONSTRAINT [FK_Bookings_Service] FOREIGN KEY ([ServiceId]) REFERENCES [dbo].[Services] ([ServiceId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table CustomerProfiles
+-- ----------------------------
+ALTER TABLE [dbo].[CustomerProfiles] ADD CONSTRAINT [FK_CustomerProfiles_User] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Users] ([UserId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table IdentityVerifications
+-- ----------------------------
+ALTER TABLE [dbo].[IdentityVerifications] ADD CONSTRAINT [FK_IdentityVerifications_Users_ProcessedByAdminId] FOREIGN KEY ([ProcessedByAdminId]) REFERENCES [dbo].[Users] ([UserId]) ON DELETE SET NULL ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[IdentityVerifications] ADD CONSTRAINT [FK_IdentityVerifications_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([UserId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table MUAProfiles
+-- ----------------------------
+ALTER TABLE [dbo].[MUAProfiles] ADD CONSTRAINT [FK_MUAProfiles_User] FOREIGN KEY ([MUAId]) REFERENCES [dbo].[Users] ([UserId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table PortfolioItems
+-- ----------------------------
+ALTER TABLE [dbo].[PortfolioItems] ADD CONSTRAINT [FK_PortfolioItems_MUA] FOREIGN KEY ([MUAId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table Reviews
+-- ----------------------------
+ALTER TABLE [dbo].[Reviews] ADD CONSTRAINT [FK_Reviews_Booking] FOREIGN KEY ([BookingId]) REFERENCES [dbo].[Bookings] ([BookingId]) ON DELETE CASCADE ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Reviews] ADD CONSTRAINT [FK_Reviews_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[CustomerProfiles] ([CustomerId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Reviews] ADD CONSTRAINT [FK_Reviews_MUA] FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table Services
+-- ----------------------------
+ALTER TABLE [dbo].[Services] ADD CONSTRAINT [FK_Services_Category] FOREIGN KEY ([CategoryId]) REFERENCES [dbo].[Categories] ([CategoryId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Services] ADD CONSTRAINT [FK_Services_MUA] FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table TimeOffs
+-- ----------------------------
+ALTER TABLE [dbo].[TimeOffs] ADD CONSTRAINT [FK_TimeOffs_MUA] FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table TwoFactorAuths
+-- ----------------------------
+ALTER TABLE [dbo].[TwoFactorAuths] ADD CONSTRAINT [FK_TwoFactorAuths_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([UserId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table Users
+-- ----------------------------
+ALTER TABLE [dbo].[Users] ADD CONSTRAINT [FK_Users_Roles] FOREIGN KEY ([RoleId]) REFERENCES [dbo].[Roles] ([RoleId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table WorkingHours
+-- ----------------------------
+ALTER TABLE [dbo].[WorkingHours] ADD CONSTRAINT [FK_WorkingHours_MUA] FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
+GO
+

@@ -1,20 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Mirrorly.Models
+namespace Mirrorly.Models;
+
+public partial class TwoFactorAuth
 {
-    public class TwoFactorAuth
-    {
-        public int TwoFactorId { get; set; }
-        public int UserId { get; set; }
-        public bool IsEnabled { get; set; } = false;
-        public string? SecretKey { get; set; }
-        public string? BackupCodes { get; set; } // JSON array of backup codes
-        public DateTime? EnabledAt { get; set; }
-        public DateTime? LastUsedAt { get; set; }
-        public int FailedAttempts { get; set; } = 0;
-        public DateTime? LockedUntil { get; set; }
+    public int TwoFactorId { get; set; }
 
-        // Navigation property
-        public virtual User User { get; set; } = null!;
-    }
+    public int UserId { get; set; }
+
+    public bool IsEnabled { get; set; }
+
+    public string? SecretKey { get; set; }
+
+    public string? BackupCodes { get; set; }
+
+    public DateTime? EnabledAt { get; set; }
+
+    public DateTime? LastUsedAt { get; set; }
+
+    public int FailedAttempts { get; set; }
+
+    public DateTime? LockedUntil { get; set; }
+
+    public virtual User User { get; set; } = null!;
 }
