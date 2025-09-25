@@ -23,7 +23,7 @@ public partial class Service
 
     public int? CategoryId { get; set; }
 
-    public virtual ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>();
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Category? Category { get; set; }
 

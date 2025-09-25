@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Mirrorly.Pages.Booking
+namespace Mirrorly.Pages.Admin
 {
-    public class BookingModel : PageModel
+    public class _AdminLayoutModel : PageModel
     {
         public void OnGet()
         {

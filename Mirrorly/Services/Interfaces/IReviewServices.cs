@@ -5,5 +5,6 @@ namespace Mirrorly.Services.Interfaces
     public interface IReviewServices
     {
         List<Review> getReviewsById(int muaId);
+        void addReview(Review review);
     }
 }
