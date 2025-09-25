@@ -12,7 +12,7 @@
  Target Server Version : 16004210 (16.00.4210)
  File Encoding         : 65001
 
- Date: 25/09/2025 15:58:23
+ Date: 25/09/2025 16:11:03
 */
 
 
@@ -96,6 +96,21 @@ GO
 -- Records of Categories
 -- ----------------------------
 SET IDENTITY_INSERT [dbo].[Categories] ON
+GO
+
+INSERT INTO [dbo].[Categories] ([CategoryId], [CategoryName], [Description]) VALUES (N'1', N'Trang điểm sự kiện – lễ nghi', N'Dịch vụ trang điểm cho các buổi lễ, cưới hỏi, kỷ yếu, lễ hội...')
+GO
+
+INSERT INTO [dbo].[Categories] ([CategoryId], [CategoryName], [Description]) VALUES (N'2', N'Trang điểm tiệc & giải trí', N'Dịch vụ trang điểm đi tiệc, dạ hội, sinh nhật, gặp gỡ đối tác...')
+GO
+
+INSERT INTO [dbo].[Categories] ([CategoryId], [CategoryName], [Description]) VALUES (N'3', N'Trang điểm chụp ảnh', N'Dịch vụ trang điểm cho chụp ảnh cưới, ảnh kỷ yếu, ảnh nghệ thuật...')
+GO
+
+INSERT INTO [dbo].[Categories] ([CategoryId], [CategoryName], [Description]) VALUES (N'4', N'Trang điểm công việc & thường ngày', N'Dịch vụ trang điểm đi làm, đi họp, đi chơi, phong cách Hàn/Tây...')
+GO
+
+INSERT INTO [dbo].[Categories] ([CategoryId], [CategoryName], [Description]) VALUES (N'5', N'Trang điểm đặc biệt', N'Dịch vụ trang điểm sân khấu, biểu diễn, hóa trang, thi hoa hậu...')
 GO
 
 SET IDENTITY_INSERT [dbo].[Categories] OFF
@@ -188,6 +203,9 @@ GO
 -- ----------------------------
 -- Records of MUAProfiles
 -- ----------------------------
+INSERT INTO [dbo].[MUAProfiles] ([MUAId], [DisplayName], [Bio], [AddressLine], [ExperienceYears], [ProfilePublic]) VALUES (N'1', N'testusername', N'âfaaa', N'dâdad', N'3', N'1')
+GO
+
 
 -- ----------------------------
 -- Table structure for PortfolioItems
@@ -431,6 +449,9 @@ GO
 SET IDENTITY_INSERT [dbo].[Users] ON
 GO
 
+INSERT INTO [dbo].[Users] ([UserId], [Username], [Email], [PasswordHash], [FullName], [PhoneNumber], [AvatarUrl], [IsActive], [IsEmailVerified], [RoleId]) VALUES (N'1', N'lam01', N'vietlam2k4@gmail.com', 0xD341DB7C246C68B31211241E9BA78A6069D0BACFF625EAAE4BF1DED8275363D2, N'testusername', N'0378790991', NULL, N'1', N'0', N'2')
+GO
+
 SET IDENTITY_INSERT [dbo].[Users] OFF
 GO
 
@@ -509,7 +530,7 @@ GO
 -- ----------------------------
 -- Auto increment value for Categories
 -- ----------------------------
-DBCC CHECKIDENT ('[dbo].[Categories]', RESEED, 1)
+DBCC CHECKIDENT ('[dbo].[Categories]', RESEED, 5)
 GO
 
 

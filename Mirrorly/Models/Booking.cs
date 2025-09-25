@@ -19,7 +19,7 @@ public partial class Booking
 
     public int Status { get; set; }
 
-    public TimeOnly? TimeM { get; set; }
+    public TimeSpan? TimeM { get; set; }
 
     public long? ServiceId { get; set; }
 

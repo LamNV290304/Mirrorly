@@ -26,28 +26,14 @@ namespace Mirrorly.Pages.Books
 
         public async Task<IActionResult> OnGet(int muaId)
         {
-            //int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+            int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
 
-            //if (userId == 0)
-            //{
-            //    return RedirectToPage("/Auth/Login");
-            //}
-
-            //LoggedUser = await _authServices.GetUserById(userId);
-            LoggedUser = new User
+            if (userId == 0)
             {
-                UserId = 1,
-                Username = "vietlam2004",
-                FullName = "Nguyễn Việt Lâm",
-                Email = "vietlam2k4@gmail.com",
-                PasswordHash = Array.Empty<byte>(),
-                PhoneNumber = "0378700991",
-                AvatarUrl = "https://example.com/avatar.jpg",
-                IsActive = true,
-                IsEmailVerified = true,
-                RoleId = 1,
-                Role = new Role { RoleId = 1, RoleName = "Admin" }
-            };
+                return RedirectToPage("/Auth/Login");
+            }
+
+            LoggedUser = await _authServices.GetUserById(userId);
 
             MuaProfile = await _profileServices.GetMuaProfile(muaId);
             StatusMessage = "";
@@ -61,28 +47,14 @@ namespace Mirrorly.Pages.Books
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+            int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
 
-            //if (userId == 0)
-            //{
-            //    return RedirectToPage("/Auth/Login");
-            //}
-
-            //LoggedUser = await _authServices.GetUserById(userId);
-            LoggedUser = new User
+            if (userId == 0)
             {
-                UserId = 1,
-                Username = "vietlam2004",
-                FullName = "Nguyễn Việt Lâm",
-                Email = "vietlam2k4@gmail.com",
-                PasswordHash = Array.Empty<byte>(),
-                PhoneNumber = "0378700991",
-                AvatarUrl = "https://example.com/avatar.jpg",
-                IsActive = true,
-                IsEmailVerified = true,
-                RoleId = 1,
-                Role = new Role { RoleId = 1, RoleName = "Admin" }
-            };
+                return RedirectToPage("/Auth/Login");
+            }
+
+            LoggedUser = await _authServices.GetUserById(userId);
 
             if (!ModelState.IsValid)
             {
@@ -95,8 +67,7 @@ namespace Mirrorly.Pages.Books
             {
                 Booking booking = new Booking
                 {
-                    //CustomerId = HttpContext.Session.GetInt32("UserId") ?? 0,
-                    CustomerId = 2,
+                    CustomerId = HttpContext.Session.GetInt32("UserId") ?? 0,
                     MuaId = bookingRequest.Muaid,
                     ScheduledStart = bookingRequest.Date,
                     TimeM = bookingRequest.Time,
@@ -114,7 +85,7 @@ namespace Mirrorly.Pages.Books
                 StatusMessage = "⚠️ Có lỗi xảy ra, vui lòng thử lại.";
             }
 
-            //LoggedUser = await _authServices.GetUserById(LoggedUser.UserId);
+            LoggedUser = await _authServices.GetUserById(LoggedUser.UserId);
             MuaProfile = await _profileServices.GetMuaProfile(bookingRequest.Muaid);
 
             return Page();
