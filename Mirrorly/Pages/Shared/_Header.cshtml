@@ -1,4 +1,4 @@
-﻿<!-- Pages/Shared/_Header.cshtml - Updated with Auth -->
+<!-- Pages/Shared/_Header.cshtml - Updated with Auth -->
 @{
     var userId = Context.Session.GetInt32("UserId");
     var username = Context.Session.GetString("Username");
@@ -216,7 +216,7 @@
     <nav>
         <a href="/Index" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")">TRANG CHỦ</a>
         <a href="/Mua/MuaProfiles" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
-        <a href="/Gallery" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">GALLERY</a>
+        <a href="#" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">GALLERY</a>
     </nav>
 
     <div class="right">
@@ -248,7 +248,9 @@
                         @if (isMUA)
                         {
                             <a href="/Profile/MuaProfile">👤 Hồ sơ MUA</a>
-                            <a href="/Mua/Bookings">📅 Đơn đặt lịch</a>
+                            <a href="/Books/ArtistBookings">📅 Đơn đặt lịch</a>
+                            <a href="/Books/BookBySchedule">📅 Tuần làm việc</a>
+
                             @if (!isVerified)
                             {
                                 <a href="/Account/VerifyIdentity" style="color: red; font-weight: bold;">
@@ -259,8 +261,7 @@
                         else if (isCustomer)
                         {
                             <a href="/Profile/CustomerProfile">👤 Hồ sơ cá nhân</a>
-                            <a href="/Customer/Bookings">📅 Lịch đặt của tôi</a>
-                            <a href="/Customer/Favorites">❤️ Yêu thích</a>
+                            <a href="/Books/BookingStatus">📅 Lịch đặt của tôi</a>
                         }
                         else if (isAdmin)
                         {

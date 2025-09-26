@@ -74,6 +74,10 @@
 
                 <div class="card-actions">
                     <a href="/Mua/Details/@mua.Muaid" class="btn-view">View Profile</a>
+
+                    <a href="/Books/Books/@mua.Muaid" class="btn-view">BOOK NOW</a>
+
+                    <a href="/Books/BookBySchedule/@mua.Muaid" class="btn-view">Schedule</a>
                 </div>
             </div>
         }
@@ -223,6 +227,13 @@
             .suggestions-box div:hover {
                 background: #fce4ec;
             }
+
+    .card-actions {
+        display: flex;
+        justify-content: center; /* căn giữa */
+        gap: 12px; /* khoảng cách giữa các nút */
+        flex-wrap: wrap; /* xuống hàng nếu không đủ chỗ */
+    }
 </style>
 <script>
     function showSearchSuggestions() {

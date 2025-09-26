@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mirrorly.Models;
@@ -22,6 +23,7 @@ namespace Mirrorly.Pages.Books
         [TempData]
         public string? StatusMessage { get; set; }
         public User? LoggedUser { get; set; }
+        public User? MuaUser { get; set; }
         public Muaprofile? MuaProfile { get; set; }
 
         public async Task<IActionResult> OnGet(int muaId)
@@ -36,6 +38,10 @@ namespace Mirrorly.Pages.Books
             LoggedUser = await _authServices.GetUserById(userId);
 
             MuaProfile = await _profileServices.GetMuaProfile(muaId);
+
+            MuaUser = await _authServices.GetUserById(muaId);
+
+
             StatusMessage = "";
 
             return Page();
@@ -74,7 +80,7 @@ namespace Mirrorly.Pages.Books
                     AddressLine = bookingRequest.Address,
                     ServiceId = bookingRequest.Service,
                     Notes = bookingRequest.Notes,
-                    Status = 3
+                    Status = 2
                 };
 
                 _bookingService.AddBooking(booking);
@@ -87,6 +93,7 @@ namespace Mirrorly.Pages.Books
 
             LoggedUser = await _authServices.GetUserById(LoggedUser.UserId);
             MuaProfile = await _profileServices.GetMuaProfile(bookingRequest.Muaid);
+            MuaUser = await _authServices.GetUserById(bookingRequest.Muaid);
 
             return Page();
         }

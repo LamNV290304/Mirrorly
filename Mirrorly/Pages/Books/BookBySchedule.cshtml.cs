@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mirrorly.Models;
+using Mirrorly.Services.Interfaces;
 using System.Globalization;
 
 namespace Mirrorly.Pages.Books
@@ -9,14 +10,37 @@ namespace Mirrorly.Pages.Books
     {
         [BindProperty(SupportsGet = true)]
         public string? Week { get; set; }  // kiểu "2025-W39"
-
+        public long? Id { get; set; }
         public DateTime WeekStart { get; set; }
         public DateTime WeekEnd { get; set; }
 
         public List<BookingView> AcceptedBookings { get; set; } = new();
 
-        public void OnGet()
+        private readonly IBookingService _bookingService;
+
+        public BookByScheduleModel(IBookingService bookingService)
         {
+            _bookingService = bookingService;
+        }
+
+        public IActionResult OnGet(int id = 0)
+        {
+            
+            var dbBookings = new List<Booking>();
+            if (id == 0)
+            {
+                int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+                if (userId == 0)
+                {
+                    return RedirectToPage("/Auth/Login");
+                }
+                dbBookings = _bookingService.GetBookingsByMuaIdAndStatus(userId, 1);
+                Id = userId;
+            }
+            else
+            {
+                dbBookings = _bookingService.GetBookingsByMuaIdAndStatus(id, 1);
+            }
             if (string.IsNullOrEmpty(Week))
             {
                 var today = DateTime.Today;
@@ -24,33 +48,35 @@ namespace Mirrorly.Pages.Books
                 Week = $"{today.Year}-W{weekNum:D2}";
             }
 
-            // Parse Week (vd: "2025-W39")
             var parts = Week.Split("-W");
             int year = int.Parse(parts[0]);
             int weekNumInt = int.Parse(parts[1]);
 
-            // Tính Monday của tuần đó
             WeekStart = ISOWeek.ToDateTime(year, weekNumInt, DayOfWeek.Monday);
             WeekEnd = WeekStart.AddDays(6);
 
-            // Mock dữ liệu để test
-            var dbBookings = new List<Booking>
-{
-    new Booking { BookingId = 1, CustomerId = 2, MuaId = 2, ScheduledStart = new DateTime(2025,9,24), TimeM = new TimeSpan(23,42,0), AddressLine="11", Status=3, ServiceId=1 },
-    new Booking { BookingId = 2, CustomerId = 2, MuaId = 2, ScheduledStart = new DateTime(2025,9,24), TimeM = new TimeSpan(0,45,0), Status=3, ServiceId=1 },
-    new Booking { BookingId = 3, CustomerId = 2, MuaId = 2, ScheduledStart = new DateTime(2025,9,26), TimeM = new TimeSpan(0,49,0), Status=3, ServiceId=1 },
-    new Booking { BookingId = 4, CustomerId = 2, MuaId = 2, ScheduledStart = new DateTime(2025,9,27), TimeM = new TimeSpan(2,51,0), Status=3, ServiceId=1 },
-    new Booking { BookingId = 5, CustomerId = 2, MuaId = 2, ScheduledStart = new DateTime(2025,9,30), TimeM = new TimeSpan(13,53,0), AddressLine="dhaoihdaodo", Status=3, ServiceId=1 }
-};
-
-            AcceptedBookings = dbBookings.Select(b => new BookingView
+            AcceptedBookings = dbBookings.Select(b =>
             {
-                Title = $"Khách {b.CustomerId} - Dịch vụ {b.ServiceId}",
-                Day = b.ScheduledStart.HasValue ? b.ScheduledStart.Value.DayOfWeek : DayOfWeek.Monday,
-                StartHour = b.TimeM.HasValue ? b.TimeM.Value.Hours : 0,
-                Duration = 1                  // tạm fix 1 giờ, bạn có thể thêm cột Duration vào DB nếu muốn chính xác
+                var startHour = b.TimeM.HasValue ? b.TimeM.Value.Hours : 0;
+                var startMinute = b.TimeM.HasValue ? b.TimeM.Value.Minutes : 0;
+                var durationMin = b.Service.DurationMin;
+
+                var start = new TimeSpan(startHour, startMinute, 0);
+                var end = start.Add(TimeSpan.FromMinutes(durationMin));
+
+                return new BookingView
+                {
+                    Title = $"Dịch vụ {b.Service.Name}",
+                    Day = b.ScheduledStart.HasValue ? b.ScheduledStart.Value.DayOfWeek : DayOfWeek.Monday,
+                    StartHour = start.Hours,
+                    DurationHourCeil = (int)Math.Ceiling(durationMin / 60.0),
+                    StartDisplay = start.ToString(@"hh\:mm"),
+                    EndDisplay = end.ToString(@"hh\:mm")
+                };
             }).ToList();
 
+
+            return Page();
         }
 
         public class BookingView
@@ -58,7 +84,10 @@ namespace Mirrorly.Pages.Books
             public string Title { get; set; } = string.Empty;
             public DayOfWeek Day { get; set; }
             public int StartHour { get; set; }
-            public int Duration { get; set; }
+            public int DurationHourCeil { get; set; }   // dùng cho rowspan (nguyên giờ)
+            public string StartDisplay { get; set; } = string.Empty;
+            public string EndDisplay { get; set; } = string.Empty;
         }
+
     }
 }

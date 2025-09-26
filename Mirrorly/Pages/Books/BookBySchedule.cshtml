@@ -1,8 +1,49 @@
-﻿@page
+﻿@page "{id?}"
+@using Mirrorly.Helpers
 @model Mirrorly.Pages.Books.BookByScheduleModel
 @{
     ViewData["Title"] = "Lịch Tuần";
 }
+
+<style>
+    input[type="week"] {
+        padding: 8px 12px;
+        border: 2px solid #e91e63; /* viền hồng */
+        border-radius: 8px; /* bo góc */
+        background-color: #fff0f6; /* nền hồng nhạt */
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        outline: none;
+        transition: all 0.3s ease;
+        padding-bottom: 5px
+    }
+
+        input[type="week"]:focus {
+            border-color: #c2185b; /* đậm hơn khi focus */
+            background-color: #fff; /* nền trắng khi focus */
+            box-shadow: 0 0 6px rgba(233, 30, 99, 0.4);
+        }
+
+    .btn-submit {
+        padding: 8px 16px;
+        margin-left: 8px;
+        border: none;
+        border-radius: 6px;
+        background: linear-gradient(45deg, #f06292, #ec407a);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .btn-submit:hover {
+            background: linear-gradient(45deg, #ec407a, #d81b60);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+</style>
+
 
 <section class="week-calendar">
     <h2>📅 Lịch Makeup Tuần (@Model.WeekStart.ToString("dd/MM") - @Model.WeekEnd.ToString("dd/MM/yyyy"))</h2>
@@ -38,17 +79,24 @@
 
                         if (booking != null)
                         {
-                            <td class="booking-cell" rowspan="@booking.Duration">
+                            <td class="booking-cell" rowspan="@booking.DurationHourCeil">
                                 <div class="booking-block">
                                     <strong>@booking.Title</strong><br />
-                                    @booking.StartHour:00 - @(booking.StartHour + booking.Duration):00
-                                    <div class="booking-actions">
-                                        <a href="#" class="btn-details">Xem chi tiết</a>
-                                    </div>
+                                    @booking.StartDisplay - @booking.EndDisplay
+                                    @if (SessionHelper.IsMUA(HttpContext.Session))
+                                    {
+                                        <div class="booking-actions">
+                                            <a href="/Books/BookingDetail/@Model.Id" class="btn-details">Xem chi tiết</a>
+                                        </div>
+                                    }
+                                    
                                 </div>
                             </td>
                         }
-                        else if (!Model.AcceptedBookings.Any(b => (int)b.Day == (d == 7 ? 0 : d) && hour > b.StartHour && hour < b.StartHour + b.Duration))
+                        else if (!Model.AcceptedBookings.Any(b =>
+                        (int)b.Day == (d == 7 ? 0 : d) &&
+                        hour > b.StartHour &&
+                        hour < b.StartHour + b.DurationHourCeil))
                         {
                             <td></td>
                         }

@@ -1,45 +1,55 @@
 ﻿@page
+@model BookingStatusModel
+
 <section class="booking-status">
-    <h2>Booking Status</h2>
+	<h2>Booking Status</h2>
 
-    <div class="status-list">
-        <!-- Booking 1 -->
-        <div class="status-card confirmed">
-            <div class="status-info">
-                <h3>Nguyễn Văn A</h3>
-                <p><strong>Service:</strong> Haircut</p>
-                <p><strong>Date:</strong> 2025-09-25</p>
-                <p><strong>Time:</strong> 10:00 AM</p>
-            </div>
-            <div class="status-footer">
-                <span class="status-label">CONFIRMED</span>
-            </div>
-        </div>
+	<div class="status-list">
+		@if (!string.IsNullOrEmpty(Model.Message))
+		{
+			<div class="alert-success">@Model.Message</div>
+		}
+		@if (!string.IsNullOrEmpty(Model.Error))
+		{
+			<div class="alert-error">@Model.Error</div>
+		}
 
-        <!-- Booking 2 -->
-        <div class="status-card pending">
-            <div class="status-info">
-                <h3>Trần Thị B</h3>
-                <p><strong>Service:</strong> Massage</p>
-                <p><strong>Date:</strong> 2025-09-26</p>
-                <p><strong>Time:</strong> 02:30 PM</p>
-            </div>
-            <div class="status-footer">
-                <span class="status-label">PENDING</span>
-            </div>
-        </div>
+		@foreach (var booking in Model.Books)
+		{
+			string cssClass = booking.Status switch
+			{
+				1 => "confirmed", // Accepted
+				2 => "pending",   // Pending
+				3 => "cancelled", // Cancelled
+				_ => "pending"
+			};
 
-        <!-- Booking 3 -->
-        <div class="status-card cancelled">
-            <div class="status-info">
-                <h3>Lê Văn C</h3>
-                <p><strong>Service:</strong> Spa</p>
-                <p><strong>Date:</strong> 2025-09-27</p>
-                <p><strong>Time:</strong> 05:00 PM</p>
-            </div>
-            <div class="status-footer">
-                <span class="status-label">CANCELLED</span>
-            </div>
-        </div>
-    </div>
+			<div class="status-card @cssClass">
+				<div class="status-info">
+					<h3>@booking.Mua.DisplayName</h3>
+					<p><strong>Service:</strong> @booking.Service.Name</p>
+					<p><strong>Date:</strong> @booking.ScheduledStart:dd/MM/yyyy</p>
+					<p><strong>Time:</strong> @booking.TimeM</p>
+					<p><strong>Address:</strong> @booking.AddressLine</p>
+					<p><strong>Notes:</strong> @booking.Notes</p>
+				</div>
+
+				<div class="status-footer">
+					<span class="status-label">
+						@(booking.Status == 1 ? "CONFIRMED" :
+						booking.Status == 2 ? "PENDING" :
+						booking.Status == 3 ? "CANCELLED" : "UNKNOWN")
+					</span>
+
+					@if (booking.Status != 3)
+					{
+						<form method="post" asp-page-handler="Cancel" asp-route-bookingId="@booking.BookingId"
+							  onsubmit="return confirm('Bạn có chắc muốn hủy booking này? Bạn sẽ mất tiền cọc.');">
+							<button type="submit" class="btn-cancel">Cancel</button>
+						</form>
+					}
+				</div>
+			</div>
+		}
+	</div>
 </section>
