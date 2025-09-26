@@ -269,35 +269,6 @@
             }
         </div>
     </section>
-
-    <!-- Working Hours -->
-    <section class="profile-section">
-        <h2>Lịch làm việc</h2>
-        <div class="workinghours-list">
-            @foreach (var wo in Model.WorkingHours)
-            {
-                <div class="workinghour-item">
-                    <span class="day">
-                        @{
-                            string dayName = wo.DayOfWeek switch
-                            {
-                                1 => "Monday ",
-                                2 => "Tuesday ",
-                                3 => "Wednesday ",
-                                4 => "Thursday ",
-                                5 => "Friday ",
-                                6 => "Saturday ",
-                                7 => "Sunday ",
-                                _ => "Unknown "
-                            };
-                        }
-                        @dayName
-                    </span>
-                    <span class="time">@wo.StartTime - @wo.EndTime</span>
-                </div>
-            }
-        </div>
-    </section>
     <!-- Map Section -->
     <input type="hidden" id="address" value="@Model.MuaProfile.AddressLine" />
 
