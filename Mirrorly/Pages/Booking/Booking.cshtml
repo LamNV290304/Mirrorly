@@ -1,0 +1,88 @@
+﻿@page
+@{
+    ViewData["Title"] = "Booking Makeup";
+    ViewData["ActivePage"] = "Booking";
+}
+
+<section class="booking-wrapper">
+    <div class="booking-form-col">
+        <h2>Đặt Lịch Makeup</h2>
+        <form class="booking-form">
+            <div class="form-group">
+                <label for="Name">Họ và Tên</label>
+                <input type="text" id="Name" name="Name" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Phone">Số Điện Thoại</label>
+                <input type="tel" id="Phone" name="Phone" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Date">Ngày</label>
+                <input type="date" id="Date" name="Date" required />
+            </div>
+            <div class="form-group">
+                <label for="Time">Giờ hẹn:</label>
+                <input type="time" id="Time" name="Time" required />
+            </div>
+            <div class="form-group">
+                <label for="Time">Địa chỉ:</label>
+                <input type="text" id="Time" name="Time" required />
+            </div>
+
+
+
+            <div class="form-group service-group">
+                <label for="Service">Chọn Gói Makeup</label>
+                <div class="service-wrapper">
+                    <select id="Service" name="Service" required>
+                        <option value="">-- Chọn gói --</option>
+                        <option value="basic" data-price="300000">Makeup Cơ Bản</option>
+                        <option value="party" data-price="500000">Makeup Dự Tiệc</option>
+                        <option value="wedding" data-price="1500000">Makeup Cô Dâu</option>
+                        <option value="theater" data-price="800000">Makeup Sân Khấu</option>
+                    </select>
+
+                    <!-- ô hiển thị giá tiền -->
+                    <input type="text" id="ServicePrice" readonly placeholder="Giá dịch vụ" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Notes">Ghi chú (yêu cầu phong cách, dị ứng, thời gian…)</label>
+                <textarea id="Notes" name="Notes" class="notes-textarea" rows="3"
+                          placeholder="Ví dụ: makeup tự nhiên, đến sớm 15’..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Xác Nhận Đặt Lịch</button>
+        </form>
+    </div>
+    <div class="booking-artist-col">
+        <img src="~/uploads/avatardefault.png" alt="Artist" class="artist-img" />
+        <h1>Diana Mcminn</h1>
+        <h3>Hair Castle</h3>
+        <p class="slogan">Enhancing natural beauty with a touch of art and passion.</p>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const serviceSelect = document.getElementById("Service");
+            const priceInput = document.getElementById("ServicePrice");
+
+            serviceSelect.addEventListener("change", function () {
+                const selectedOption = this.options[this.selectedIndex];
+                const price = selectedOption.getAttribute("data-price");
+
+                if (price) {
+                    // format tiền VND
+                    priceInput.value = Number(price).toLocaleString('vi-VN') + " đ";
+                } else {
+                    priceInput.value = "";
+                }
+            });
+        });
+    </script>
+}

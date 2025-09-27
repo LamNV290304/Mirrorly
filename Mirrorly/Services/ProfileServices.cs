@@ -80,7 +80,6 @@ namespace Mirrorly.Services
         {
             return await _context.Muaprofiles
                 .Include(m => m.Mua)
-                .Include(m => m.Services)
                 .FirstOrDefaultAsync(m => m.Muaid == userId);
         }
     }

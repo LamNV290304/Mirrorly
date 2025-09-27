@@ -31,8 +31,6 @@ namespace WebCozyShop.Infrastructure
             // Register new Auth and Profile services
             services.AddScoped<IAuthServices, AuthServices>();
             services.AddScoped<IProfileServices, ProfileServices>();
-
-            services.AddScoped<IComprehensiveProfileServices, ComprehensiveProfileServices>();
             return services;
         }
     }

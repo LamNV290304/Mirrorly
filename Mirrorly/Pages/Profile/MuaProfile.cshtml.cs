@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Mirrorly.Services.Interfaces;
-using Mirrorly.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mirrorly.Pages.Profile
@@ -11,16 +9,13 @@ namespace Mirrorly.Pages.Profile
     {
         private readonly IProfileServices _profileServices;
         private readonly IAuthServices _authServices;
-        private readonly ProjectExeContext _context;
 
-        public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices, ProjectExeContext context)
+        public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices)
         {
             _profileServices = profileServices;
             _authServices = authServices;
-            _context = context;
         }
 
-        // Basic Info Properties
         [BindProperty]
         [Required(ErrorMessage = "Tên hiển thị là bắt buộc")]
         [StringLength(120, ErrorMessage = "Tên hiển thị không được quá 120 ký tự")]
@@ -40,19 +35,11 @@ namespace Mirrorly.Pages.Profile
         [BindProperty]
         public bool ProfilePublic { get; set; }
 
-        // Display Properties
         public string Email { get; set; } = "";
         public string Username { get; set; } = "";
-        public List<Service> Services { get; set; } = new();
-        public List<PortfolioItem> Portfolios { get; set; } = new();
-        public List<WorkingHour> WorkingHours { get; set; } = new();
-        public List<Category> Categories { get; set; } = new();
 
         [TempData]
         public string? SuccessMessage { get; set; }
-
-        [TempData]
-        public string? ErrorMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -68,7 +55,6 @@ namespace Mirrorly.Pages.Profile
                 return RedirectToPage("/Auth/Login");
             }
 
-            // Load basic info
             var muaProfile = await _profileServices.GetMuaProfile(userId.Value);
             if (muaProfile != null)
             {
@@ -80,6 +66,7 @@ namespace Mirrorly.Pages.Profile
             }
             else
             {
+                // Set default values for new profile
                 DisplayName = user.FullName ?? "";
                 ProfilePublic = false;
             }
@@ -87,40 +74,9 @@ namespace Mirrorly.Pages.Profile
             Email = user.Email;
             Username = user.Username;
 
-            // Load related data
-            await LoadRelatedDataAsync(userId.Value);
-
             return Page();
         }
 
-        private async Task LoadRelatedDataAsync(int userId)
-        {
-            // Load services
-            Services = await _context.Services
-                .Include(s => s.Category)
-                .Where(s => s.MuaId == userId)
-                .OrderBy(s => s.Name)
-                .ToListAsync();
-
-            // Load portfolio
-            Portfolios = await _context.PortfolioItems
-                .Where(p => p.Muaid == userId)
-                .OrderByDescending(p => p.CreatedAtUtc)
-                .ToListAsync();
-
-            // Load working hours
-            WorkingHours = await _context.WorkingHours
-                .Where(w => w.MuaId == userId)
-                .OrderBy(w => w.DayOfWeek)
-                .ToListAsync();
-
-            // Load categories for dropdown
-            Categories = await _context.Categories
-                .OrderBy(c => c.CategoryName)
-                .ToListAsync();
-        }
-
-        // Update Basic Information
         public async Task<IActionResult> OnPostUpdateBasicInfoAsync()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -129,6 +85,7 @@ namespace Mirrorly.Pages.Profile
                 return RedirectToPage("/Auth/Login");
             }
 
+            // Validate required fields manually since we only want to validate basic info
             if (string.IsNullOrWhiteSpace(DisplayName))
             {
                 ModelState.AddModelError("DisplayName", "Tên hiển thị là bắt buộc");
@@ -136,278 +93,61 @@ namespace Mirrorly.Pages.Profile
 
             if (!ModelState.IsValid)
             {
-                await LoadRelatedDataAsync(userId.Value);
+                // Reload user info for display
+                var user = await _authServices.GetUserById(userId.Value);
+                if (user != null)
+                {
+                    Email = user.Email;
+                    Username = user.Username;
+                }
                 return Page();
             }
 
-            try
+            var muaProfile = await _profileServices.GetMuaProfile(userId.Value);
+
+            if (muaProfile == null)
             {
-                var muaProfile = await _profileServices.GetMuaProfile(userId.Value);
-
-                if (muaProfile == null)
+                // Create new profile if doesn't exist
+                muaProfile = new Mirrorly.Models.Muaprofile
                 {
-                    muaProfile = new Muaprofile
-                    {
-                        Muaid = userId.Value,
-                        DisplayName = DisplayName,
-                        Bio = Bio,
-                        AddressLine = AddressLine,
-                        ExperienceYears = ExperienceYears,
-                        ProfilePublic = ProfilePublic
-                    };
+                    Muaid = userId.Value,
+                    DisplayName = DisplayName,
+                    Bio = Bio,
+                    AddressLine = AddressLine,
+                    ExperienceYears = ExperienceYears,
+                    ProfilePublic = ProfilePublic
+                };
 
-                    await _profileServices.CreateMuaProfile(muaProfile);
+                var createSuccess = await _profileServices.CreateMuaProfile(muaProfile);
+                if (createSuccess)
+                {
+                    TempData["SuccessMessage"] = "Hồ sơ đã được tạo thành công!";
                 }
                 else
                 {
-                    muaProfile.DisplayName = DisplayName;
-                    muaProfile.Bio = Bio;
-                    muaProfile.AddressLine = AddressLine;
-                    muaProfile.ExperienceYears = ExperienceYears;
-                    muaProfile.ProfilePublic = ProfilePublic;
-
-                    await _profileServices.UpdateMuaProfile(muaProfile);
+                    ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi tạo hồ sơ");
+                    return Page();
                 }
-
-                TempData["SuccessMessage"] = "Thông tin cơ bản đã được cập nhật thành công!";
             }
-            catch (Exception)
+            else
             {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật thông tin.";
-            }
+                // Update existing profile
+                muaProfile.DisplayName = DisplayName;
+                muaProfile.Bio = Bio;
+                muaProfile.AddressLine = AddressLine;
+                muaProfile.ExperienceYears = ExperienceYears;
+                muaProfile.ProfilePublic = ProfilePublic;
 
-            return RedirectToPage();
-        }
-
-        // Add Service
-        public async Task<IActionResult> OnPostAddServiceAsync(string serviceName, string description,
-            decimal basePrice, int durationMin, int? categoryId)
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
-
-            if (string.IsNullOrWhiteSpace(serviceName) || basePrice <= 0)
-            {
-                TempData["ErrorMessage"] = "Tên dịch vụ và giá là bắt buộc!";
-                return RedirectToPage();
-            }
-
-            try
-            {
-                var service = new Service
+                var updateSuccess = await _profileServices.UpdateMuaProfile(muaProfile);
+                if (updateSuccess)
                 {
-                    MuaId = userId.Value,
-                    Name = serviceName,
-                    Description = description,
-                    BasePrice = basePrice,
-                    Currency = "VND",
-                    DurationMin = durationMin > 0 ? durationMin : 90,
-                    CategoryId = categoryId,
-                    Active = true
-                };
-
-                _context.Services.Add(service);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = $"Dịch vụ '{serviceName}' đã được thêm thành công!";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi thêm dịch vụ.";
-            }
-
-            return RedirectToPage();
-        }
-
-        // Update Service
-        public async Task<IActionResult> OnPostUpdateServiceAsync(long serviceId, string serviceName,
-            string description, decimal basePrice, int durationMin, bool active)
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
-
-            try
-            {
-                var service = await _context.Services
-                    .FirstOrDefaultAsync(s => s.ServiceId == serviceId && s.MuaId == userId.Value);
-
-                if (service == null)
-                {
-                    TempData["ErrorMessage"] = "Không tìm thấy dịch vụ.";
-                    return RedirectToPage();
+                    TempData["SuccessMessage"] = "Hồ sơ đã được cập nhật thành công!";
                 }
-
-                service.Name = serviceName;
-                service.Description = description;
-                service.BasePrice = basePrice;
-                service.DurationMin = durationMin;
-                service.Active = active;
-
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = $"Dịch vụ '{serviceName}' đã được cập nhật!";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật dịch vụ.";
-            }
-
-            return RedirectToPage();
-        }
-
-        // Delete Service
-        public async Task<IActionResult> OnPostDeleteServiceAsync(long serviceId)
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
-
-            try
-            {
-                var service = await _context.Services
-                    .FirstOrDefaultAsync(s => s.ServiceId == serviceId && s.MuaId == userId.Value);
-
-                if (service == null)
+                else
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy dịch vụ.";
-                    return RedirectToPage();
+                    ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi cập nhật hồ sơ");
+                    return Page();
                 }
-
-                _context.Services.Remove(service);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Dịch vụ đã được xóa thành công!";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi xóa dịch vụ.";
-            }
-
-            return RedirectToPage();
-        }
-
-        // Add Portfolio
-        public async Task<IActionResult> OnPostAddPortfolioAsync(string title, string description, string mediaUrl)
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
-
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(mediaUrl))
-            {
-                TempData["ErrorMessage"] = "Tiêu đề và URL hình ảnh là bắt buộc!";
-                return RedirectToPage();
-            }
-
-            // Validate URL
-            if (!Uri.TryCreate(mediaUrl, UriKind.Absolute, out _))
-            {
-                TempData["ErrorMessage"] = "URL hình ảnh không hợp lệ!";
-                return RedirectToPage();
-            }
-
-            try
-            {
-                var portfolio = new PortfolioItem
-                {
-                    Muaid = userId.Value,
-                    Title = title,
-                    Description = description,
-                    MediaUrl = mediaUrl,
-                    CreatedAtUtc = DateTime.UtcNow
-                };
-
-                _context.PortfolioItems.Add(portfolio);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = $"Hình ảnh '{title}' đã được thêm vào portfolio!";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi thêm hình ảnh.";
-            }
-
-            return RedirectToPage();
-        }
-
-        // Delete Portfolio
-        public async Task<IActionResult> OnPostDeletePortfolioAsync(long itemId)
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
-
-            try
-            {
-                var portfolio = await _context.PortfolioItems
-                    .FirstOrDefaultAsync(p => p.ItemId == itemId && p.Muaid == userId.Value);
-
-                if (portfolio == null)
-                {
-                    TempData["ErrorMessage"] = "Không tìm thấy hình ảnh.";
-                    return RedirectToPage();
-                }
-
-                _context.PortfolioItems.Remove(portfolio);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Hình ảnh đã được xóa khỏi portfolio!";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi xóa hình ảnh.";
-            }
-
-            return RedirectToPage();
-        }
-
-        // Update Working Hours
-        public async Task<IActionResult> OnPostUpdateWorkingHoursAsync()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
-
-            try
-            {
-                // Remove existing working hours
-                var existingHours = await _context.WorkingHours
-                    .Where(w => w.MuaId == userId.Value)
-                    .ToListAsync();
-
-                _context.WorkingHours.RemoveRange(existingHours);
-
-                // Add new working hours
-                for (byte day = 1; day <= 7; day++)
-                {
-                    var isWorkingKey = $"IsWorking_{day}";
-                    var startTimeKey = $"StartTime_{day}";
-                    var endTimeKey = $"EndTime_{day}";
-
-                    if (Request.Form.ContainsKey(isWorkingKey) &&
-                        Request.Form[isWorkingKey].ToString().Contains("true"))
-                    {
-                        var startTimeStr = Request.Form[startTimeKey].ToString();
-                        var endTimeStr = Request.Form[endTimeKey].ToString();
-
-                        if (TimeOnly.TryParse(startTimeStr, out var startTime) &&
-                            TimeOnly.TryParse(endTimeStr, out var endTime))
-                        {
-                            var workingHour = new WorkingHour
-                            {
-                                MuaId = userId.Value,
-                                DayOfWeek = day,
-                                StartTime = startTime,
-                                EndTime = endTime
-                            };
-
-                            _context.WorkingHours.Add(workingHour);
-                        }
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Lịch làm việc đã được cập nhật thành công!";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật lịch làm việc.";
             }
 
             return RedirectToPage();
