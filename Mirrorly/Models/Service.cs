@@ -22,8 +22,6 @@ public partial class Service
 
     public int? CategoryId { get; set; }
 
-    public virtual ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>();
-
     public virtual Category? Category { get; set; }
 
     public virtual Muaprofile? Mua { get; set; } = null!;

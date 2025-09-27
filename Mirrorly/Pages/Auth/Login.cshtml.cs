@@ -57,6 +57,8 @@ namespace Mirrorly.Pages.Auth
                 HttpContext.Session.SetString("Email", user.Email);
                 HttpContext.Session.SetString("FullName", user.FullName ?? "");
                 HttpContext.Session.SetInt32("RoleId", user.RoleId);
+                HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl ?? "");
+                HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl ?? "");
 
                 // Redirect based on role
                 if (user.RoleId == 2) // MUA

@@ -13,21 +13,23 @@ public partial class Booking
 
     public DateTime? ScheduledStart { get; set; }
 
-    public DateTime? ScheduledEnd { get; set; }
-
     public string? AddressLine { get; set; }
-
-    public string Currency { get; set; } = null!;
 
     public string? Notes { get; set; }
 
     public int Status { get; set; }
 
-    public virtual ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>();
+    public TimeSpan? TimeM { get; set; }
+
+    public int? ServiceId { get; set; }
+
+    public int? SlotHaveBookId { get; set; }
 
     public virtual CustomerProfile Customer { get; set; } = null!;
 
     public virtual Muaprofile Mua { get; set; } = null!;
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public virtual SlotHaveBook? SlotHaveBook { get; set; }
 }

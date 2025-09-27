@@ -17,8 +17,6 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
-    public virtual DbSet<BookingItem> BookingItems { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<CustomerProfile> CustomerProfiles { get; set; }
@@ -33,6 +31,10 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
+    public virtual DbSet<Slot> Slots { get; set; }
+
+    public virtual DbSet<SlotHaveBook> SlotHaveBooks { get; set; }
+
     public virtual DbSet<TimeOff> TimeOffs { get; set; }
 
     public virtual DbSet<Token> Tokens { get; set; }
@@ -41,17 +43,15 @@ public partial class ProjectExeContext : DbContext
 
     public virtual DbSet<WorkingHour> WorkingHours { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=123abc@A;database=project_Exe;TrustServerCertificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
         {
             entity.Property(e => e.AddressLine).HasMaxLength(255);
-            entity.Property(e => e.Currency)
-                .HasMaxLength(3)
-                .IsUnicode(false)
-                .HasDefaultValue("VND")
-                .IsFixedLength();
-            entity.Property(e => e.ScheduledEnd).HasPrecision(3);
             entity.Property(e => e.ScheduledStart).HasPrecision(3);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Bookings)
@@ -63,22 +63,10 @@ public partial class ProjectExeContext : DbContext
                 .HasForeignKey(d => d.MuaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Bookings_MUA");
-        });
 
-        modelBuilder.Entity<BookingItem>(entity =>
-        {
-            entity.Property(e => e.Quantity).HasDefaultValue(1);
-            entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 2)");
-
-            entity.HasOne(d => d.Booking).WithMany(p => p.BookingItems)
-                .HasForeignKey(d => d.BookingId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BookingItems_Booking");
-
-            entity.HasOne(d => d.Service).WithMany(p => p.BookingItems)
-                .HasForeignKey(d => d.ServiceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BookingItems_Service");
+            entity.HasOne(d => d.SlotHaveBook).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.SlotHaveBookId)
+                .HasConstraintName("FK_Bookings_SlotHaveBook");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -197,6 +185,26 @@ public partial class ProjectExeContext : DbContext
                 .HasForeignKey(d => d.MuaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Services_MUA");
+        });
+
+        modelBuilder.Entity<Slot>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Slot__3214EC07A6EBC66C");
+
+            entity.ToTable("Slot");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<SlotHaveBook>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__SlotHave__3214EC07F1D9ACB9");
+
+            entity.ToTable("SlotHaveBook");
+
+            entity.HasOne(d => d.Slot).WithMany(p => p.SlotHaveBooks)
+                .HasForeignKey(d => d.SlotId)
+                .HasConstraintName("FK_SlotHaveBook_Slot");
         });
 
         modelBuilder.Entity<TimeOff>(entity =>

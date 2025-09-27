@@ -90,5 +90,21 @@ namespace Mirrorly.Services
                 return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
+
+        public async Task<bool> ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null) return false;
+
+            // kiểm tra mật khẩu cũ
+            if (!await VerifyPassword(oldPassword, user.PasswordHash))
+                return false;
+
+            // cập nhật mật khẩu mới
+            user.PasswordHash = HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }
