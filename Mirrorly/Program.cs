@@ -41,7 +41,7 @@ namespace Mirrorly
 
             // Enable session before auth middleware
             app.UseSession();
-
+            
             // Add custom session auth middleware
             app.UseSessionAuth();
 
