@@ -1,0 +1,637 @@
+﻿html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    background-color: #fce4ec;
+    margin-bottom: 60px;
+}
+
+
+/* --- HEADER STYLE --- */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 30px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+    header .logo {
+        font-weight: bold;
+        font-size: 18px;
+        color: black;
+        text-decoration: none;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    }
+
+    header nav {
+        display: flex;
+        gap: 30px;
+    }
+
+        header nav a {
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+            font-weight: 500, bold;
+        }
+
+            header nav a.active {
+                border-bottom: 1px solid black;
+            }
+
+    header .right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    header .search-box input {
+        padding: 6px 10px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        outline: none;
+        font-size: 14px;
+    }
+
+    header .avatar {
+        width: 36px;
+        height: 36px;
+        background: #ccc;
+        border-radius: 50%;
+    }
+
+/* --- BOOKING PAGE TWO COLUMNS --- */
+.booking-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 40px;
+    background: #fce4ec; /* nền hồng nhạt */
+}
+
+.booking-form-col, .booking-artist-col {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.booking-form-col {
+    flex: 1;
+    max-width: 500px;
+}
+
+    .booking-form-col h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #d81b60;
+    }
+
+.booking-form .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-form label {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.booking-form input,
+.booking-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #d81b60; /* hồng đậm */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .btn-submit:hover {
+        background: #ad1457;
+    }
+
+/* --- ARTIST INFO --- */
+.booking-artist-col {
+    width: 300px;
+    text-align: center;
+}
+
+.artist-img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.booking-artist-col h1 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.booking-artist-col h3 {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.booking-artist-col .slogan {
+    color: #e91e63;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.btn-book-now {
+    display: inline-block;
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+    .btn-book-now:hover {
+        background: #388e3c;
+    }
+
+
+.notes-textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 90px; /* chiều cao tối thiểu */
+    max-height: 420px; /* giới hạn để không quá dài */
+    resize: vertical; /* cho phép kéo dãn theo trục dọc */
+    overflow: auto;
+}
+
+/* --- Booking Status Page (Pink & White Theme) --- */
+.booking-status {
+    max-width: 900px;
+    margin: 40px 0 40px 40px;
+    padding: 20px;
+    border-radius: 16px;
+    background: #fce4ec; /* light pink background */
+}
+
+    .booking-status h2 {
+        text-align: left; /* căn trái */
+        margin-bottom: 20px;
+        font-size: 26px;
+        color: #c2185b; /* dark pink */
+        font-weight: bold;
+        margin-left: 10px; /* cách lề trái 1 chút cho đẹp */
+    }
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+/* --- Booking Card --- */
+.status-card {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    border-radius: 12px;
+    background: #ffffff; /* white card */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .status-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+.status-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ad1457; /* pink text */
+}
+
+.status-info p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #444;
+}
+
+.status-footer {
+    display: flex;
+    flex-direction: column; /* xếp label và nút theo cột */
+    align-items: center; /* căn giữa ngang */
+    gap: 12px; /* khoảng cách giữa label và nhóm nút */
+}
+
+
+/* Base style cho label */
+.status-label {
+    display: inline-block; /* đảm bảo block có padding */
+    font-weight: 900; /* chữ đậm */
+    text-transform: uppercase; /* viết hoa hết */
+    color: #fff; /* chữ trắng */
+    padding: 10px 20px; /* tăng padding cho dễ nhìn */
+    border-radius: 999px; /* pill tròn hẳn */
+    font-size: 14px;
+    min-width: 130px; /* đủ rộng để bọc chữ */
+    text-align: center;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* đổ bóng nhẹ */
+}
+
+
+/* Colors theo trạng thái */
+.status-card.confirmed .status-label {
+    background: #2e7d32; /* xanh lá đậm */
+}
+
+.status-card.pending .status-label {
+    background: #f9a825; /* vàng đậm */
+}
+
+.status-card.cancelled .status-label {
+    background: #c62828; /* đỏ đậm */
+}
+
+.service-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#Service {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#ServicePrice {
+    width: 150px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    font-weight: bold;
+    color: #d81b60;
+}
+
+.orders-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fce4ec;
+    border-radius: 12px;
+}
+
+    .orders-wrapper h2 {
+        color: #c2185b;
+        margin-bottom: 20px;
+    }
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.order-info h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ad1457;
+}
+
+.order-info p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #444;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
+
+/* Status colors */
+.order-card.confirmed .status-label {
+    background: #2e7d32;
+}
+
+.order-card.pending .status-label {
+    background: #f9a825;
+}
+
+.order-card.cancelled .status-label {
+    background: #c62828;
+}
+
+/* Accept button */
+.btn-accept {
+    padding: 8px 16px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-accept:hover {
+        background: #388e3c;
+    }
+
+.btn-details {
+    padding: 8px 16px;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-details:hover {
+        background: #0d47a1;
+    }
+
+.alert-success {
+    padding: 12px 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border: 2px solid #27ae60; /* xanh lá */
+    background-color: #eafaf1; /* nền xanh nhạt */
+    color: #1e8449;
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+    .alert-success::before {
+        content: "✅";
+        font-size: 18px;
+    }
+
+.alert-error {
+    padding: 12px 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border: 2px solid #e74c3c; /* đỏ */
+    background-color: #fdecea; /* nền đỏ nhạt */
+    color: #c0392b;
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+    .alert-error::before {
+        content: "⚠️";
+        font-size: 18px;
+    }
+
+.week-calendar {
+    max-width: 100%;
+    margin: 20px;
+    background: #fce4ec;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+    .week-calendar h2 {
+        color: #c2185b;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .calendar-table th,
+    .calendar-table td {
+        border: 1px solid #ddd;
+        text-align: center;
+        padding: 6px;
+        font-size: 13px;
+    }
+
+.hour-col {
+    background: #f8bbd0;
+    font-weight: bold;
+    color: #880e4f;
+}
+
+.booking-cell {
+    background: transparent; /* bỏ nền hồng ở td */
+    padding: 0; /* tránh td làm block to hơn */
+    text-align: center; /* căn giữa block bên trong */
+}
+
+.booking-block {
+    display: inline-block; /* chỉ chiếm theo nội dung */
+    width: fit-content; /* vừa khít nội dung */
+    max-width: 100%; /* không vỡ layout */
+    margin: 0 auto; /* căn giữa trong ô */
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: #d81b60;
+    color: #fff;
+    text-align: center;
+}
+
+.booking-actions {
+    margin-top: 6px;
+    text-align: center;
+}
+
+.btn-details {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #fff;
+    color: #d81b60;
+    border: 2px solid #d81b60;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+    .btn-details:hover {
+        background: #d81b60;
+        color: #fff;
+    }
+
+.status-card.confirmed .status-label {
+    background: #2e7d32;
+}
+
+.status-card.pending .status-label {
+    background: #f9a825;
+}
+
+.status-card.cancelled .status-label {
+    background: #c62828;
+}
+
+.btn-cancel {
+    margin-left: 12px;
+    padding: 8px 16px;
+    background: #e53935;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-cancel:hover {
+        background: #b71c1c;
+    }
+.actions {
+    display: flex;
+    flex-direction: row; /* nút vẫn nằm cạnh nhau */
+    gap: 10px; /* khoảng cách giữa 2 nút */
+    justify-content: center; /* căn giữa theo ngang */
+}
+
+.btn-accept {
+    padding: 8px 16px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-accept:hover {
+        background: #388e3c;
+    }
+
+.actions {
+    display: flex;
+    gap: 12px; /* khoảng cách giữa nút */
+    margin-top: 10px;
+    justify-content: flex-end; /* căn phải */
+}
+
+.btn-accept {
+    padding: 8px 16px;
+    background: #4caf50; /* xanh lá */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .btn-accept:hover {
+        background: #388e3c;
+    }
+
+.btn-cancel {
+    padding: 8px 16px;
+    background: #e53935; /* đỏ */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .btn-cancel:hover {
+        background: #b71c1c;
+    }
+
+.calendar-table {
+    table-layout: fixed; /* buộc cột chia đều */
+    width: 100%;
+}
+
+    .calendar-table th,
+    .calendar-table td {
+        width: 12%; /* hoặc 1/7 nếu 7 ngày */
+    }

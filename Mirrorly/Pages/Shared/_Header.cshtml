@@ -215,7 +215,14 @@
 
     <nav>
         <a href="/Index" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")">TRANG CHỦ</a>
-        <a href="/Mua/MuaProfiles" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
+        @if (isLoggedIn) {
+            <a href="/Mua/MuaProfiles" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
+        } 
+        else
+        {
+            <a href="/Auth/Login" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
+
+        }
         <a href="#" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">GALLERY</a>
     </nav>
 
