@@ -71,7 +71,7 @@ namespace Mirrorly.Pages.Books
 
             try
             {
-                Booking booking = new Booking
+                Mirrorly.Models.Booking booking = new Mirrorly.Models.Booking
                 {
                     CustomerId = HttpContext.Session.GetInt32("UserId") ?? 0,
                     MuaId = bookingRequest.Muaid,
