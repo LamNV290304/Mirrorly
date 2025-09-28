@@ -8,11 +8,12 @@ namespace Mirrorly.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingRepo _bookingRepo;
-        private readonly ProjectExeContext _context = new ProjectExeContext();
+        private readonly ProjectExeContext _context;
 
-        public BookingService(IBookingRepo bookingRepo)
+        public BookingService(IBookingRepo bookingRepo, ProjectExeContext context)
         {
             _bookingRepo = bookingRepo;
+            _context = context;
         }
         public void AddBooking(Booking booking)
         {

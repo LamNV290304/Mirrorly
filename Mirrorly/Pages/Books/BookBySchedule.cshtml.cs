@@ -10,7 +10,6 @@ namespace Mirrorly.Pages.Books
     {
         [BindProperty(SupportsGet = true)]
         public string? Week { get; set; }  // kiểu "2025-W39"
-        public long? Id { get; set; }
         public DateTime WeekStart { get; set; }
         public DateTime WeekEnd { get; set; }
 
@@ -35,7 +34,6 @@ namespace Mirrorly.Pages.Books
                     return RedirectToPage("/Auth/Login");
                 }
                 dbBookings = _bookingService.GetBookingsByMuaIdAndStatus(userId, 1);
-                Id = userId;
             }
             else
             {
@@ -66,6 +64,7 @@ namespace Mirrorly.Pages.Books
 
                 return new BookingView
                 {
+                    Id = b.BookingId,
                     Title = $"Dịch vụ {b.Service.Name}",
                     Day = b.ScheduledStart.HasValue ? b.ScheduledStart.Value.DayOfWeek : DayOfWeek.Monday,
                     StartHour = start.Hours,
@@ -81,6 +80,7 @@ namespace Mirrorly.Pages.Books
 
         public class BookingView
         {
+            public long Id { get; set; }
             public string Title { get; set; } = string.Empty;
             public DayOfWeek Day { get; set; }
             public int StartHour { get; set; }
