@@ -1,0 +1,91 @@
+﻿@page
+@model Mirrorly.Pages.Payment.QRModel
+@{
+    var showSuccess = (bool)(ViewData["ShowSuccess"] ?? false);
+}
+
+<div class="qr-container text-center">
+    <h2 class="page-title">Thanh toán bằng QR</h2>
+    <img src="/uploads/QRcode.jpg" alt="QR Code" class="qr-image" />
+    <p class="mt-3 booking-code"><strong>Mã đơn:</strong> @Model.Booking.BookingId</p>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content success-modal">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">✅ Đặt lịch thành công!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Đơn hàng của bạn đã được tạo. Vui lòng quét mã QR để hoàn tất thanh toán.</p>
+            </div>
+        </div>
+    </div>
+</div>
+    <style>
+        body {
+            background: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+        }
+
+        .page-title {
+            color: #e75480; /* Hồng nhạt đậm */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .qr-container {
+            padding: 30px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(231, 84, 128, 0.2);
+            max-width: 400px;
+            margin: 40px auto;
+        }
+
+        .qr-image {
+            width: 250px;
+            border: 5px solid #ffe4ec; /* viền hồng nhạt */
+            border-radius: 12px;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .booking-code {
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        /* Modal style */
+        .success-modal {
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(231, 84, 128, 0.25);
+        }
+
+            .success-modal .modal-title {
+                color: #e75480;
+                font-weight: bold;
+            }
+
+            .success-modal .modal-body {
+                color: #444;
+            }
+
+        .btn-close {
+            filter: invert(40%) sepia(60%) saturate(400%) hue-rotate(310deg);
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var showSuccess = '@showSuccess'.toLowerCase() === 'true';
+            if (showSuccess) {
+                var modal = new bootstrap.Modal(document.getElementById('successModal'));
+                modal.show();
+            }
+        });
+    </script>

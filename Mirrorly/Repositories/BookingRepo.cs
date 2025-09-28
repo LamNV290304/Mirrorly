@@ -28,6 +28,11 @@ namespace Mirrorly.Repositories
             }
         }
 
+        public Booking GetBookingByBookId(int booking)
+        {
+            return _context.Bookings.FirstOrDefault(b => b.BookingId == booking);
+        }
+
         public Booking GetBookingById(int cusId, int muaId)
         {
            return _context.Bookings.FirstOrDefault(b => b.CustomerId == cusId && b.MuaId == muaId) ;

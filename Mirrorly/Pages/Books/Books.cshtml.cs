@@ -84,7 +84,8 @@ namespace Mirrorly.Pages.Books
                 };
 
                 _bookingService.AddBooking(booking);
-                StatusMessage = "✅ Đặt lịch thành công!";
+                //  StatusMessage = "✅ Đặt lịch thành công!";
+                return RedirectToPage("/Payment/QR", new { bookingId = booking.BookingId, success = true });
             }
             catch (Exception)
             {

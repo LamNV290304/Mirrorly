@@ -6,6 +6,7 @@ namespace Mirrorly.Services.Interfaces
     {
         void AddBooking(Booking booking);
         Booking GetBookingById(int cusId, int muaId);
+        Booking GetBookingByBookingId(int bookingId);
 
         List<Booking> GetBookingsByCustomerId(int cusId);
 
