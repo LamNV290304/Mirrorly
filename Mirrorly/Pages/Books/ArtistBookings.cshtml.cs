@@ -14,7 +14,7 @@ namespace Mirrorly.Pages.Books
             _bookingService = bookingService;
         }
 
-        public List<Booking> Books { get; set; } = new();
+        public List<Models.Booking> Books { get; set; } = new();
 
         [TempData] public string? Message { get; set; }
         [TempData] public string? Error { get; set; }

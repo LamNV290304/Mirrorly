@@ -25,7 +25,7 @@ namespace Mirrorly.Pages.Books
         public IActionResult OnGet(int id = 0)
         {
             
-            var dbBookings = new List<Booking>();
+            var dbBookings = new List<Models.Booking>();
             if (id == 0)
             {
                 int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
