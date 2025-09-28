@@ -13,7 +13,7 @@ public partial class PortfolioItem
 
     public string? Description { get; set; }
 
-    public string? MediaUrl { get; set; }
+    public string MediaUrl { get; set; } = null!;
 
     public DateTime CreatedAtUtc { get; set; }
 

@@ -19,8 +19,7 @@ namespace Mirrorly.Repositories
 
         public void ChangeBookingStatus(int bookingId, int status)
         {
-            long id = bookingId;
-            var booking = _context.Bookings.Find(id);
+            var booking = _context.Bookings.Find(bookingId);
             if (booking != null)
             {
                 booking.Status = status;
@@ -35,34 +34,17 @@ namespace Mirrorly.Repositories
 
         public List<Booking> GetBookingsByCustomerId(int cusId)
         {
-            return _context.Bookings
-                .Where(b => b.CustomerId == cusId)
-                .Include(b => b.Customer)
-                .Include(b => b.Service)
-                .Include(b => b.Mua)
-                .OrderByDescending(b => b.BookingId)
-                .ToList();
+            return _context.Bookings.Where(b => b.CustomerId == cusId).ToList();
         }
 
         public List<Booking> GetBookingsByMuaId(int muaId)
         {
-            return _context.Bookings
-                .Where(b => b.MuaId == muaId)
-                .Include(b => b.Customer)
-                .Include(b => b.Service)
-                .Include(b => b.Mua)
-                .OrderByDescending(b => b.BookingId)
-                .ToList();
+            return _context.Bookings.Where(b => b.MuaId == muaId).ToList();
         }
 
         public List<Booking> GetBookingsByMuaIdAndStatus(int muaId, int status)
         {
-            return _context.Bookings
-                .Where(b => b.MuaId == muaId && b.Status == status)
-                .Include(b => b.Customer)
-                .Include(b => b.Service)
-                .Include(b => b.Mua)
-                .ToList();
+            return _context.Bookings.Where(b => b.MuaId == muaId && b.Status == status).ToList();
         }
     }
 }

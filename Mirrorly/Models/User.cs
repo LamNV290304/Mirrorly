@@ -27,13 +27,7 @@ public partial class User
 
     public virtual CustomerProfile? CustomerProfile { get; set; }
 
-    public virtual ICollection<IdentityVerification> IdentityVerificationProcessedByAdmins { get; set; } = new List<IdentityVerification>();
-
-    public virtual ICollection<IdentityVerification> IdentityVerificationUsers { get; set; } = new List<IdentityVerification>();
-
     public virtual Muaprofile? Muaprofile { get; set; }
 
     public virtual Role Role { get; set; } = null!;
-
-    public virtual TwoFactorAuth? TwoFactorAuth { get; set; }
 }

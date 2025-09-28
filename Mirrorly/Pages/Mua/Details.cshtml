@@ -66,6 +66,27 @@
             color: #555;
         }
 
+    .btn-booking {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #6f42c1, #d63384);
+        color: white;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+        .btn-booking:hover {
+            background: linear-gradient(135deg, #5a32a3, #b42a6b);
+            transform: translateY(-2px);
+        }
+
+        .btn-booking:active {
+            transform: translateY(0);
+        }
+
     /* Reviews */
     .reviews-list {
         display: flex;
@@ -209,6 +230,9 @@
                     <p class="price">@se.BasePrice @se.Currency</p>
                     <p class="duration">⏱ @se.DurationMin phút</p>
                     <p class="category">📂 @se.Category.CategoryName</p>
+                    <a asp-page="/Booking/Create" asp-route-serviceId="@se.ServiceId" class="btn-booking">
+                        📅 Đặt lịch
+                    </a>
                 </div>
             }
         </div>
@@ -269,6 +293,35 @@
             }
         </div>
     </section>
+
+    <!-- Working Hours -->
+    @* <section class="profile-section">
+        <h2>Lịch làm việc</h2>
+        <div class="workinghours-list">
+            @foreach (var wo in Model.WorkingHours)
+            {
+                <div class="workinghour-item">
+                    <span class="day">
+                        @{
+                            string dayName = wo.DayOfWeek switch
+                            {
+                                1 => "Monday ",
+                                2 => "Tuesday ",
+                                3 => "Wednesday ",
+                                4 => "Thursday ",
+                                5 => "Friday ",
+                                6 => "Saturday ",
+                                7 => "Sunday ",
+                                _ => "Unknown "
+                            };
+                        }
+                        @dayName
+                    </span>
+                    <span class="time">@wo.StartTime - @wo.EndTime</span>
+                </div>
+            }
+        </div>
+    </section> *@
     <!-- Map Section -->
     <input type="hidden" id="address" value="@Model.MuaProfile.AddressLine" />
 
