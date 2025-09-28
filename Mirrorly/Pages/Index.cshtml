@@ -203,6 +203,11 @@
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }   
+    .feature-link {
+        text-decoration: none; /* bỏ gạch chân */
+        color: inherit; /* giữ nguyên màu chữ trong .feature-card */
+        display: block; /* bao trọn card */
     }
     #color-palette { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 5px 0; }
     .color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #ddd; transition: transform 0.2s, border-color 0.2s; }
@@ -272,38 +277,48 @@
 </div>
 
 <div class="features-section">
-    <div class="feature-card">
-        <div class="feature-icon">💄</div>
-        <h3 class="feature-title">Makeup Artist Chuyên Nghiệp</h3>
-        <p class="feature-description">
-            Kết nối với những makeup artist có kinh nghiệm và được đánh giá cao bởi khách hàng.
-        </p>
-    </div>
-    
-    <div class="feature-card">
-        <div class="feature-icon">📅</div>
-        <h3 class="feature-title">Đặt Lịch Dễ Dàng</h3>
-        <p class="feature-description">
-            Hệ thống đặt lịch thông minh giúp bạn dễ dàng chọn thời gian và dịch vụ phù hợp.
-        </p>
-    </div>
-    
-    <div class="feature-card">
-        <div class="feature-icon">⭐</div>
-        <h3 class="feature-title">Đánh Giá Tin Cậy</h3>
-        <p class="feature-description">
-            Đọc đánh giá thật từ khách hàng để đưa ra lựa chọn tốt nhất cho bản thân.
-        </p>
-    </div>
-    
-    <div class="feature-card">
-        <div class="feature-icon">🎨</div>
-        <h3 class="feature-title">Portfolio Đa Dạng</h3>
-        <p class="feature-description">
-            Xem portfolio phong phú của các MUA để tìm phong cách makeup phù hợp với bạn.
-        </p>
-    </div>
+    <a href="/Auth/Login" class="feature-link">
+        <div class="feature-card">
+            <div class="feature-icon">💄</div>
+            <h3 class="feature-title">Chuyên Nghiệp</h3>
+            <p class="feature-description">
+                Kết nối với makeup artist có kinh nghiệm và được đánh giá cao bởi khách hàng.
+            </p>
+        </div>
+    </a>
+
+    <a href="/Auth/Login" class="feature-link">
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3 class="feature-title">Đặt Lịch Dễ Dàng</h3>
+            <p class="feature-description">
+                Hệ thống đặt lịch thông minh giúp bạn dễ dàng chọn thời gian và dịch vụ phù hợp.
+            </p>
+        </div>
+    </a>
+
+    <a href="/Auth/Login" class="feature-link">
+        <div class="feature-card">
+            <div class="feature-icon">⭐</div>
+            <h3 class="feature-title">Đánh Giá Tin Cậy</h3>
+            <p class="feature-description">
+                Đọc đánh giá thật từ khách hàng để đưa ra lựa chọn tốt nhất cho bản thân.
+            </p>
+        </div>
+    </a>
+
+    <a href="/Auth/Login" class="feature-link">
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3 class="feature-title">Portfolio Đa Dạng</h3>
+            <p class="feature-description">
+                Xem portfolio phong phú của các MUA để tìm phong cách makeup phù hợp với bạn.
+            </p>
+        </div>
+    </a>
 </div>
+
+
 
 <div class="container" style="margin-top: 60px;">
     <h1 class="text-center mt-4 mb-4">Trải nghiệm AR Makeup Chuyên nghiệp</h1>
