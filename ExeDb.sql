@@ -451,6 +451,13 @@ GO
 
 INSERT INTO [dbo].[Users] ([UserId], [Username], [Email], [PasswordHash], [FullName], [PhoneNumber], [AvatarUrl], [IsActive], [IsEmailVerified], [RoleId]) VALUES (N'1', N'lam01', N'vietlam2k4@gmail.com', 0xD341DB7C246C68B31211241E9BA78A6069D0BACFF625EAAE4BF1DED8275363D2, N'testusername', N'0378790991', NULL, N'1', N'0', N'2')
 GO
+INSERT INTO [dbo].[Users] 
+    ([Username], [Email], [PasswordHash], [FullName], [PhoneNumber], [AvatarUrl], [IsActive], [IsEmailVerified], [RoleId]) 
+VALUES 
+    ( N'vutran', N'vu0410@gmail.com', 
+     0x8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92, 
+     N'vutraan', N'0943313588', NULL, N'1', N'0', N'1')
+GO
 
 SET IDENTITY_INSERT [dbo].[Users] OFF
 GO
@@ -937,4 +944,56 @@ GO
 -- ----------------------------
 ALTER TABLE [dbo].[WorkingHours] ADD CONSTRAINT [FK_WorkingHours_MUA] FOREIGN KEY ([MuaId]) REFERENCES [dbo].[MUAProfiles] ([MUAId]) ON DELETE NO ACTION ON UPDATE NO ACTION
 GO
+
+-- CustomerProfiles
+INSERT INTO [dbo].[CustomerProfiles] ([CustomerId], [DisplayName], [AvatarUrl], [PhoneNumber]) 
+VALUES (1, N'Nguyễn Văn A', NULL, '0901234567'),
+       (2, N'Trần Thị B', NULL, '0912345678');
+
+-- Services
+SET IDENTITY_INSERT [dbo].[Services] ON
+INSERT INTO [dbo].[Services] ([ServiceId], [MuaId], [Name], [Description], [BasePrice], [Currency], [DurationMin], [Active], [CategoryId]) 
+VALUES (1, 1, N'Trang điểm cô dâu', N'Trang điểm chuyên nghiệp cho ngày cưới', 1500000, 'VND', 120, 1, 1),
+       (2, 1, N'Trang điểm dự tiệc', N'Phong cách nhẹ nhàng đi tiệc', 500000, 'VND', 60, 1, 2),
+       (3, 1, N'Trang điểm chụp ảnh kỷ yếu', N'Trang điểm trẻ trung, tự nhiên', 400000, 'VND', 45, 1, 3);
+SET IDENTITY_INSERT [dbo].[Services] OFF
+
+-- Bookings
+SET IDENTITY_INSERT [dbo].[Bookings] ON
+INSERT INTO [dbo].[Bookings] ([BookingId], [CustomerId], [MuaId], [ScheduledStart], [AddressLine], [Notes], [Status], [TimeM], [ServiceId]) 
+VALUES (1, 1, 1, '2025-09-30 09:00:00', N'123 Nguyễn Trãi, Hà Nội', N'Khách muốn trang điểm cô dâu', 1, '09:00:00', 1),
+       (2, 2, 1, '2025-09-30 18:30:00', N'456 Lê Lợi, Hà Nội', N'Trang điểm dự tiệc sang trọng', 0, '18:30:00', 2);
+SET IDENTITY_INSERT [dbo].[Bookings] OFF
+
+-- Reviews
+SET IDENTITY_INSERT [dbo].[Reviews] ON
+INSERT INTO [dbo].[Reviews] ([ReviewId], [BookingId], [CustomerId], [MuaId], [Rating], [Comment]) 
+VALUES (1, 1, 1, 1, 5, N'Dịch vụ rất tốt, MUA thân thiện.'),
+       (2, 2, 2, 1, 4, N'Trang điểm đẹp nhưng đến hơi muộn.');
+SET IDENTITY_INSERT [dbo].[Reviews] OFF
+
+-- PortfolioItems
+INSERT INTO [dbo].[PortfolioItems] ([MUAId], [Title], [Description], [MediaUrl]) 
+VALUES (1, N'Trang điểm cô dâu nhẹ nhàng', N'Phong cách Hàn Quốc', 'uploads/portfolio1.jpg'),
+       (1, N'Trang điểm dạ hội sang trọng', N'Makeup tone Tây', 'uploads/portfolio2.jpg');
+
+-- TimeOffs
+INSERT INTO [dbo].[TimeOffs] ([MuaId], [StartUtc], [EndUtc], [Reason]) 
+VALUES (1, '2025-10-05 00:00:00', '2025-10-06 23:59:59', N'Đi công tác');
+
+-- WorkingHours
+INSERT INTO [dbo].[WorkingHours] ([MuaId], [DayOfWeek], [StartTime], [EndTime]) 
+VALUES (1, 1, '08:00:00', '18:00:00'),
+       (1, 2, '08:00:00', '18:00:00'),
+       (1, 3, '08:00:00', '18:00:00'),
+       (1, 4, '08:00:00', '18:00:00'),
+       (1, 5, '08:00:00', '18:00:00');
+
+-- Tokens (demo cho reset password)
+INSERT INTO [dbo].[Tokens] ([Email], [Token], [Expired], [Status]) 
+VALUES ('vietlam2k4@gmail.com', NEWID(), DATEADD(DAY, 1, GETDATE()), 0);
+
+-- TwoFactorAuths
+INSERT INTO [dbo].[TwoFactorAuths] ([UserId], [IsEnabled], [SecretKey], [BackupCodes], [EnabledAt], [FailedAttempts]) 
+VALUES (1, 1, N'ABCDEFGH12345678', N'CODE1,CODE2,CODE3', GETDATE(), 0);
 
