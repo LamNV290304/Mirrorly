@@ -1,10 +1,15 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Trang chủ";
+    var userId = HttpContext.Session.GetInt32("UserId");
+    var username = HttpContext.Session.GetString("Username");
+    var roleId = HttpContext.Session.GetInt32("RoleId");
+    var isLoggedIn = userId.HasValue;
+    var isMUA = roleId == 2;
+    var isCustomer = roleId == 1;
 }
 
-<<<<<<< HEAD
 <style>
     .hero-section {
         background: linear-gradient(135deg, #fdf2f8 0%, #fff0f6 100%);
@@ -364,10 +369,3 @@
     </div>
 }
 
-=======
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<a href="/Mua/MuaProfiles">Go to MUA Profiles</a>
->>>>>>> parent of d138704 (Merge branch 'master' into dev/Vu)

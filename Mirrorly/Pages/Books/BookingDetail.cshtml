@@ -1,0 +1,129 @@
+﻿@page "{id:int}"
+@model BookingDetailModel
+@{
+    ViewData["Title"] = "Booking Detail";
+}
+
+<section class="booking-wrapper">
+    <!-- Cột trái: Thông tin booking -->
+    <div class="booking-form-col">
+        <h2>📑 Thông tin Booking</h2>
+
+        @if (Model.BookingDetail != null)
+        {
+            <div class="booking-info">
+                <p><strong>Ngày:</strong> @Model.BookingDetail.ScheduledStart?.ToString("dd/MM/yyyy")</p>
+                <p><strong>Thời gian:</strong> @Model.BookingDetail.TimeM?.ToString("hh\\:mm")</p>
+                <p><strong>Địa chỉ:</strong> @Model.BookingDetail.AddressLine</p>
+                <p><strong>Dịch vụ:</strong> @Model.BookingDetail.ServiceName</p>
+
+                <div class="form-group">
+                    <label><strong>Ghi chú:</strong></label>
+                    <div class="notes-box">
+                        @(!string.IsNullOrEmpty(Model.BookingDetail?.Notes)
+                            ? Model.BookingDetail.Notes
+                            : "Không có ghi chú")
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="alert-error">❌ Không tìm thấy booking.</p>
+        }
+    </div>
+
+    <!-- Cột phải: Thông tin khách hàng -->
+    <div class="booking-artist-col">
+        <h2>👤 Thông tin khách hàng</h2>
+        <div class="customer-info">
+            @if (!string.IsNullOrEmpty(Model.BookingDetail?.AvatarUrl))
+            {
+                <img src="@Model.BookingDetail.AvatarUrl" alt="Avatar" class="customer-img" />
+            }
+            else
+            {
+                <img src="~/uploads/avatardefault.png" alt="Avatar" class="customer-img" />
+            }
+
+            <h3>@Model.BookingDetail?.DisplayName</h3>
+            <p><strong>SĐT:</strong> @Model.BookingDetail?.PhoneNumber</p>
+            <p><strong>Email:</strong> @Model.BookingDetail?.Email</p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .booking-info, .form-group {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+    body {
+        background: #fff0f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #6d214f;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .booking-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        justify-content: center;
+    }
+
+    .booking-form-col, .booking-artist-col {
+        flex: 1 1 380px;
+        background: #ffffff;
+        border: 1px solid #f8bbd0;
+        border-radius: 20px;
+        box-shadow: 0 6px 16px rgba(248, 187, 208, 0.25);
+        padding: 20px;
+    }
+
+    h2 {
+        color: #d81b60;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
+    .booking-info p, .customer-info p {
+        font-size: 14px;
+        margin: 6px 0;
+        color: #6d214f;
+    }
+
+    .customer-info {
+        text-align: center;
+    }
+
+    .customer-img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover; /* ảnh fill hết khung */
+        border-radius: 12px; /* bo nhẹ 12px, hoặc để 0 nếu muốn vuông 100% */
+        border: 2px solid #f48fb1;
+        margin-bottom: 12px;
+    }
+    .alert-error {
+        padding: 12px;
+        background: #fde0ef;
+        border-radius: 8px;
+        color: #d81b60;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .notes-box {
+        width: 100%;
+        min-height: 100px; /* luôn cao tối thiểu */
+        border: 1px solid #f8bbd0;
+        border-radius: 10px;
+        background: #fff0f6;
+        padding: 10px;
+        font-size: 14px;
+        color: #6d214f;
+        white-space: pre-wrap; /* giữ xuống dòng của text */
+    }
+</style>

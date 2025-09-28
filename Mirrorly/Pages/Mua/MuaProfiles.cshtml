@@ -7,7 +7,13 @@
 <body>
     <!-- Search + Filters -->
     <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="Search by name or bio..." onkeyup="filterMua()" />
+        <!-- Ô Search -->
+        <input type="text" id="searchInput" placeholder="Search by name or bio..."
+               onkeyup="filterMua(); showSearchSuggestions()"
+               autocomplete="off" />
+
+        <!-- Danh sách gợi ý -->
+        <div id="searchSuggestions" class="suggestions-box"></div>
 
         <select id="areaFilter" onchange="filterMua()">
             <option value="">All Areas</option>
@@ -38,6 +44,7 @@
             <option value="5">5+ years</option>
             <option value="10">10+ years</option>
         </select>
+        
     </div>
 
     <div class="row" id="muaContainer">
@@ -52,7 +59,8 @@
                  data-bio="@mua.Bio"
                  data-price="@avgPrice"
                  data-rating="@avgRating"
-                 data-experience="@mua.ExperienceYears">
+                 data-experience="@mua.ExperienceYears"
+                 data-muaid="@mua.Muaid">
                 <h3>@mua.DisplayName</h3>
                 <p class="bio">@mua.Bio</p>
 
@@ -66,6 +74,10 @@
 
                 <div class="card-actions">
                     <a href="/Mua/Details/@mua.Muaid" class="btn-view">View Profile</a>
+
+                    <a href="/Books/Books/@mua.Muaid" class="btn-view">BOOK NOW</a>
+
+                    <a href="/Books/BookBySchedule/@mua.Muaid" class="btn-view">Schedule</a>
                 </div>
             </div>
         }
@@ -191,9 +203,80 @@
             background: #ec407a;
             transform: scale(1.07);
         }
-</style>
 
+    .suggestions-box {
+        position: absolute;
+        background: #fff;
+        border: 1px solid #f8bbd0;
+        border-radius: 10px;
+        margin-top: 2px;
+        width: 200px;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+    }
+
+        .suggestions-box div {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6d214f;
+        }
+
+            .suggestions-box div:hover {
+                background: #fce4ec;
+            }
+
+    .card-actions {
+        display: flex;
+        justify-content: center; /* căn giữa */
+        gap: 12px; /* khoảng cách giữa các nút */
+        flex-wrap: wrap; /* xuống hàng nếu không đủ chỗ */
+    }
+</style>
 <script>
+    function showSearchSuggestions() {
+        const input = document.getElementById("searchInput");
+        const suggestionsBox = document.getElementById("searchSuggestions");
+        const term = input.value.toLowerCase();
+
+        let history = JSON.parse(localStorage.getItem("muaSearchHistory") || "[]");
+        let uniqueTerms = [...new Set(history.map(h => h.term))]; 
+
+        let filtered = uniqueTerms
+            .filter(t => t.toLowerCase().includes(term))
+            .slice(-5) 
+            .reverse();
+
+        if (filtered.length === 0) {
+            suggestionsBox.style.display = "none";
+            return;
+        }
+
+        suggestionsBox.innerHTML = "";
+        filtered.forEach(t => {
+            const div = document.createElement("div");
+            div.textContent = t;
+            div.onclick = () => {
+                input.value = t;
+                suggestionsBox.style.display = "none";
+                filterMua();
+            };
+            suggestionsBox.appendChild(div);
+        });
+
+        suggestionsBox.style.display = "block";
+        suggestionsBox.style.left = input.offsetLeft + "px";
+        suggestionsBox.style.top = (input.offsetTop + input.offsetHeight) + "px";
+    }
+
+    document.addEventListener("click", function (e) {
+        if (!document.getElementById("searchInput").contains(e.target) &&
+            !document.getElementById("searchSuggestions").contains(e.target)) {
+            document.getElementById("searchSuggestions").style.display = "none";
+        }
+    });
     function filterMua() {
         const input = document.getElementById("searchInput").value.toLowerCase();
         const selectedArea = document.getElementById("areaFilter").value.toLowerCase();
@@ -218,13 +301,80 @@
             else if (selectedPrice === "mid") matchPrice = price >= 50 && price <= 100;
             else if (selectedPrice === "high") matchPrice = price > 100;
 
-            let matchRating = true;
-            if (selectedRating) matchRating = rating >= parseInt(selectedRating);
-
-            let matchExperience = true;
-            if (selectedExperience) matchExperience = experience >= parseInt(selectedExperience);
+            let matchRating = !selectedRating || rating >= parseInt(selectedRating);
+            let matchExperience = !selectedExperience || experience >= parseInt(selectedExperience);
 
             card.style.display = (matchSearch && matchArea && matchPrice && matchRating && matchExperience) ? "block" : "none";
         });
+
+        // Lưu từ khóa tìm kiếm
+        if (input) saveSearchHistory(input);
+    }
+
+    function saveSearchHistory(term) {
+        let history = JSON.parse(localStorage.getItem("muaSearchHistory") || "[]");
+        history.push({ term: term, date: new Date().toISOString() });
+        if (history.length > 50) history = history.slice(-50);
+        localStorage.setItem("muaSearchHistory", JSON.stringify(history));
+    }
+
+    // ==============================
+    // LỊCH SỬ BOOKING
+    // ==============================
+    function saveBookingHistory(muaId) {
+        let history = JSON.parse(localStorage.getItem("muaBookingHistory") || "[]");
+        history.push({ muaId: muaId, date: new Date().toISOString() });
+        if (history.length > 50) history = history.slice(-50);
+        localStorage.setItem("muaBookingHistory", JSON.stringify(history));
+    }
+
+    // ==============================
+    // GỢI Ý MUA DỰA TRÊN LỊCH SỬ
+    // ==============================
+    function recommendMua() {
+        const cards = document.querySelectorAll(".mua-profile-card");
+        let searchHistory = JSON.parse(localStorage.getItem("muaSearchHistory") || "[]");
+        let bookingHistory = JSON.parse(localStorage.getItem("muaBookingHistory") || "[]");
+
+        // Khởi tạo điểm
+        let scores = {};
+        cards.forEach(card => {
+            const id = card.getAttribute("data-muaid");
+            scores[id] = 0;
+        });
+
+        // +2 điểm cho booking
+        bookingHistory.forEach(entry => {
+            if (scores[entry.muaId] !== undefined) scores[entry.muaId] += 2;
+        });
+
+        // +1 điểm cho search trùng tên hoặc bio
+        searchHistory.forEach(entry => {
+            const term = entry.term.toLowerCase();
+            cards.forEach(card => {
+                const id = card.getAttribute("data-muaid");
+                const name = card.getAttribute("data-name").toLowerCase();
+                const bio = card.getAttribute("data-bio").toLowerCase();
+                if (name.includes(term) || bio.includes(term)) {
+                    scores[id] += 1;
+                }
+            });
+        });
+
+        // Sắp xếp theo điểm
+        let topIds = Object.entries(scores)
+            .sort((a, b) => b[1] - a[1])
+            .filter(x => x[1] > 0)
+            .map(x => x[0]);
+
+        // Hiển thị
+        if (topIds.length === 0) {
+            cards.forEach(c => c.style.display = "block"); // Không có lịch sử → hiển thị tất cả
+        } else {
+            cards.forEach(c => {
+                let id = c.getAttribute("data-muaid");
+                c.style.display = topIds.includes(id) ? "block" : "none";
+            });
+        }
     }
 </script>
