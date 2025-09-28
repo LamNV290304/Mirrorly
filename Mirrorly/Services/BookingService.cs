@@ -76,5 +76,9 @@ namespace Mirrorly.Services
             };
         }
 
+        public Booking GetBookingByBookingId(int bookingId)
+        {
+            return _bookingRepo.GetBookingByBookId(bookingId);
+        }
     }
 }

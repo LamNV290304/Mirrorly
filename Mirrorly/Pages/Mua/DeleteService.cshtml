@@ -1,0 +1,79 @@
+﻿@page "{id:int}"
+@model Mirrorly.Pages.Mua.DeleteServiceModel
+@{
+    ViewData["Title"] = "Xóa dịch vụ";
+}
+
+<h2 class="page-title">🗑 Xóa dịch vụ</h2>
+
+<div class="confirm-box">
+    <p>Bạn có chắc muốn xóa dịch vụ: <strong>@Model.Service.Name</strong> ?</p>
+    <form method="post" class="action-buttons">
+        <input type="hidden" asp-for="Service.ServiceId" />
+        <button type="submit" class="btn btn-delete">🗑 Xóa</button>
+        <a asp-page="Services" class="btn btn-cancel">⬅ Hủy</a>
+    </form>
+</div>
+
+<style>
+    .page-title {
+        color: #d63384;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    .confirm-box {
+        max-width: 480px;
+        margin: auto;
+        padding: 30px 20px;
+        background: #fff;
+        border: 2px solid #f8cce0;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .action-buttons {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 15px;
+    }
+
+    .btn-delete {
+        background: #e63946;
+        border: none;
+        color: #fff;
+        box-shadow: 0 3px 8px rgba(230,57,70,0.3);
+    }
+
+        .btn-delete:hover {
+            background: #c92a2a;
+            transform: translateY(-2px);
+        }
+
+    .btn-cancel {
+        background: #e9ecef;
+        color: #495057;
+    }
+
+        .btn-cancel:hover {
+            background: #ced4da;
+            transform: translateY(-2px);
+        }
+</style>

@@ -71,7 +71,7 @@ namespace Mirrorly.Pages.Books
 
             try
             {
-                Booking booking = new Booking
+                Mirrorly.Models.Booking booking = new Mirrorly.Models.Booking
                 {
                     CustomerId = HttpContext.Session.GetInt32("UserId") ?? 0,
                     MuaId = bookingRequest.Muaid,
@@ -84,7 +84,8 @@ namespace Mirrorly.Pages.Books
                 };
 
                 _bookingService.AddBooking(booking);
-                StatusMessage = "✅ Đặt lịch thành công!";
+                //  StatusMessage = "✅ Đặt lịch thành công!";
+                return RedirectToPage("/Payment/QR", new { bookingId = booking.BookingId, success = true });
             }
             catch (Exception)
             {

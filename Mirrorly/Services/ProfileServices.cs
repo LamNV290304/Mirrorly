@@ -79,8 +79,7 @@ namespace Mirrorly.Services
         public async Task<Muaprofile?> GetMuaProfile(int userId)
         {
             return await _context.Muaprofiles
-                .Include(m => m.Mua)
-                .Include(m => m.Services)
+                .Include(m => m.Mua).Include(s => s.Services)
                 .FirstOrDefaultAsync(m => m.Muaid == userId);
         }
     }
