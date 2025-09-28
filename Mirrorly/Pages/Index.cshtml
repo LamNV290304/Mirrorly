@@ -1,11 +1,356 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Trang chủ";
+    var userId = HttpContext.Session.GetInt32("UserId");
+    var username = HttpContext.Session.GetString("Username");
+    var roleId = HttpContext.Session.GetInt32("RoleId");
+    var isLoggedIn = userId.HasValue;
+    var isMUA = roleId == 2;
+    var isCustomer = roleId == 1;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #fdf2f8 0%, #fff0f6 100%);
+        padding: 80px 0;
+        text-align: center;
+        margin: -30px -30px 50px -30px;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .hero-title {
+        font-size: 48px;
+        font-weight: 700;
+        color: #db2777;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 20px;
+        color: #be185d;
+        margin-bottom: 40px;
+        font-weight: 500;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero {
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        min-width: 180px;
+    }
+
+    .btn-primary-hero {
+        background: #db2777;
+        color: white;
+        border: 2px solid #db2777;
+    }
+
+    .btn-primary-hero:hover {
+        background: #be185d;
+        border-color: #be185d;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
+    }
+
+    .btn-secondary-hero {
+        background: transparent;
+        color: #db2777;
+        border: 2px solid #db2777;
+    }
+
+    .btn-secondary-hero:hover {
+        background: #db2777;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
+    }
+
+    .features-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin: 60px 0;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        border: 1px solid #fbcfe8;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(248, 187, 208, 0.3);
+    }
+
+    .feature-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+
+    .feature-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #db2777;
+        margin-bottom: 15px;
+    }
+
+    .feature-description {
+        color: #6b7280;
+        line-height: 1.6;
+    }
+
+    .welcome-section {
+        background: #fdf2f8;
+        padding: 40px;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 40px;
+        border: 1px solid #fbcfe8;
+    }
+
+    .welcome-title {
+        color: #db2777;
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .welcome-text {
+        color: #be185d;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 12px 24px;
+        background: #db2777;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+        background: #be185d;
+        transform: translateY(-2px);
+    }
+
+    .btn-action-secondary {
+        background: #f8bbd0;
+        color: #be185d;
+    }
+
+    .btn-action-secondary:hover {
+        background: #fbcfe8;
+    }
+
+    .mb-2 {
+        visibility: hidden;
+    }
+
+    #live-container {
+        position: relative;
+        width: 640px;
+        height: 480px;
+        margin: 0 auto;
+        border: 2px solid #333;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    #webcam, #webgl-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    #webcam { transform: scaleX(-1); z-index: 1; }
+    #webgl-canvas { z-index: 2; }
+    #controls {
+        width: 640px;
+        margin: 15px auto;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #color-palette { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 5px 0; }
+    .color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #ddd; transition: transform 0.2s, border-color 0.2s; }
+    .color-swatch:hover { transform: scale(1.1); }
+    .color-swatch.active { border: 3px solid #007bff; transform: scale(1.15); }
+    .skin-controls { display: flex; justify-content: space-around; align-items: center; }
+    .control-group { display: flex; flex-direction: column; align-items: center; font-size: 0.9em; }
+    .control-group label { margin-bottom: 5px; }
+    .control-group input[type="range"] { width: 150px; }
+    #debug-info { font-family: 'Courier New', Courier, monospace; font-size: 0.9em; background-color: #282c34; color: #61dafb; padding: 10px; border-radius: 5px; display: none; }
+</style>
+
+<div class="hero-section">
+    <div class="hero-content">
+        @if (isLoggedIn)
+        {
+            <div class="welcome-section">
+                <h1 class="welcome-title">
+                    Chào mừng trở lại, @username! 
+                    @if (isMUA)
+                    {
+                        <span>💄</span>
+                    }
+                    else
+                    {
+                        <span>✨</span>
+                    }
+                </h1>
+                <p class="welcome-text">
+                    @if (isMUA)
+                    {
+                        <text>Quản lý dịch vụ và khách hàng của bạn một cách dễ dàng</text>
+                    }
+                    else
+                    {
+                        <text>Tìm kiếm và đặt lịch với những Makeup Artist tuyệt vời nhất</text>
+                    }
+                </p>
+                
+                <div class="quick-actions">
+                    @if (isMUA)
+                    {
+                        <a href="/Profile/MuaProfile" class="btn-action">👤 Hồ sơ của tôi</a>
+                        <a href="/Mua/Bookings" class="btn-action">📅 Đơn đặt lịch</a>
+                        <a href="/Mua/Services" class="btn-action-secondary">📋 Quản lý dịch vụ</a>
+                    }
+                    else
+                    {
+                        <a href="/Profile/CustomerProfile" class="btn-action">👤 Hồ sơ của tôi</a>
+                        <a href="/Mua/MuaProfiles" class="btn-action">💄 Tìm MUA</a>
+                        <a href="/Customer/Bookings" class="btn-action-secondary">📅 Lịch của tôi</a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <h1 class="hero-title">MIRRORLY</h1>
+            <p class="hero-subtitle">Kết nối bạn với những Makeup Artist chuyên nghiệp nhất</p>
+            
+            <div class="hero-buttons">
+                <a href="/Auth/Register" class="btn-hero btn-primary-hero">Đăng ký ngay</a>
+                <a href="/Mua/MuaProfiles" class="btn-hero btn-secondary-hero">Khám phá MUA</a>
+            </div>
+        }
+    </div>
 </div>
-<a href="/Mua/MuaProfiles">Go to MUA Profiles</a>
+
+<div class="features-section">
+    <div class="feature-card">
+        <div class="feature-icon">💄</div>
+        <h3 class="feature-title">Makeup Artist Chuyên Nghiệp</h3>
+        <p class="feature-description">
+            Kết nối với những makeup artist có kinh nghiệm và được đánh giá cao bởi khách hàng.
+        </p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3 class="feature-title">Đặt Lịch Dễ Dàng</h3>
+        <p class="feature-description">
+            Hệ thống đặt lịch thông minh giúp bạn dễ dàng chọn thời gian và dịch vụ phù hợp.
+        </p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3 class="feature-title">Đánh Giá Tin Cậy</h3>
+        <p class="feature-description">
+            Đọc đánh giá thật từ khách hàng để đưa ra lựa chọn tốt nhất cho bản thân.
+        </p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3 class="feature-title">Portfolio Đa Dạng</h3>
+        <p class="feature-description">
+            Xem portfolio phong phú của các MUA để tìm phong cách makeup phù hợp với bạn.
+        </p>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 60px;">
+    <h1 class="text-center mt-4 mb-4">Trải nghiệm AR Makeup Chuyên nghiệp</h1>
+    <div id="live-container">
+        <video id="webcam" autoplay playsinline></video>
+        <canvas id="webgl-canvas"></canvas>
+    </div>
+    <div id="controls" class="text-center mt-3">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Chọn màu son:</label>
+            <div id="color-palette"></div>
+        </div>
+        <div class="mb-2">
+            <label class="form-label fw-bold">Hiệu ứng làm đẹp da:</label>
+            <div class="skin-controls">
+                <div class="control-group">
+                    <label for="smoothing-slider">Làm mịn:</label>
+                    <input type="range" id="smoothing-slider" min="0" max="1" step="0.05" value="0.3">
+                </div>
+                <div class="control-group">
+                    <label for="brightening-slider">Làm sáng:</label>
+                    <input type="range" id="brightening-slider" min="0" max="0.2" step="0.01" value="0.02">
+                </div>
+                <div class="control-group" >
+                    <label for="pinking-slider">Làm hồng da:</label>
+                    <input type="range" id="pinking-slider" min="0" max="0.1" step="0.01" value="0.03">
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-check form-switch d-inline-block mt-2">
+            <input class="form-check-input" type="checkbox" role="switch" id="debug-mode">
+        </div>
+        <div id="debug-info" class="mt-2 text-start"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+<script type="module" src="~/js/lipstick.js"></script>
+
+@if (!isLoggedIn)
+{
+    <div style="text-align: center; margin: 60px 0;">
+        <h2 style="color: #db2777; margin-bottom: 20px;">Bắt đầu ngay hôm nay</h2>
+        <p style="color: #6b7280; margin-bottom: 30px;">Tham gia cộng đồng Mirrorly để trải nghiệm dịch vụ makeup tuyệt vời</p>
+        <a href="/Mua/MuaProfiles" class="btn-hero btn-primary-hero">Khám phá ngay</a>
+    </div>
+}
+

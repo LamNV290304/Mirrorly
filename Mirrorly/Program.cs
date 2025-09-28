@@ -1,4 +1,5 @@
-﻿using WebCozyShop.Infrastructure;
+using WebCozyShop.Infrastructure;
+using Mirrorly.Middleware;
 
 namespace Mirrorly
 {
@@ -16,15 +17,17 @@ namespace Mirrorly
             builder.Services.AddThirdPartyIntegrations(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddDistributedMemoryCache();
+
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
 
             var app = builder.Build();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -36,8 +39,14 @@ namespace Mirrorly
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+            // Enable session before auth middleware
             app.UseSession();
+
+            // Add custom session auth middleware
+            app.UseSessionAuth();
+
+            app.UseRouting();
+
             app.UseAuthorization();
 
             app.MapRazorPages();

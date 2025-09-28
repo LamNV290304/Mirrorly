@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Mirrorly.Models;
 using Mirrorly.Services.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mirrorly.Pages.Profile
 {
-    public class CustomerProfileModel : PageModel
+    public class CustomerProfileModel : BasePageModel
     {
         private readonly IProfileServices _profileServices;
         private readonly IAuthServices _authServices;
 
-        public CustomerProfileModel(IProfileServices profileServices, IAuthServices authServices)
+        public CustomerProfileModel(IProfileServices profileServices, IAuthServices authServices,
+            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices)
+            : base(context, verificationServices, twoFactorServices)
         {
             _profileServices = profileServices;
             _authServices = authServices;
@@ -37,19 +40,12 @@ namespace Mirrorly.Pages.Profile
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue)
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            if (!RequireCustomer()) return Page();
 
-            var user = await _authServices.GetUserById(userId.Value);
-            if (user == null || user.RoleId != 1)
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            var user = await _authServices.GetUserById(CurrentUserId!.Value);
+            if (user == null) return RedirectToPage("/Auth/Login");
 
-            var customerProfile = await _profileServices.GetCustomerProfile(userId.Value);
+            var customerProfile = await _profileServices.GetCustomerProfile(CurrentUserId.Value);
             if (customerProfile != null)
             {
                 DisplayName = customerProfile.DisplayName;
@@ -65,16 +61,12 @@ namespace Mirrorly.Pages.Profile
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue)
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            if (!RequireCustomer()) return Page();
 
             if (!ModelState.IsValid)
             {
                 // Reload user info for display
-                var user = await _authServices.GetUserById(userId.Value);
+                var user = await _authServices.GetUserById(CurrentUserId!.Value);
                 if (user != null)
                 {
                     Email = user.Email;
@@ -83,14 +75,14 @@ namespace Mirrorly.Pages.Profile
                 return Page();
             }
 
-            var customerProfile = await _profileServices.GetCustomerProfile(userId.Value);
+            var customerProfile = await _profileServices.GetCustomerProfile(CurrentUserId.Value);
 
             if (customerProfile == null)
             {
                 // Create new profile if doesn't exist
-                customerProfile = new Mirrorly.Models.CustomerProfile
+                customerProfile = new CustomerProfile
                 {
-                    CustomerId = userId.Value,
+                    CustomerId = CurrentUserId.Value,
                     DisplayName = DisplayName,
                     PhoneNumber = PhoneNumber,
                     AvatarUrl = AvatarUrl

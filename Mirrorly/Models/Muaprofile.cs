@@ -16,6 +16,7 @@ public partial class Muaprofile
     public int? ExperienceYears { get; set; }
 
     public bool ProfilePublic { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual User Mua { get; set; } = null!;
