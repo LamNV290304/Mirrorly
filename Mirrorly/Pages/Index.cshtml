@@ -459,7 +459,7 @@
 
     <!-- Feature cards column (bên phải) - 2x2 grid -->
     <div class="cards-column" aria-label="Feature cards">
-        <a href="/Auth/Login" class="feature-link">
+        <a href="@(isLoggedIn ? "#" : "/Auth/Login")" class="feature-link">
             <div class="feature-card">
                 <div class="feature-icon">💄</div>
                 <h3 class="feature-title">Chuyên Nghiệp</h3>
@@ -469,7 +469,7 @@
             </div>
         </a>
 
-        <a href="/Auth/Login" class="feature-link">
+        <a href="@(isLoggedIn ? "#" : "/Auth/Login")" class="feature-link">
             <div class="feature-card">
                 <div class="feature-icon">📅</div>
                 <h3 class="feature-title">Đặt Lịch Dễ Dàng</h3>
@@ -479,7 +479,7 @@
             </div>
         </a>
 
-        <a href="/Auth/Login" class="feature-link">
+        <a href="@(isLoggedIn ? "#" : "/Auth/Login")" class="feature-link">
             <div class="feature-card">
                 <div class="feature-icon">⭐</div>
                 <h3 class="feature-title">Đánh Giá Tin Cậy</h3>
@@ -489,7 +489,7 @@
             </div>
         </a>
 
-        <a href="/Auth/Login" class="feature-link">
+        <a href="@(isLoggedIn ? "#" : "/Auth/Login")" class="feature-link">
             <div class="feature-card">
                 <div class="feature-icon">🎨</div>
                 <h3 class="feature-title">Portfolio Đa Dạng</h3>
