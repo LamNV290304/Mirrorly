@@ -238,9 +238,12 @@ namespace Mirrorly.Pages.Auth
 
             return role switch
             {
-                3 => RedirectToPage("/Admin/Dashboard"), // Admin
-                2 => RedirectToPage("/Profile/MuaProfile"), // MUA
-                1 => RedirectToPage("/Profile/CustomerProfile"), // Customer
+                //3 => RedirectToPage("/Admin/Dashboard"), // Admin
+                //2 => RedirectToPage("/Profile/MuaProfile"), // MUA
+                //1 => RedirectToPage("/Profile/CustomerProfile"), // Customer
+                3 => RedirectToPage("/Index"), // Admin
+                2 => RedirectToPage("/Index"), // MUA
+                1 => RedirectToPage("/Index"), // Customer
                 _ => RedirectToPage("/")
             };
         }
