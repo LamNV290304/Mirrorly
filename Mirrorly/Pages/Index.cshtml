@@ -398,11 +398,16 @@
                         <a href="/Mua/Bookings" class="btn-action">📅 Đơn đặt lịch</a>
                         <a href="/Mua/Services" class="btn-action-secondary">📋 Quản lý dịch vụ</a>
                     }
-                    else
+                    else if (isCustomer)
                     {
                         <a href="/Profile/CustomerProfile" class="btn-action">👤 Hồ sơ của tôi</a>
                         <a href="/Mua/MuaProfiles" class="btn-action">💄 Tìm Artist</a>
                         <a href="/Customer/Bookings" class="btn-action">📅 Lịch của tôi</a>
+                    }
+                    else 
+                    {
+                        <a href="/Profile/CustomerProfile" class="btn-action">👤 Hồ sơ của tôi</a>
+                        <a href="/Mua/MuaProfiles" class="btn-action">💄 Tìm Artist</a>
                     }
                 </div>
             </div>
