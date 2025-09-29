@@ -362,6 +362,115 @@
     .form-check {
         visibility: hidden;
     }
+    /* Premium Section */
+    .premium-section {
+        text-align: center;
+        margin: 80px 20px;
+    }
+
+    .premium-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #db2777;
+        margin-bottom: 12px;
+    }
+
+    .premium-subtitle {
+        color: #6b7280;
+        font-size: 18px;
+        margin-bottom: 40px;
+    }
+
+    .pricing-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .pricing-card {
+        background: #fff;
+        border: 1px solid #fbcfe8;
+        border-radius: 16px;
+        padding: 30px 20px;
+        box-shadow: 0 4px 12px rgba(219, 39, 119, 0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .pricing-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(219, 39, 119, 0.15);
+        }
+
+        .pricing-card.highlight {
+            border: 2px solid #db2777;
+            box-shadow: 0 12px 40px rgba(219, 39, 119, 0.25);
+        }
+
+    .plan-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #db2777;
+        margin-bottom: 10px;
+    }
+
+    .plan-price {
+        font-size: 20px;
+        font-weight: bold;
+        color: #be185d;
+        margin-bottom: 20px;
+    }
+
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 25px 0;
+        text-align: left;
+        color: #6b7280;
+        line-height: 1.6;
+        font-size: 15px;
+    }
+
+    .btn-plan {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .btn-basic {
+        background: #f8bbd0;
+        color: #be185d;
+    }
+
+        .btn-basic:hover {
+            background: #fbcfe8;
+        }
+
+    .btn-premium {
+        background: #db2777;
+        color: #fff;
+        box-shadow: 0 6px 20px rgba(219, 39, 119, 0.3);
+    }
+
+        .btn-premium:hover {
+            background: #be185d;
+        }
+
+    .btn-pro {
+        background: #fff0f6;
+        color: #db2777;
+        border: 2px solid #db2777;
+    }
+
+        .btn-pro:hover {
+            background: #db2777;
+            color: #fff;
+        }
+
 </style>
 
 <div class="hero-section">
@@ -505,6 +614,43 @@
         </a>
     </div>
 </div>
+
+<!-- PREMIUM SECTION -->
+<div class="premium-section">
+    <h2 class="premium-title">🌟 Trở thành thành viên Premium</h2>
+    <p class="premium-subtitle">
+        Nâng cấp trải nghiệm với nhiều tính năng đặc biệt chỉ dành cho thành viên Premium
+    </p>
+
+    <div class="pricing-cards">
+        <!-- Gói Cơ bản -->
+        <div class="pricing-card">
+            <h3 class="plan-title">Basic</h3>
+            <p class="plan-price">Miễn phí</p>
+            <ul class="plan-features">
+                <li>💄 Trải nghiệm AR Makeup có giới hạn</li>
+                <li>🔎 Tìm kiếm Makeup Artist</li>
+                <li>📅 Đặt lịch cơ bản</li>
+                <li>⭐ Đọc đánh giá</li>
+            </ul>
+            <a href="/Auth/Register" class="btn-plan btn-basic">Bắt đầu ngay</a>
+        </div>
+
+        <!-- Gói Premium -->
+        <div class="pricing-card highlight">
+            <h3 class="plan-title">Premium</h3>
+            <p class="plan-price">29.000₫ / tháng</p>
+            <ul class="plan-features">
+                <li>💄 Trải nghiệm AR Makeup không giới hạn</li>
+                <li>🎨 Portfolio mở rộng & ưu tiên</li>
+                <li>📩 Chat trực tiếp với MUA</li>
+                <li>🎁 Ưu đãi & khuyến mãi đặc biệt</li>
+            </ul>
+            <a href="/Payment/Upgrade" class="btn-plan btn-premium">Nâng cấp ngay</a>
+        </div>      
+    </div>
+</div>
+
 
 <!-- Scripts giữ nguyên -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
