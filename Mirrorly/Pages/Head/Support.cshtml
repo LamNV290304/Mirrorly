@@ -1,0 +1,126 @@
+﻿@page
+@model SupportModel
+@{
+    ViewData["Title"] = "Hỗ trợ";
+}
+
+<style>
+    .support-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #f8bbd0;
+        box-shadow: 0 4px 20px rgba(248, 187, 208, 0.15);
+    }
+
+    .support-title {
+        text-align: center;
+        color: #db2777;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .contact-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .contact-card {
+        background: #fdf2f8;
+        border: 1px solid #f8bbd0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.2s;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(219, 39, 119, 0.15);
+    }
+
+    .contact-card h3 {
+        color: #be185d;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .contact-card p {
+        font-size: 15px;
+        color: #374151;
+    }
+
+    .faq {
+        margin-bottom: 40px;
+    }
+
+    .faq h2 {
+        color: #db2777;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .faq-item {
+        margin-bottom: 15px;
+    }
+
+    .faq-item strong {
+        display: block;
+        color: #be185d;
+        margin-bottom: 5px;
+    }
+
+    .support-note {
+        background: #fef9c3;
+        border: 1px solid #fde047;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        font-size: 15px;
+        color: #92400e;
+    }
+</style>
+
+<div class="support-container">
+    <h1 class="support-title">Trung tâm Hỗ trợ Mirrorly</h1>
+
+    <!-- Contact cards -->
+    <div class="contact-cards">
+        <div class="contact-card">
+            <h3>📞 Hỗ trợ khách hàng</h3>
+            <p>Nguyễn Việt Lâm — 0378 790 991</p>
+        </div>
+        <div class="contact-card">
+            <h3>💄 Hỗ trợ Makeup Artist</h3>
+            <p>Vũ Quỳnh Nga — 0879 899 555</p>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq">
+        <h2>❓ Câu hỏi thường gặp</h2>
+        <div class="faq-item">
+            <strong>Tôi quên mật khẩu thì phải làm sao?</strong>
+            <span>Bạn hãy nhấn vào “Quên mật khẩu” tại màn hình đăng nhập và làm theo hướng dẫn.</span>
+        </div>
+        <div class="faq-item">
+            <strong>Làm thế nào để đặt lịch với MUA?</strong>
+            <span>Chọn Makeup Artist bạn muốn, vào hồ sơ chi tiết và nhấn “Đặt lịch”.</span>
+        </div>
+        <div class="faq-item">
+            <strong>Tôi có thể huỷ lịch hẹn không?</strong>
+            <span>Có. Khi MUA chưa xác nhận, bạn có thể huỷ bất kỳ lúc nào. Sau khi đã xác nhận, chỉ khách hàng mới có quyền huỷ.</span>
+        </div>
+    </div>
+
+    <!-- Note -->
+    <div class="support-note">
+        Nếu bạn cần thêm sự trợ giúp, hãy liên hệ trực tiếp qua số điện thoại ở trên.<br/>
+        Đội ngũ Mirrorly luôn sẵn sàng hỗ trợ bạn 💖
+    </div>
+</div>

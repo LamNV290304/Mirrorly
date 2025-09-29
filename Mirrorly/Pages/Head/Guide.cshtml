@@ -1,0 +1,208 @@
+﻿@page
+@model Mirrorly.Pages.Head.GuideModel
+@{
+    ViewData["Title"] = "Hướng dẫn sử dụng Mirrorly";
+}
+
+<style>
+    .guide-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #f8bbd0;
+        box-shadow: 0 4px 20px rgba(248, 187, 208, 0.2);
+    }
+
+    .guide-title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+        color: #db2777;
+        margin-bottom: 30px;
+    }
+
+    .guide-section {
+        margin-bottom: 60px;
+    }
+
+        .guide-section h1 {
+            font-size: 24px;
+            color: #db2777;
+            margin-bottom: 20px;
+            border-left: 6px solid #db2777;
+            padding-left: 10px;
+        }
+
+    .guide-step {
+        margin-bottom: 40px;
+    }
+
+        .guide-step h2 {
+            font-size: 20px;
+            color: #be185d;
+            margin-bottom: 12px;
+        }
+
+        .guide-step p {
+            font-size: 15px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+    .guide-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+    }
+
+        .guide-images img {
+            max-width: 300px;
+            border-radius: 12px;
+            border: 1px solid #f8bbd0;
+        }
+</style>
+
+<div class="guide-container">
+    <h1 class="guide-title">Hướng dẫn sử dụng Mirrorly</h1>
+
+    <!-- Section 1 -->
+    <div class="guide-section">
+        <h1>🔑 Đăng ký & Đăng nhập</h1>
+
+        <div class="guide-step">
+            <h2>Bước 1: Đăng nhập</h2>
+            <p>
+                Người dùng đăng nhập bằng <strong>Email</strong> và <strong>Mật khẩu</strong>.
+                Sau khi đăng nhập thành công, bạn sẽ được chuyển đến trang chủ.
+                Nếu chưa có tài khoản, hãy nhấn vào <em>“Đăng ký ngay”</em>.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-login.png" alt="Login" />
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <h2>Bước 2: Đăng ký tài khoản mới</h2>
+            <p>
+                Trong màn hình đăng ký, bạn có thể chọn vai trò <strong>Khách hàng</strong> hoặc
+                <strong>Makeup Artist (MUA)</strong>. Sau khi điền đầy đủ thông tin, tài khoản sẽ được tạo.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-register.png" alt="Register" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="guide-section">
+        <h1>👩‍💻 Hướng dẫn cho Người dùng (Khách hàng)</h1>
+
+        <div class="guide-step">
+            <h2>Bước 1: Xem danh sách Makeup Artist</h2>
+            <p>
+                Tại trang chủ, chọn mục <strong>Makeup Artist</strong> để xem danh sách thợ.
+                Bạn có thể tìm kiếm và sử dụng bộ lọc theo vị trí, đánh giá hoặc số năm kinh nghiệm.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-mua-list-1.png" alt="Danh sách MUA" />
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <h2>Bước 2: Xem hồ sơ chi tiết của MUA</h2>
+            <p>
+                Khi nhấn <em>“View profile”</em>, bạn sẽ thấy chi tiết dịch vụ, bảng giá,
+                đánh giá từ khách hàng, lịch làm việc và bản đồ vị trí.
+                Trong trang này cũng có nút <strong>Đặt lịch</strong>.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-mua-profile-1.png" alt="Profile MUA 1" />
+                <img src="/uploads/guide-mua-profile-2.png" alt="Profile MUA 2" />
+                <img src="/uploads/guide-mua-profile-3.png" alt="Profile MUA 3" />
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <h2>Bước 3: Đặt lịch make-up</h2>
+            <p>Quy trình đặt lịch bao gồm nhiều bước giữa khách hàng và MUA:</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-booking-1.png" alt="Khách hàng điền thông tin để đặt lịch" />
+            </div>
+            <p>Khách hàng điền thông tin đặt lịch, đơn sẽ chuyển sang trạng thái chờ MUA xác nhận.</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-booking-2.png" alt="Khách hàng xem trạng thái và hủy nếu cần" />
+            </div>
+            <p>Khách hàng có thể theo dõi trạng thái đơn và hủy nếu muốn. Quyền hủy thuộc về khách hàng.</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-orders-mua-1.png" alt="MUA xem danh sách đơn đặt" />
+                <img src="/uploads/guide-orders-mua-2.png" alt="MUA quyết định nhận hoặc từ chối" />
+            </div>
+            <p>MUA xem danh sách đơn đặt, quyết định nhận hoặc từ chối. Khi MUA đã nhận, chỉ khách hàng mới có thể hủy.</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-mua-schedule.png" alt="MUA kiểm tra lịch làm việc" />
+            </div>
+            <p>MUA kiểm tra lịch làm việc của mình trước khi nhận đơn mới.</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-orders-mua-detail.png" alt="Xem chi tiết thông tin khách hàng" />
+            </div>
+            <p>MUA có thể bấm vào chi tiết đơn để xem thông tin khách hàng và yêu cầu cụ thể.</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-orders-approved.png" alt="Đơn đã chấp nhận vẫn có thể hủy" />
+            </div>
+            <p>Đơn đã chấp nhận vẫn có thể hủy nếu khách hàng mong muốn.</p>
+
+            <div class="guide-images">
+                <img src="/uploads/guide-customer-check-schedule.png" alt="Khách hàng xem lịch MUA" />
+            </div>
+            <p>Khách hàng có thể xem lịch làm việc của MUA để dễ dàng đặt, nhưng không thấy chi tiết cá nhân.</p>
+        </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="guide-section">
+        <h1>💼 Hướng dẫn cho Makeup Artist (MUA)</h1>
+
+        <div class="guide-step">
+            <h2>Bước 1: Quản lý hồ sơ cá nhân</h2>
+            <p>
+                Sau khi đăng nhập, MUA sẽ có hồ sơ cá nhân riêng, có thể cập nhật thông tin và ảnh đại diện.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-mua-profile-self-1.png" alt="Hồ sơ MUA" />
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <h2>Bước 2: Tạo dịch vụ, bảng giá và lên lịch làm việc</h2>
+            <p>
+                Tại đây MUA có thể tạo các dịch vụ bảng giá, các hình ảnh sản phẩm của bàn thân và có thể lên được lịch làm việc cho cá nhân.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-mua-services-1.png" alt="Tạo dịch vụ" />
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <h2>Bước 3: Xác minh danh tính</h2>
+            <p>
+                MUA có thể gửi yêu cầu xác minh danh tính, sau đó admin sẽ phê duyệt để tăng độ uy tín.
+            </p>
+            <div class="guide-images">
+                <img src="/uploads/guide-mua-verify-1.png" alt="Xác minh danh tính" />
+                <img src="/uploads/guide-mua-verify-2.png" alt="Xác minh danh tính" />
+                <img src="/uploads/guide-mua-verify-3.png" alt="Xác minh danh tính" />
+                <img src="/uploads/guide-mua-verify-4.png" alt="Xác minh danh tính" />
+            </div>
+        </div>
+    </div>
+</div>

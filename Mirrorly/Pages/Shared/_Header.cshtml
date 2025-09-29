@@ -223,9 +223,11 @@
             <a href="/Auth/Login" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
 
         }
-        <a href="#" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">Hỗ trợ</a>
 
-        <a href="#" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">Hướng dẫn</a>
+        <a href="/Head/Guide" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">Hướng dẫn</a>
+
+        <a href="/Head/Support" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Gallery" ? "active" : "")">Hỗ trợ</a>
+
     </nav>
 
     <div class="right">
