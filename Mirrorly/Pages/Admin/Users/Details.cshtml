@@ -246,7 +246,7 @@
             <button class="tab-button" onclick="showTab('activity')">📈 Hoạt động</button>
             @if (Model.User.RoleId == 2)
             {
-                <button class="tab-button" onclick="showTab('mua')">💄 Hồ sơ MUA</button>
+                <button class="tab-button" onclick="showTab('mua')">💄 Hồ sơ Artist</button>
             }
             <button class="tab-button" onclick="showTab('security')">🔒 Bảo mật</button>
         </div>
@@ -327,7 +327,7 @@
             {
                 <!-- MUA Profile Tab -->
                 <div id="mua-tab" class="tab-pane">
-                    <h3 style="color: #1e293b; margin-bottom: 20px;">Hồ sơ MUA</h3>
+                    <h3 style="color: #1e293b; margin-bottom: 20px;">Hồ sơ Artist</h3>
                     @if (Model.MuaProfile != null)
                     {
                         <div class="info-grid">
@@ -374,7 +374,7 @@
                     else
                     {
                         <div style="text-align: center; padding: 40px; color: #9ca3af;">
-                            <p>User chưa tạo hồ sơ MUA</p>
+                            <p>User chưa tạo hồ sơ Artist</p>
                         </div>
                     }
                 </div>
