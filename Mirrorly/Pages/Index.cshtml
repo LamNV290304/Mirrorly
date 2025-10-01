@@ -1,4 +1,7 @@
-﻿@page
+﻿@* =====================
+   Razor/C# Logic
+   ===================== *@
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Trang chủ";
@@ -10,8 +13,11 @@
     var isCustomer = roleId == 1;
 }
 
+@* =====================
+   Styles
+   ===================== *@
 <style>
-    /* --- Hero & common styles (giữ nguyên/nhanh gọn) --- */
+    /* --- Hero & common styles --- */
     .hero-section {
         background: linear-gradient(135deg, #fdf2f8 0%, #fff0f6 100%);
         padding: 80px 0;
@@ -63,12 +69,12 @@
         border: 2px solid #db2777;
     }
 
-        .btn-primary-hero:hover {
-            background: #be185d;
-            border-color: #be185d;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
-        }
+    .btn-primary-hero:hover {
+        background: #be185d;
+        border-color: #be185d;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
+    }
 
     .btn-secondary-hero {
         background: transparent;
@@ -76,12 +82,12 @@
         border: 2px solid #db2777;
     }
 
-        .btn-secondary-hero:hover {
-            background: #db2777;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
-        }
+    .btn-secondary-hero:hover {
+        background: #db2777;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
+    }
 
     /* --- Layout wrapper: AR left, cards right --- */
     .main-layout {
@@ -93,7 +99,7 @@
         flex-wrap: wrap; /* cho responsive */
     }
 
-    /* ar-wrapper giữ khối AR nguyên vẹn bên trong (không ghi đè selector #live-container/#controls) */
+    /* ar-wrapper giữ khối AR nguyên vẹn bên trong */
     .ar-wrapper {
         flex: 1 1 60%;
         min-width: 320px;
@@ -112,7 +118,7 @@
         align-content: start;
     }
 
-    /* Feature card styles (giữ nịnh mắt nhưng không chạm AR) */
+    /* Feature card styles */
     .feature-card {
         background: white;
         padding: 22px;
@@ -126,10 +132,10 @@
         justify-content: center;
     }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(248, 187, 208, 0.3);
-        }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(248, 187, 208, 0.3);
+    }
 
     .feature-icon {
         font-size: 44px;
@@ -155,7 +161,7 @@
         display: block;
     }
 
-    /* Controls / palette / debug small helpers (may influence layout but not AR internals) */
+    /* Controls / palette / debug small helpers */
     #color-palette {
         display: flex;
         justify-content: center;
@@ -173,14 +179,14 @@
         transition: transform 0.2s, border-color 0.2s;
     }
 
-        .color-swatch:hover {
-            transform: scale(1.1);
-        }
+    .color-swatch:hover {
+        transform: scale(1.1);
+    }
 
-        .color-swatch.active {
-            border: 3px solid #007bff;
-            transform: scale(1.15);
-        }
+    .color-swatch.active {
+        border: 3px solid #007bff;
+        transform: scale(1.15);
+    }
 
     .skin-controls {
         display: flex;
@@ -198,13 +204,13 @@
         min-width: 110px;
     }
 
-        .control-group label {
-            margin-bottom: 5px;
-        }
+    .control-group label {
+        margin-bottom: 5px;
+    }
 
-        .control-group input[type="range"] {
-            width: 150px;
-        }
+    .control-group input[type="range"] {
+        width: 150px;
+    }
 
     #debug-info {
         font-family: 'Courier New', Courier, monospace;
@@ -216,7 +222,7 @@
         display: none;
     }
 
-    /* --- Other existing UI styles kept (welcome, buttons) --- */
+    /* --- Other existing UI styles kept --- */
     .welcome-section {
         background: #fdf2f8;
         padding: 40px;
@@ -256,19 +262,19 @@
         transition: all 0.2s;
     }
 
-        .btn-action:hover {
-            background: #be185d;
-            transform: translateY(-2px);
-        }
+    .btn-action:hover {
+        background: #be185d;
+        transform: translateY(-2px);
+    }
 
     .btn-action-secondary {
         background: #f8bbd0;
         color: #be185d;
     }
 
-        .btn-action-secondary:hover {
-            background: #fbcfe8;
-        }
+    .btn-action-secondary:hover {
+        background: #fbcfe8;
+    }
 
     .mb-2 {
         visibility: hidden;
@@ -276,56 +282,46 @@
 
     /* --- Responsive adjustments --- */
     @@media (max-width: 900px) {
-        .main-layout
+        .main-layout {
+            flex-direction: column;
+            gap: 20px;
+        }
 
-    {
-        flex-direction: column;
-        gap: 20px;
-    }
+        .cards-column {
+            width: 100%;
+            grid-template-columns: repeat(2, 1fr);
+        }
 
-    .cards-column {
-        width: 100%;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .ar-wrapper, .cards-column {
-        min-width: 0;
-    }
-
+        .ar-wrapper, .cards-column {
+            min-width: 0;
+        }
     }
 
     @@media (max-width: 520px) {
-        .cards-column
+        .cards-column {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
 
-    {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        .feature-title {
+            font-size: 16px;
+        }
+
+        .feature-description {
+            font-size: 13px;
+        }
+
+        .control-group input[type="range"] {
+            width: 110px;
+        }
     }
 
-    .feature-title {
-        font-size: 16px;
-    }
-
-    .feature-description {
-        font-size: 13px;
-    }
-
-    .control-group input[type="range"] {
-        width: 110px;
-    }
-
-    }
-
-    /* ------------------------
-           IMPORTANT: **Nguyên bản AR CAM CSS (KHÔNG THAY ĐỔI)**
-           Phần sau đây giữ nguyên y hệt selector và giá trị từ file gốc
-           Vì bạn yêu cầu *không thay đổi CSS của AR cam* — nên KHÔNG sửa bất kỳ dòng nào trong block này.
-           ------------------------ */
-
+    /*--- AR CAM ---*/
     #live-container {
         position: relative;
-        width: 640px;
-        height: 480px;
+        width: 100%;
+        max-width: 640px;
+        aspect-ratio: 4 / 3;
         margin: 0 auto;
         border: 2px solid #333;
         border-radius: 10px;
@@ -351,7 +347,8 @@
     }
 
     #controls {
-        width: 640px;
+        width: 100%;
+        max-width: 640px;
         margin: 15px auto;
         padding: 15px;
         background-color: #fff;
@@ -362,6 +359,8 @@
     .form-check {
         visibility: hidden;
     }
+
+
     /* Premium Section */
     .premium-section {
         text-align: center;
@@ -398,15 +397,15 @@
         transition: transform 0.3s, box-shadow 0.3s;
     }
 
-        .pricing-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 30px rgba(219, 39, 119, 0.15);
-        }
+    .pricing-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 30px rgba(219, 39, 119, 0.15);
+    }
 
-        .pricing-card.highlight {
-            border: 2px solid #db2777;
-            box-shadow: 0 12px 40px rgba(219, 39, 119, 0.25);
-        }
+    .pricing-card.highlight {
+        border: 2px solid #db2777;
+        box-shadow: 0 12px 40px rgba(219, 39, 119, 0.25);
+    }
 
     .plan-title {
         font-size: 22px;
@@ -446,9 +445,9 @@
         color: #be185d;
     }
 
-        .btn-basic:hover {
-            background: #fbcfe8;
-        }
+    .btn-basic:hover {
+        background: #fbcfe8;
+    }
 
     .btn-premium {
         background: #db2777;
@@ -456,9 +455,9 @@
         box-shadow: 0 6px 20px rgba(219, 39, 119, 0.3);
     }
 
-        .btn-premium:hover {
-            background: #be185d;
-        }
+    .btn-premium:hover {
+        background: #be185d;
+    }
 
     .btn-pro {
         background: #fff0f6;
@@ -466,13 +465,38 @@
         border: 2px solid #db2777;
     }
 
-        .btn-pro:hover {
-            background: #db2777;
-            color: #fff;
-        }
+    .btn-pro:hover {
+        background: #db2777;
+        color: #fff;
+    }
 
+    @@media (max-width: 520px) {
+        #live-container
+
+    {
+        border-radius: 8px;
+        border-width: 1px;
+    }
+
+    #controls {
+        padding: 12px;
+        margin: 10px auto;
+    }
+
+    .control-group input[type="range"] {
+        width: 100px;
+    }
+
+    .skin-controls {
+        gap: 8px;
+    }
+
+    }
 </style>
 
+@* =====================
+   Hero / Welcome Section
+   ===================== *@
 <div class="hero-section">
     <div class="hero-content">
         @if (isLoggedIn)
@@ -529,14 +553,14 @@
     </div>
 </div>
 
-<!-- ---------- MAIN: Di chuyển nguyên khối AR CAM sang trái (không chỉnh sửa khối AR) ---------- -->
+@* =====================
+   Main Layout: AR & Feature Cards
+   ===================== *@
 <div class="main-layout">
-    <!-- AR wrapper: *chỉ chứa nguyên khối AR CAM như cũ, KHÔNG THAY ĐỔI HTML trong đây* -->
     <div class="ar-wrapper">
         <h1 class="text-center" style="margin:0; color:#db2777;">Trải nghiệm AR Makeup Chuyên nghiệp</h1>
         <p style="color:#6b7280; margin-top:4px; margin-bottom:8px;">Xem thử màu son và hiệu ứng trang điểm ngay trên khuôn mặt bạn</p>
 
-        <!-- === NGUYÊN KHỐI AR CAM (KHÔNG ĐƯỢC SỬA) === -->
         <div id="live-container">
             <video id="webcam" autoplay playsinline></video>
             <canvas id="webgl-canvas"></canvas>
@@ -568,10 +592,8 @@
             </div>
             <div id="debug-info" class="mt-2 text-start"></div>
         </div>
-        <!-- === END NGUYÊN KHỐI AR CAM === -->
     </div>
 
-    <!-- Feature cards column (bên phải) - 2x2 grid -->
     <div class="cards-column" aria-label="Feature cards">
         <a href="@(isLoggedIn ? "javascript:void(0);" : "/Auth/Login")" class="feature-link">
             <div class="feature-card">
@@ -615,7 +637,9 @@
     </div>
 </div>
 
-<!-- PREMIUM SECTION -->
+@* =====================
+   Premium Section
+   ===================== *@
 <div class="premium-section">
     <h2 class="premium-title">🌟 Trở thành thành viên Premium</h2>
     <p class="premium-subtitle">
@@ -651,12 +675,9 @@
     </div>
 </div>
 
-
-<!-- Scripts giữ nguyên -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-<script type="module" src="~/js/lipstick.js"></script>
-
+@* =====================
+   Call to Action (if not logged in)
+   ===================== *@
 @if (!isLoggedIn)
 {
     <div style="text-align: center; margin: 60px 0;">
@@ -666,26 +687,28 @@
     </div>
 }
 
-<!-- chèn 1 lần: expose giá trị đăng nhập -->
+@* =====================
+   Scripts
+   ===================== *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+<script type="module" src="~/js/lipstick.js"></script>
+
 <script>
-    // Razor: xuất ra boolean JS (kết quả: true hoặc false)
     const isLoggedIn = @(isLoggedIn ? "true" : "false");
 </script>
 
 <script>
     (function () {
-      // Nếu user đã login thì không cần làm gì
       if (isLoggedIn === true || isLoggedIn === "true") return;
 
       const STORAGE_KEY = 'mirrorly_guest_color_changes';
       const LAST_COLOR_KEY = STORAGE_KEY + '_last';
       const LIMIT = 3;
 
-      // restore
       let count = parseInt(sessionStorage.getItem(STORAGE_KEY) || '0', 10);
       let lastColor = sessionStorage.getItem(LAST_COLOR_KEY) || null;
 
-      // helper: toast / gentle UI
       function showToast(msg) {
         let t = document.getElementById('mirrorly-guest-toast');
         if (!t) {
@@ -700,7 +723,6 @@
         t._hideTimer = setTimeout(() => { t.style.opacity = '0'; }, 2000);
       }
 
-      // attach after DOM ready
       function init() {
         const palette = document.getElementById('color-palette');
         if (!palette) return;
@@ -709,14 +731,11 @@
           const sw = ev.target.closest('.color-swatch');
           if (!sw) return;
 
-          // try to derive a stable color id: data-color attribute preferred
           const colorId = sw.getAttribute('data-color') || sw.style.backgroundColor || sw.id || sw.className;
 
           if (!colorId) return;
 
-          // If same as last chosen color -> ignore (no increment)
           if (colorId === lastColor) {
-            // optional: still show a subtle feedback but don't increment
             return;
           }
 
@@ -726,15 +745,12 @@
           count = parseInt(sessionStorage.getItem(STORAGE_KEY) || '0', 10) + 1;
           sessionStorage.setItem(STORAGE_KEY, String(count));
 
-          // show short feedback
           showToast(`Bạn đã thử màu ${count}/${LIMIT}.`);
 
           if (count >= LIMIT) {
-            // clear tracking so user won't be stuck if they cancel login
             sessionStorage.removeItem(STORAGE_KEY);
             sessionStorage.removeItem(LAST_COLOR_KEY);
 
-            // small delay for UX, then redirect
             setTimeout(() => {
               window.location.href = '/Auth/Login';
             }, 600);
