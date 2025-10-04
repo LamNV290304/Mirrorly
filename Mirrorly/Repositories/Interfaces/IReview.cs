@@ -4,7 +4,7 @@ namespace Mirrorly.Repositories.Interfaces
 {
     public interface IReview
     {
-        List<Review> getReviewsById(int muaId);
+        List<Review> getReviewsByServiceId(int id);
         void addReview(Review review);
     }
 }

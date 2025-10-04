@@ -2,17 +2,13 @@
 @model Mirrorly.Pages.Mua.MuaProfilesModel
 @using Mirrorly.Models;
 
-<p>Explore our talented Makeup Artists (MUAs) and their stunning portfolios. Use the search and filters to find the perfect match.</p>
+<p>Khám phá các Thợ Trang Điểm tài năng của chúng tôi và danh mục đầu tư ấn tượng của họ. Sử dụng tính năng tìm kiếm và bộ lọc để tìm ra sự kết hợp hoàn hảo..</p>
 
 <body>
-    <!-- Search + Filters -->
     <div class="filter-bar">
-        <!-- Ô Search -->
         <input type="text" id="searchInput" placeholder="Search by name or bio..."
-               onkeyup="filterMua(); showSearchSuggestions()"
-               autocomplete="off" />
+               onkeyup="filterMua(); showSearchSuggestions()" autocomplete="off" />
 
-        <!-- Danh sách gợi ý -->
         <div id="searchSuggestions" class="suggestions-box"></div>
 
         <select id="areaFilter" onchange="filterMua()">
@@ -44,7 +40,6 @@
             <option value="5">5+ years</option>
             <option value="10">10+ years</option>
         </select>
-        
     </div>
 
     <div class="row" id="muaContainer">
@@ -60,7 +55,8 @@
                  data-price="@avgPrice"
                  data-rating="@avgRating"
                  data-experience="@mua.ExperienceYears"
-                 data-muaid="@mua.Muaid">
+                 data-muaid="@mua.Muaid"
+                 onclick="window.location.href='/Mua/Details/@mua.Muaid'">
                 <h3>@mua.DisplayName</h3>
                 <p class="bio">@mua.Bio</p>
 
@@ -71,14 +67,6 @@
                     <li><strong>Rating:</strong> @(avgRating > 0 ? avgRating.ToString("0.0") : "N/A") ⭐</li>
                     <li><strong>Public:</strong> @(mua.ProfilePublic ? "Yes" : "No")</li>
                 </ul>
-
-                <div class="card-actions">
-                    <a href="/Mua/Details/@mua.Muaid" class="btn-view">View Profile</a>
-
-                    <a href="/Books/Books/@mua.Muaid" class="btn-view">BOOK NOW</a>
-
-                    <a href="/Books/BookBySchedule/@mua.Muaid" class="btn-view">Schedule</a>
-                </div>
             </div>
         }
     </div>
@@ -100,7 +88,6 @@
         text-align: center;
     }
 
-    /* Filter bar */
     .filter-bar {
         margin-bottom: 20px;
         display: flex;
@@ -129,7 +116,6 @@
                 box-shadow: 0 0 8px rgba(248, 187, 208, 0.4);
             }
 
-    /* Layout cards */
     .row {
         display: flex;
         flex-wrap: wrap;
@@ -147,6 +133,7 @@
         max-width: 360px;
         flex: 1 1 280px;
         transition: transform 0.25s, box-shadow 0.25s;
+        cursor: pointer;
     }
 
         .mua-profile-card:hover {
@@ -159,6 +146,7 @@
             font-size: 20px;
             color: #ad1457;
             text-align: center;
+            text-decoration: underline;
         }
 
         .mua-profile-card .bio {
@@ -168,10 +156,16 @@
             text-align: center;
         }
 
+    .bio .see-more {
+        color: #ad1457;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
     .mua-info {
         list-style: none;
         padding: 0;
-        margin: 0 0 15px;
+        margin: 0;
         font-size: 14px;
     }
 
@@ -183,59 +177,40 @@
             .mua-info li:last-child {
                 border-bottom: none;
             }
-
-    .card-actions {
-        text-align: center;
-    }
-
-    .btn-view {
-        display: inline-block;
-        padding: 10px 20px;
-        background: #f48fb1;
-        color: #fff;
-        text-decoration: none;
-        font-weight: 600;
-        border-radius: 25px;
-        transition: background 0.25s, transform 0.2s;
-    }
-
-        .btn-view:hover {
-            background: #ec407a;
-            transform: scale(1.07);
-        }
-
-    .suggestions-box {
-        position: absolute;
-        background: #fff;
-        border: 1px solid #f8bbd0;
-        border-radius: 10px;
-        margin-top: 2px;
-        width: 200px;
-        max-height: 150px;
-        overflow-y: auto;
-        z-index: 1000;
-        display: none;
-    }
-
-        .suggestions-box div {
-            padding: 8px 12px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #6d214f;
-        }
-
-            .suggestions-box div:hover {
-                background: #fce4ec;
-            }
-
-    .card-actions {
-        display: flex;
-        justify-content: center; /* căn giữa */
-        gap: 12px; /* khoảng cách giữa các nút */
-        flex-wrap: wrap; /* xuống hàng nếu không đủ chỗ */
-    }
 </style>
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".mua-profile-card .bio").forEach(bioEl => {
+            const fullText = bioEl.textContent.trim();
+            const words = fullText.split(/\s+/);
+            const limit = 40;
+
+            if (words.length > limit) {
+                const shortText = words.slice(0, limit).join(" ") + "... ";
+                const seeMore = document.createElement("span");
+                seeMore.textContent = "Xem thêm";
+                seeMore.classList.add("see-more");
+
+                bioEl.textContent = shortText;
+                bioEl.appendChild(seeMore);
+
+                seeMore.addEventListener("click", (e) => {
+                    e.stopPropagation(); // tránh trigger click card
+                    if (seeMore.textContent === "Xem thêm") {
+                        bioEl.textContent = fullText + " ";
+                        seeMore.textContent = "Thu gọn";
+                        bioEl.appendChild(seeMore);
+                    } else {
+                        bioEl.textContent = shortText;
+                        seeMore.textContent = "Xem thêm";
+                        bioEl.appendChild(seeMore);
+                    }
+                });
+            }
+        });
+    });
+
     function showSearchSuggestions() {
         const input = document.getElementById("searchInput");
         const suggestionsBox = document.getElementById("searchSuggestions");
