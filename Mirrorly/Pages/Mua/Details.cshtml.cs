@@ -5,6 +5,7 @@ using Mirrorly.Models;
 using Mirrorly.Services;
 using Mirrorly.Services.Interfaces;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Mirrorly.Pages.Mua
 {
@@ -27,15 +28,16 @@ namespace Mirrorly.Pages.Mua
             _bookingService = bookingService;
         }
         [BindProperty]
+        public Service? Service { get; set; }
         public List<Review> Reviews { get; set; }
         public List<Service> Services { get; set; }
         public List<PortfolioItem> Portfolios { get; set; }
         public List<WorkingHour> WorkingHours { get; set; }
-        public Muaprofile MuaProfile { get; set; }
-        [BindProperty]
+        public Muaprofile? MuaProfile { get; set; }
         public Review NewReview { get; set; }
-        public void OnGet(int id)
+        public async Task OnGet(int id)
         {
+            Service = await _service.GetServiceByIdAsync(id);
             Reviews = _review.getReviewsById(id);
             Services = _service.getServicesByMuaId(id);
             Portfolios = _portfo.getPortfolioItemsByMuaId(id);
@@ -48,18 +50,16 @@ namespace Mirrorly.Pages.Mua
             if (!userId.HasValue)
             {
                 ModelState.AddModelError(string.Empty, "Bạn cần đăng nhập để đánh giá.");
-                OnGet(id);
+                await OnGet(id);
                 // Redirect to login page
                 return RedirectToPage("/Auth/Login");
             }
-            // Lấy id user đang login
-            // Kiểm tra booking tồn tại (ví dụ booking đã hoàn thành)
             var booking = _bookingService.GetBookingById(userId.Value, id);
 
             if (booking == null)
             {
                 ModelState.AddModelError(string.Empty, "Bạn cần có booking với MUA này trước khi đánh giá.");
-                OnGet(id);
+                await OnGet(id);
                 return Page();
             }
 
@@ -67,7 +67,7 @@ namespace Mirrorly.Pages.Mua
             if (NewReview == null)
             {
                 ModelState.AddModelError("", "Form gửi lên không hợp lệ.");
-                OnGet(id);
+                 await OnGet(id);
                 return Page();
             }
 
@@ -79,7 +79,7 @@ namespace Mirrorly.Pages.Mua
 
             if (!ModelState.IsValid)
             {
-                OnGet(id);
+                await OnGet(id);
                 return Page();
             }
 

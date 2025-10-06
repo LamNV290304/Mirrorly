@@ -29,7 +29,7 @@
             padding-bottom: 6px;
         }
 
-    /* Services */
+    /* Grid + card */
     .services-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -37,12 +37,15 @@
     }
 
     .service-card {
+        position: relative;
         background: #fff;
         border: 1px solid #fbcfe8;
         border-radius: 16px;
-        padding: 20px;
+        padding: 20px 20px 70px; /* chừa chỗ cho nút */
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         transition: transform 0.2s;
+        min-height: 220px;
+        overflow: hidden;
     }
 
         .service-card:hover {
@@ -54,17 +57,75 @@
             color: #be185d;
         }
 
-        .service-card .price {
-            font-weight: bold;
-            color: #db2777;
-            margin-top: 8px;
+    /* mô tả */
+    .description-wrapper {
+        margin-bottom: 8px;
+    }
+
+    .description {
+        color: #444;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0 0 6px;
+        transition: all 0.25s ease;
+    }
+
+    .full-desc.hidden {
+        display: none;
+    }
+
+    /* nút Xem thêm */
+    .toggle-desc {
+        display: inline-block;
+        margin-top: 4px;
+        color: #db2777;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .toggle-desc:hover {
+            color: #be185d;
+            text-decoration: underline;
         }
 
-        .service-card .duration,
-        .service-card .category {
-            font-size: 13px;
-            color: #555;
+    /* thông tin */
+    .price {
+        font-weight: bold;
+        color: #db2777;
+        margin-top: 6px;
+    }
+
+    .duration, .category {
+        font-size: 13px;
+        color: #555;
+    }
+
+    /* nút đặt lịch trên từng thẻ */
+    .book-btn {
+        position: absolute;
+        bottom: 15px;
+        right: 20px;
+        background: #db2777;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 3px 8px rgba(219, 39, 119, 0.3);
+        transition: background 0.2s ease-in-out, transform 0.12s;
+    }
+
+        .book-btn:hover {
+            background: #be185d;
+            transform: translateY(-2px);
         }
+
+    /* tiện ích */
+    .hidden {
+        display: none;
+    }
 
     /* Reviews */
     .reviews-list {
@@ -90,62 +151,6 @@
     .review-card .rating {
         color: #f59e0b;
     }
-
-    /* Portfolio */
-    .portfolio-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-    }
-
-    .portfolio-card {
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1px solid #fbcfe8;
-        background: #fff;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-        .portfolio-card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-        }
-
-    .portfolio-info {
-        padding: 12px;
-    }
-
-        .portfolio-info h4 {
-            margin: 0;
-            color: #be185d;
-        }
-
-    /* Working hours */
-    .workinghours-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .workinghour-item {
-        background: #ffe4f1;
-        border-radius: 10px;
-        padding: 10px 16px;
-        font-size: 14px;
-        display: flex;
-        justify-content: space-between;
-        min-width: 160px;
-    }
-
-        .workinghour-item .day {
-            font-weight: 600;
-            color: #db2777;
-        }
-
-        .workinghour-item .time {
-            color: #333;
-        }
 
     .review-form {
         margin-top: 20px;
@@ -203,12 +208,28 @@
         <div class="services-grid">
             @foreach (var se in Model.Services)
             {
+                var desc = se.Description ?? "";
+                var words = desc.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                var limit = 40; 
+                var isLong = words.Length > limit;
+                var shortDesc = isLong ? string.Join(" ", words.Take(limit)) + "..." : desc;
+
                 <div class="service-card">
                     <h3>@se.Name</h3>
-                    <p>@se.Description</p>
+
+                    <div class="description-wrapper">                       
+                        <p class="description short-desc" id="short-@se.ServiceId">@shortDesc</p>                        
+                        @if (isLong)
+                        {
+                            <p class="description full-desc hidden" id="full-@se.ServiceId">@desc</p>
+                            <a href="javascript:void(0);" class="toggle-desc" onclick="toggleDesc(@se.ServiceId, this)">Xem thêm</a>
+                        }
+                    </div>
+
                     <p class="price">@se.BasePrice @se.Currency</p>
                     <p class="duration">⏱ @se.DurationMin phút</p>
-                    <p class="category">📂 @se.Category.CategoryName</p>
+                    <p class="category">📂 @se.Category?.CategoryName</p>
+                    <a href="/Books/Books/@Model.MuaProfile?.Muaid" class="book-btn">Đặt lịch ngay</a>
                 </div>
             }
         </div>
@@ -220,6 +241,7 @@
         <div class="reviews-list">
             @foreach (var review in Model.Reviews)
             {
+                <h3>Đánh giá của @Model.Service?.Name</h3>
                 <div class="review-card">
                     <div class="review-header">
                         <strong>@review.Customer.DisplayName</strong>
@@ -231,53 +253,13 @@
             }
         </div>
     </section>
-    <!-- Form thêm bình luận -->
-    <form method="post" class="review-form">
-        <div class="form-group">
-            <label for="Rating">Chấm điểm:</label>
-            <select id="Rating" name="NewReview.Rating" class="form-control">
-                <option value="5">⭐ 5</option>
-                <option value="4">⭐ 4</option>
-                <option value="3">⭐ 3</option>
-                <option value="2">⭐ 2</option>
-                <option value="1">⭐ 1</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="Comment">Bình luận:</label>
-            <textarea id="Comment" name="NewReview.Comment" class="form-control" rows="4" placeholder="Viết cảm nhận của bạn..."></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit">Gửi bình luận</button>
-    </form>
-    </section>
-
-    <!-- Portfolios -->
-    <section class="profile-section">
-        <h2>Portfolio</h2>
-        <div class="portfolio-grid">
-            @foreach (var po in Model.Portfolios)
-            {
-                <div class="portfolio-card">
-                    <img src="@po.MediaUrl" alt="@po.Title" />
-                    <div class="portfolio-info">
-                        <h4>@po.Title</h4>
-                        <p>@po.Description</p>
-                    </div>
-                </div>
-            }
-        </div>
-    </section>
     <!-- Map Section -->
-    <input type="hidden" id="address" value="@Model.MuaProfile.AddressLine" />
+    <input type="hidden" id="address" value="@Model.MuaProfile?.AddressLine" />
 
     <div id="map" style="width:100%; height:400px;"></div>
 
     <script>
         var address = document.getElementById("address").value;
-
-        // Gọi API Nominatim để lấy lat/lng từ địa chỉ
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
             .then(res => res.json())
             .then(data => {
@@ -299,6 +281,25 @@
                     alert("Không tìm thấy địa chỉ: " + address);
                 }
             });
+                // Toggle mô tả theo serviceId
+        function toggleDesc(serviceId, linkElem) {
+            var shortEl = document.getElementById("short-" + serviceId);
+            var fullEl = document.getElementById("full-" + serviceId);
+
+            if (!shortEl || !fullEl) return;
+
+            if (fullEl.classList.contains("hidden")) {
+                shortEl.classList.add("hidden");
+                fullEl.classList.remove("hidden");
+                linkElem.textContent = "Thu gọn";
+                linkElem.setAttribute("aria-expanded", "true");
+            } else {
+                shortEl.classList.remove("hidden");
+                fullEl.classList.add("hidden");
+                linkElem.textContent = "Xem thêm";
+                linkElem.setAttribute("aria-expanded", "false");
+            }
+        }
     </script>
 
 </div>
