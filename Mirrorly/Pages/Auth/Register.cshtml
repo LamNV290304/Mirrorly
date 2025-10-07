@@ -27,12 +27,12 @@
         margin-bottom: 20px;
     }
 
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        color: #be185d;
-        font-weight: 500;
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #be185d;
+            font-weight: 500;
+        }
 
     .form-control {
         width: 100%;
@@ -44,11 +44,11 @@
         box-sizing: border-box;
     }
 
-    .form-control:focus {
-        outline: none;
-        border-color: #db2777;
-        box-shadow: 0 0 8px rgba(219, 39, 119, 0.2);
-    }
+        .form-control:focus {
+            outline: none;
+            border-color: #db2777;
+            box-shadow: 0 0 8px rgba(219, 39, 119, 0.2);
+        }
 
     .btn-primary {
         width: 100%;
@@ -63,9 +63,14 @@
         transition: background 0.2s;
     }
 
-    .btn-primary:hover {
-        background: #be185d;
-    }
+        .btn-primary:hover {
+            background: #be185d;
+        }
+
+        .btn-primary:disabled {
+            background: #f8bbd0;
+            cursor: not-allowed;
+        }
 
     .text-danger {
         color: #dc2626;
@@ -78,14 +83,14 @@
         margin-top: 20px;
     }
 
-    .auth-links a {
-        color: #db2777;
-        text-decoration: none;
-    }
+        .auth-links a {
+            color: #db2777;
+            text-decoration: none;
+        }
 
-    .auth-links a:hover {
-        text-decoration: underline;
-    }
+            .auth-links a:hover {
+                text-decoration: underline;
+            }
 
     .role-selection {
         display: flex;
@@ -103,28 +108,138 @@
         transition: all 0.2s;
     }
 
-    .role-option.selected {
-        border-color: #db2777;
+        .role-option.selected {
+            border-color: #db2777;
+            background: #fdf2f8;
+        }
+
+        .role-option input[type="radio"] {
+            display: none;
+        }
+
+        .role-option label {
+            cursor: pointer;
+            font-weight: 600;
+            color: #be185d;
+        }
+
+    .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 25px 0;
+        padding: 15px;
         background: #fdf2f8;
+        border-radius: 8px;
+        cursor: default; /* Thêm dòng này */
     }
 
-    .role-option input[type="radio"] {
-        display: none;
-    }
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: #db2777;
+        }
 
-    .role-option label {
+        .terms-checkbox label {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #be185d;
+            cursor: default; /* Thay đổi từ cursor: pointer thành cursor: default */
+        }
+
+    .terms-link {
+        color: #db2777;
+        text-decoration: underline;
         cursor: pointer;
         font-weight: 600;
-        color: #be185d;
+    }
+
+        .terms-link:hover {
+            color: #be185d;
+        }
+
+    /* Modal styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        max-width: 700px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #db2777;
+    }
+
+    .modal-title {
+        color: #db2777;
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .policy-content {
+        line-height: 1.6;
+        color: #333;
+    }
+
+        .policy-content h3 {
+            color: #be185d;
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+        }
+
+        .policy-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .policy-content li {
+            margin-bottom: 8px;
+        }
+
+    .policy-header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f8bbd0;
+    }
+
+    .policy-date {
+        color: #666;
+        font-size: 14px;
+        margin-top: 5px;
     }
 </style>
 
 <div class="auth-container">
     <h1 class="auth-title">Đăng ký tài khoản</h1>
-    
+
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        
+
         <div class="form-group">
             <label>Loại tài khoản</label>
             <div class="role-selection">
@@ -139,72 +254,246 @@
             </div>
             <span asp-validation-for="RoleId" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group">
             <label asp-for="Username">Tên đăng nhập</label>
             <input asp-for="Username" class="form-control" />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group">
             <label asp-for="Email">Email</label>
             <input asp-for="Email" class="form-control" type="email" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group">
             <label asp-for="FullName">Họ và tên</label>
             <input asp-for="FullName" class="form-control" />
             <span asp-validation-for="FullName" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group">
             <label asp-for="PhoneNumber">Số điện thoại</label>
             <input asp-for="PhoneNumber" class="form-control" />
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group">
             <label asp-for="Password">Mật khẩu</label>
             <input asp-for="Password" class="form-control" type="password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group">
             <label asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
             <input asp-for="ConfirmPassword" class="form-control" type="password" />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
-        
-        <button type="submit" class="btn-primary">Đăng ký</button>
-        
+
+        <!-- Terms and Conditions Checkbox -->
+        <div class="terms-checkbox">
+            <input type="checkbox" id="agreeTerms" name="AgreeToTerms" />
+            <span style="font-size: 14px; line-height: 1.4; color: #be185d;">
+                Tôi đồng ý với <span class="terms-link" onclick="showPolicy()">điều khoản và chính sách</span> của trang
+            </span>
+        </div>
+        <span id="termsError" class="text-danger" style="display: none;">Vui lòng đồng ý với điều khoản và chính sách</span>
+
+        <button type="submit" class="btn-primary" id="submitBtn" disabled>Đăng ký</button>
+
         <div class="auth-links">
             <p>Đã có tài khoản? <a href="/Auth/Login">Đăng nhập ngay</a></p>
         </div>
     </form>
 </div>
 
+<!-- Policy Modal -->
+<div class="modal-overlay" id="policyModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closePolicy()">&times;</button>
+        <div class="policy-header">
+            <h2 class="modal-title" id="policyTitle">Điều Khoản và Chính Sách</h2>
+            <div class="policy-date" id="policyDate"></div>
+        </div>
+        <div class="policy-content" id="policyContent">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const roleOptions = document.querySelectorAll('.role-option');
-        
+        const agreeCheckbox = document.getElementById('agreeTerms');
+        const submitBtn = document.getElementById('submitBtn');
+        const termsError = document.getElementById('termsError');
+
+        // Role selection
         roleOptions.forEach(option => {
             option.addEventListener('click', function() {
                 const radio = this.querySelector('input[type="radio"]');
                 radio.checked = true;
-                
-                // Remove selected class from all options
+
                 roleOptions.forEach(opt => opt.classList.remove('selected'));
-                
-                // Add selected class to clicked option
                 this.classList.add('selected');
             });
         });
-        
-        // Set initial state
+
+        // Set initial state for role selection
         const checkedRadio = document.querySelector('input[type="radio"]:checked');
         if (checkedRadio) {
             checkedRadio.closest('.role-option').classList.add('selected');
+        }
+
+        // Enable/disable submit button based on checkbox
+        agreeCheckbox.addEventListener('change', function() {
+            submitBtn.disabled = !this.checked;
+            termsError.style.display = this.checked ? 'none' : 'block';
+        });
+
+        // Form submission validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!agreeCheckbox.checked) {
+                e.preventDefault();
+                termsError.style.display = 'block';
+                agreeCheckbox.focus();
+            }
+        });
+    });
+
+    function showPolicy() {
+        const roleId = document.querySelector('input[name="RoleId"]:checked')?.value;
+        const modal = document.getElementById('policyModal');
+        const title = document.getElementById('policyTitle');
+        const content = document.getElementById('policyContent');
+        const date = document.getElementById('policyDate');
+
+        if (roleId === '2') {
+            // Makeup Artist Policy
+            title.textContent = 'Điều khoản & Chính sách dành cho Artist';
+            date.textContent = 'Cập nhật lần cuối: [27/09/2025]';
+            content.innerHTML = `
+                <p>Chào mừng bạn đến với nền tảng kết nối dịch vụ trang điểm. Khi đăng ký trở thành Artist (Makeup Artist), bạn đồng ý tuân thủ các điều khoản và chính sách dưới đây:</p>
+
+                <h3>1. Đăng ký & Xác thực</h3>
+                <ul>
+                    <li>Artist phải cung cấp thông tin cá nhân chính xác: họ tên, số điện thoại, email, CMND/CCCD và hồ sơ nghề nghiệp.</li>
+                    <li>Mỗi Artist chỉ được phép có một tài khoản duy nhất.</li>
+                    <li>Nền tảng có quyền xác minh và từ chối/hủy tài khoản nếu phát hiện sai phạm.</li>
+                </ul>
+
+                <h3>2. Bảo mật thông tin</h3>
+                <ul>
+                    <li>Thông tin cá nhân được bảo mật theo quy định pháp luật.</li>
+                    <li>Chỉ hiển thị những thông tin mà Artist đồng ý công khai (portfolio, giá dịch vụ…).</li>
+                    <li>Artist tự chịu trách nhiệm bảo mật tài khoản đăng nhập.</li>
+                </ul>
+
+                <h3>3. Quyền lợi</h3>
+                <ul>
+                    <li>Tạo hồ sơ cá nhân, giới thiệu dịch vụ và nhận đặt lịch từ khách hàng.</li>
+                    <li>Nhận thanh toán an toàn thông qua hệ thống sau khi hoàn tất dịch vụ.</li>
+                    <li>Được hỗ trợ kỹ thuật và giải quyết tranh chấp khi cần.</li>
+                </ul>
+
+                <h3>4. Nghĩa vụ</h3>
+                <ul>
+                    <li>Cung cấp dịch vụ đúng mô tả, giá cả minh bạch và thái độ chuyên nghiệp.</li>
+                    <li>Không tự ý hủy lịch nếu không có lý do chính đáng.</li>
+                    <li>Tuân thủ quy định pháp luật và quy định nền tảng.</li>
+                </ul>
+
+                <h3>5. Thanh toán & Phí</h3>
+                <ul>
+                    <li>Các khoản phí dịch vụ (hoa hồng, phí giao dịch) sẽ được công khai minh bạch.</li>
+                    <li>Thanh toán chỉ thực hiện qua hệ thống để đảm bảo an toàn.</li>
+                </ul>
+
+                <h3>6. Hành vi bị cấm</h3>
+                <ul>
+                    <li>Cung cấp thông tin sai, giả mạo hồ sơ.</li>
+                    <li>Giao dịch ngoài nền tảng nhằm trốn phí.</li>
+                    <li>Có hành vi lừa đảo, xúc phạm hoặc quấy rối khách hàng.</li>
+                    <li>Chia sẻ/bán dữ liệu khách hàng cho bên thứ ba.</li>
+                </ul>
+
+                <h3>7. Tranh chấp & Xử lý vi phạm</h3>
+                <ul>
+                    <li>Nền tảng đóng vai trò trung gian hòa giải khi có khiếu nại.</li>
+                    <li>Có quyền tạm khóa hoặc xóa tài khoản nếu Artist vi phạm.</li>
+                    <li>Các tranh chấp nghiêm trọng có thể được đưa ra cơ quan pháp luật.</li>
+                </ul>
+
+                <h3>8. Cam kết</h3>
+                <p>Khi đăng ký, Artist xác nhận đã đọc, hiểu và đồng ý với toàn bộ Điều khoản & Chính sách dành cho Artist.</p>
+            `;
+        } else {
+            // Customer Policy (default)
+            title.textContent = 'Điều khoản & Chính sách dành cho Khách hàng';
+            date.textContent = 'Cập nhật lần cuối: [27/09/2025]';
+            content.innerHTML = `
+                <p>Chào mừng bạn đến với nền tảng kết nối dịch vụ trang điểm. Khi đăng ký và sử dụng dịch vụ với tư cách là Khách hàng, bạn đồng ý với các điều khoản và chính sách dưới đây:</p>
+
+                <h3>1. Đăng ký & Sử dụng tài khoản</h3>
+                <ul>
+                    <li>Khách hàng cần cung cấp thông tin chính xác (họ tên, số điện thoại, email…) để đặt lịch.</li>
+                    <li>Không được mạo danh người khác hoặc sử dụng thông tin giả mạo.</li>
+                    <li>Người dùng phải tự chịu trách nhiệm bảo mật thông tin đăng nhập.</li>
+                </ul>
+
+                <h3>2. Quyền lợi của Khách hàng</h3>
+                <ul>
+                    <li>Tìm kiếm, tham khảo hồ sơ Artist, bảng giá và đặt lịch trực tiếp trên hệ thống.</li>
+                    <li>Được bảo vệ quyền lợi trong trường hợp xảy ra tranh chấp.</li>
+                    <li>Được hỗ trợ kỹ thuật và chăm sóc khách hàng khi có vấn đề phát sinh.</li>
+                </ul>
+
+                <h3>3. Nghĩa vụ của Khách hàng</h3>
+                <ul>
+                    <li>Cung cấp thông tin chính xác khi đặt lịch (thời gian, địa điểm, yêu cầu dịch vụ).</li>
+                    <li>Thanh toán đầy đủ, đúng hạn thông qua hệ thống.</li>
+                    <li>Hợp tác, tôn trọng Artist và không có hành vi quấy rối, xúc phạm.</li>
+                    <li>Không được hủy lịch đột ngột nhiều lần gây ảnh hưởng đến Artist.</li>
+                </ul>
+
+                <h3>4. Thanh toán & Hoàn tiền</h3>
+                <ul>
+                    <li>Tất cả thanh toán được thực hiện qua hệ thống để đảm bảo an toàn.</li>
+                    <li>Chính sách hoàn/hủy dịch vụ sẽ được áp dụng theo quy định riêng và hiển thị rõ trước khi đặt lịch.</li>
+                    <li>Nền tảng có quyền từ chối hoặc giữ lại khoản thanh toán nếu phát hiện hành vi gian lận.</li>
+                </ul>
+
+                <h3>5. Hành vi bị cấm</h3>
+                <ul>
+                    <li>Đặt lịch giả mạo, spam, gây ảnh hưởng đến Artist hoặc hệ thống.</li>
+                    <li>Giao dịch ngoài nền tảng nhằm trốn tránh trách nhiệm hoặc phí dịch vụ.</li>
+                    <li>Có hành vi lừa đảo, xúc phạm, bôi nhọ Artist hoặc nền tảng.</li>
+                </ul>
+
+                <h3>6. Tranh chấp & Giải quyết</h3>
+                <ul>
+                    <li>Trong trường hợp có khiếu nại, nền tảng sẽ làm trung gian hòa giải.</li>
+                    <li>Quyết định cuối cùng dựa trên bằng chứng từ cả hai bên.</li>
+                    <li>Các tranh chấp phức tạp có thể được đưa ra cơ quan pháp luật có thẩm quyền.</li>
+                </ul>
+
+                <h3>7. Cam kết</h3>
+                <p>Khi sử dụng dịch vụ, Khách hàng xác nhận rằng mình đã đọc, hiểu và đồng ý với toàn bộ Điều khoản & Chính sách dành cho Khách hàng.</p>
+            `;
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closePolicy() {
+        document.getElementById('policyModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('policyModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closePolicy();
         }
     });
 </script>

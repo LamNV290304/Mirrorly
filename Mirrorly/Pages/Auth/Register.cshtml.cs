@@ -48,6 +48,10 @@ namespace Mirrorly.Pages.Auth
         [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp")]
         public string ConfirmPassword { get; set; } = "";
 
+        [Required(ErrorMessage = "Vui lòng đồng ý với điều khoản và chính sách")]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Vui lòng đồng ý với điều khoản và chính sách")]
+        public bool AgreeToTerms { get; set; }
+
         [BindProperty]
         [Required(ErrorMessage = "Vui lòng chọn loại tài khoản")]
         public byte RoleId { get; set; }
