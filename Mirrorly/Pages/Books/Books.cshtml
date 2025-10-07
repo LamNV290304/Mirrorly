@@ -1,4 +1,4 @@
-﻿@page "{muaId:int}"
+﻿@page "{serviceId:int}"
 @model Mirrorly.Pages.Books.BookingModel
 @{
 }
@@ -48,19 +48,34 @@
 				<label for="Service">Chọn Gói Makeup</label>
 				<div class="service-wrapper">
 					<select id="Service" name="Service" required>
-						<option value="">-- Chọn gói --</option>
+						@if (Model.Services != null)
+						{
+							<option value="@Model.Services.ServiceId"
+									data-price="@Model.Services.BasePrice"
+									selected>
+								@Model.Services.Name
+							</option>
+						}
 						@if (Model.MuaProfile?.Services != null)
 						{
 							foreach (var service in Model.MuaProfile.Services)
 							{
-								<option value="@service.ServiceId" data-price="@service.BasePrice">
-									@service.Name
-								</option>
+								// Tránh hiển thị trùng service đang chọn
+								if (Model.Services == null || service.ServiceId != Model.Services.ServiceId)
+								{
+									<option value="@service.ServiceId" data-price="@service.BasePrice">
+										@service.Name
+									</option>
+								}
 							}
 						}
 					</select>
 
-					<input type="text" id="ServicePrice" readonly placeholder="Giá dịch vụ" />
+
+					<input type="text" id="ServicePrice"
+						   readonly placeholder="Giá dịch vụ"
+						   value="@(Model.Services != null ? Model.Services.BasePrice.ToString("N0") + " đ" : "")" />
+
 				</div>
 			</div>
 
@@ -83,9 +98,6 @@
 		}
 		<h1>@Model.MuaProfile.DisplayName</h1>
 		<h3>Kinh nghiệm: @Model.MuaProfile.ExperienceYears</h3>
-		<p class="slogan">@Model.MuaProfile.Bio</p>
-
-		<a type="submit" class="btn-book-now" href="/Mua/Details/@Model.MuaProfile.Muaid"> Thông tin chi tiết </a>
 	</div>
 
 </section>
