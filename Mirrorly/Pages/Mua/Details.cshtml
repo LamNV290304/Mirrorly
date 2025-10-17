@@ -199,6 +199,50 @@
         .btn-submit:hover {
             background: #be185d;
         }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .service-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(255, 105, 180, 0.15);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+    }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.25);
+        }
+
+    .service-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-bottom: 3px solid #ffb6c1;
+    }
+
+    .book-btn {
+        display: inline-block;
+        margin-top: 10px;
+        background: linear-gradient(90deg, #ff7eb9, #ff65a3);
+        color: white;
+        padding: 8px 18px;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
+
+        .book-btn:hover {
+            background: linear-gradient(90deg, #ff65a3, #ff7eb9);
+        }
+
 </style>
 
 <div class="profile-container">
@@ -206,13 +250,16 @@
     <section class="profile-section">
         <h2>Dịch vụ cung cấp</h2>
         <div class="services-grid">
-            @foreach (var se in Model.Services)
+            @if (Model.Services != null){
+            foreach (var se in Model.Services)
             {
                 var desc = se.Description ?? "";
                 var words = desc.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
                 var limit = 40; 
                 var isLong = words.Length > limit;
                 var shortDesc = isLong ? string.Join(" ", words.Take(limit)) + "..." : desc;
+                    var imagePath = $"/uploads/services/service_{se.ServiceId}.jpg";
+                    var defaultImage = "/uploads/default-service.jpg";
 
                 <div class="service-card">
                     <h3>@se.Name</h3>
@@ -232,6 +279,9 @@
                     <a href="/Books/Books/@se.ServiceId" class="book-btn">Đặt lịch ngay</a>
                 </div>
             }
+            } else {
+                <p>Không có dịch vụ nào được cung cấp.</p>
+            }
         </div>
     </section>
 
@@ -239,7 +289,11 @@
     <section class="profile-section">
         <h2>Đánh giá từ khách hàng</h2>
         <div class="reviews-list">
-            @foreach (var review in Model.Reviews)
+            @if (Model.Reviews == null || !Model.Reviews.Any())
+            {
+                <p>Chưa có đánh giá nào.</p>
+            } else {
+            foreach (var review in Model.Reviews)
             {
                 <h3>Đánh giá của @Model.Service?.Name</h3>
                 <div class="review-card">
@@ -250,6 +304,7 @@
                     <p>@review.Comment</p>
                     <small>@review.CreatedAt.ToString("f")</small>
                 </div>
+            }
             }
         </div>
     </section>
