@@ -403,7 +403,7 @@ namespace Mirrorly.Pages.Admin.Verifications
                     <h1 style='margin: 0; font-size: 24px; font-weight: bold;'>
                         {statusIcon} Kết quả xác minh danh tính
                     </h1>
-                    <p style='margin: 10px 0 0 0; opacity: 0.9;'>Mirrorly - Nền tảng makeup artist</p>
+                    <p style='margin: 10px 0 0 0; opacity: 0.9;'>Mirrorly - Nền tảng thợ trang điểm</p>
                 </div>
                 
                 <!-- Main Content -->
@@ -518,7 +518,7 @@ namespace Mirrorly.Pages.Admin.Verifications
                     <div style='margin-bottom: 15px;'>
                         <h2 style='margin: 0; font-size: 20px; color: #f1f5f9;'>MIRRORLY</h2>
                         <p style='margin: 5px 0 0 0; opacity: 0.8; font-size: 14px;'>
-                            Nền tảng kết nối makeup artist chuyên nghiệp
+                            Nền tảng kết nối thợ trang điểm chuyên nghiệp
                         </p>
                     </div>
                     
