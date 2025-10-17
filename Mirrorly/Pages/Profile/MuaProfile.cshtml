@@ -1,7 +1,7 @@
 ﻿@page "/Profile/MuaProfile"
 @model Mirrorly.Pages.Profile.MuaProfileModel
 @{
-    ViewData["Title"] = "Hồ sơ Makeup Artist";
+    ViewData["Title"] = "Hồ sơ thợ trang điểm";
 }
 
 <style>
@@ -327,7 +327,7 @@
 <div class="profile-container">
     <!-- Header Section -->
     <div class="profile-header">
-        <h1 class="profile-title">Quản lý Hồ sơ Makeup Artist</h1>
+        <h1 class="profile-title">Quản lý Hồ sơ thợ trang điểm</h1>
         
         <div class="profile-status @(Model.ProfilePublic ? "profile-public" : "profile-private")">
             @if (Model.ProfilePublic)

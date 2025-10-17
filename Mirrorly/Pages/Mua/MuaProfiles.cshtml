@@ -2,13 +2,16 @@
 @model Mirrorly.Pages.Mua.MuaProfilesModel
 @using Mirrorly.Models;
 
-<p>Khám phá các Thợ Trang Điểm tài năng của chúng tôi và danh mục đầu tư ấn tượng của họ. Sử dụng tính năng tìm kiếm và bộ lọc để tìm ra sự kết hợp hoàn hảo..</p>
+<p>
+    Khám phá các Thợ Trang Điểm tài năng của chúng tôi và danh mục đầu tư ấn tượng của họ.
+    Sử dụng tính năng tìm kiếm và bộ lọc để tìm ra sự kết hợp hoàn hảo.
+</p>
 
 <body>
+    <!-- ====== THANH LỌC ====== -->
     <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="Search by name or bio..."
+        <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên hoặc bio..."
                onkeyup="filterMua(); showSearchSuggestions()" autocomplete="off" />
-
         <div id="searchSuggestions" class="suggestions-box"></div>
 
         <select id="areaFilter" onchange="filterMua()">
@@ -42,13 +45,17 @@
         </select>
     </div>
 
-    <div class="row" id="muaContainer">
+    <!-- ====== DANH SÁCH MUA ====== -->
+    <div class="row mua-grid" id="muaContainer">
         @foreach (var mua in Model.MuaProfiles)
         {
             var avgPrice = (mua.Services != null && mua.Services.Any()) ? mua.Services.Average(s => s.BasePrice) : 0;
             var avgRating = (mua.Reviews != null && mua.Reviews.Any()) ? mua.Reviews.Average(r => r.Rating) : 0;
+            var imgUrl = (mua.PortfolioItems != null && mua.PortfolioItems.Any())
+            ? mua.PortfolioItems.First().MediaUrl
+            : "/uploads/default-avatar.jpg";
 
-            <div class="mua-profile-card"
+            <div class="mua-card"
                  data-area="@mua.AddressLine"
                  data-name="@mua.DisplayName"
                  data-bio="@mua.Bio"
@@ -57,21 +64,33 @@
                  data-experience="@mua.ExperienceYears"
                  data-muaid="@mua.Muaid"
                  onclick="window.location.href='/Mua/Details/@mua.Muaid'">
-                <h3>@mua.DisplayName</h3>
-                <p class="bio">@mua.Bio</p>
 
-                <ul class="mua-info">
-                    <li><strong>Area:</strong> @mua.AddressLine</li>
-                    <li><strong>Experience:</strong> @mua.ExperienceYears years</li>
-                    <li><strong>Price:</strong> @(avgPrice > 0 ? "$" + avgPrice.ToString("0.0") : "N/A")</li>
-                    <li><strong>Rating:</strong> @(avgRating > 0 ? avgRating.ToString("0.0") : "N/A") ⭐</li>
-                    <li><strong>Public:</strong> @(mua.ProfilePublic ? "Yes" : "No")</li>
-                </ul>
+                <div class="mua-image-container">
+                    <img src="@imgUrl" alt="@mua.DisplayName" class="mua-image" />
+                    <div class="mua-overlay">
+                        <span class="view-btn">Xem chi tiết</span>
+                    </div>
+                </div>
+
+                <div class="mua-info">
+                    <h3 class="mua-name">@mua.DisplayName</h3>
+                    <p class="mua-bio">@((mua.Bio?.Length > 70) ? mua.Bio.Substring(0, 70) + "..." : mua.Bio)</p>
+                    <div class="mua-meta">
+                        <span><i class="fa fa-map-marker-alt"></i> @mua.AddressLine</span>
+                        <span><i class="fa fa-briefcase"></i> @mua.ExperienceYears năm</span>
+                    </div>
+                    <div class="mua-stats">
+                        <span class="price">💰 @(avgPrice > 0 ? "$" + avgPrice.ToString("0.0") : "N/A")</span>
+                        <span class="rating">⭐ @(avgRating > 0 ? avgRating.ToString("0.0") : "N/A")</span>
+                    </div>
+                </div>
             </div>
         }
     </div>
+
 </body>
 
+<!-- ====== CSS ====== -->
 <style>
     body {
         background: #fff0f6;
@@ -88,6 +107,7 @@
         text-align: center;
     }
 
+    /* ====== FILTER BAR ====== */
     .filter-bar {
         margin-bottom: 20px;
         display: flex;
@@ -116,6 +136,7 @@
                 box-shadow: 0 0 8px rgba(248, 187, 208, 0.4);
             }
 
+    /* ====== GRID ====== */
     .row {
         display: flex;
         flex-wrap: wrap;
@@ -123,65 +144,339 @@
         justify-content: center;
     }
 
-    .mua-profile-card {
+    /* ====== CARD ====== */
+    .mua-card {
         background: #ffffff;
-        border: 1px solid #f8bbd0;
+        border: 2px solid #f8c8dc;
         border-radius: 20px;
-        box-shadow: 0 6px 16px rgba(248, 187, 208, 0.25);
-        padding: 20px;
-        min-width: 280px;
-        max-width: 360px;
-        flex: 1 1 280px;
+        box-shadow: 0 4px 12px rgba(248, 187, 208, 0.25);
+        width: 300px;
+        overflow: hidden;
         transition: transform 0.25s, box-shadow 0.25s;
         cursor: pointer;
     }
 
-        .mua-profile-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 8px 24px rgba(248, 187, 208, 0.4);
+        .mua-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(248, 187, 208, 0.4);
         }
 
-        .mua-profile-card h3 {
-            margin: 0 0 10px;
-            font-size: 20px;
-            color: #ad1457;
+    /* ====== ẢNH ====== */
+    .mua-image-container {
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: #ffeef5;
+    }
+
+    .mua-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .mua-card:hover .mua-image {
+        transform: scale(1.05);
+    }
+
+    /* ====== THÔNG TIN ====== */
+    .mua-info {
+        padding: 16px;
+        text-align: left;
+    }
+
+        .mua-info h3 {
+            color: #e91e63;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
             text-align: center;
             text-decoration: underline;
         }
 
-        .mua-profile-card .bio {
-            font-size: 14px;
-            color: #6d214f;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-    .bio .see-more {
-        color: #ad1457;
-        font-weight: 600;
-        cursor: pointer;
+    .bio {
+        font-size: 0.9rem;
+        color: #6d214f;
+        margin-bottom: 12px;
+        text-align: center;
     }
 
-    .mua-info {
+        .bio .see-more {
+            color: #ad1457;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+    .mua-info ul {
         list-style: none;
         padding: 0;
         margin: 0;
-        font-size: 14px;
+        font-size: 0.9rem;
     }
 
-        .mua-info li {
-            padding: 6px 0;
-            border-bottom: 1px solid #f8bbd0;
+    .mua-info li {
+        padding: 5px 0;
+        border-bottom: 1px solid #f8bbd0;
+    }
+
+        .mua-info li:last-child {
+            border-bottom: none;
         }
 
-            .mua-info li:last-child {
-                border-bottom: none;
-            }
-</style>
-<script>
+    /* ====== GỢI Ý TÌM KIẾM ====== */
+    .suggestions-box {
+        position: absolute;
+        background: #fff;
+        border: 1px solid #f8bbd0;
+        border-radius: 10px;
+        width: 200px;
+        display: none;
+        z-index: 10;
+        color: #6d214f;
+    }
 
+        .suggestions-box div {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            .suggestions-box div:hover {
+                background: #fde4ec;
+            }
+
+
+    /* Vùng tổng thể */
+    .mua-profiles-section {
+        background-color: #fff5f9;
+        padding: 50px 20px;
+        min-height: 100vh;
+    }
+
+    /* Tiêu đề */
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d63384;
+        margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    /* Lưới card */
+    .mua-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 28px;
+        justify-content: center;
+    }
+
+    /* Card từng thợ */
+    .mua-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.25s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .mua-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.25);
+        }
+
+    /* Ảnh đại diện */
+    .mua-image {
+        height: 240px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .mua-hover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 192, 203, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .mua-card:hover .mua-hover {
+        opacity: 1;
+    }
+
+    /* Nút xem chi tiết */
+    .view-btn {
+        background-color: #ff69b4;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.25s;
+    }
+
+        .view-btn:hover {
+            background-color: #d63384;
+        }
+
+    /* Thông tin */
+    .mua-info {
+        padding: 18px 16px;
+    }
+
+    .mua-name {
+        color: #d63384;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+
+    .mua-bio {
+        color: #555;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        line-height: 1.4;
+        height: 45px;
+        overflow: hidden;
+    }
+
+    .mua-details span {
+        display: block;
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 3px;
+    }
+
+    .mua-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+        padding: 20px;
+    }
+
+    .mua-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.25s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .mua-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 22px rgba(255, 105, 180, 0.25);
+        }
+
+    /* Ảnh */
+    .mua-image-container {
+        position: relative;
+        width: 100%;
+        height: 230px;
+        overflow: hidden;
+    }
+
+    .mua-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .mua-card:hover .mua-image {
+        transform: scale(1.05);
+    }
+
+    /* Overlay hover */
+    .mua-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 182, 193, 0.45);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .mua-card:hover .mua-overlay {
+        opacity: 1;
+    }
+
+    .view-btn {
+        background-color: #ff69b4;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: background-color 0.2s ease;
+    }
+
+        .view-btn:hover {
+            background-color: #d63384;
+        }
+
+    /* Thông tin */
+    .mua-info {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .mua-name {
+        font-size: 1.2rem;
+        color: #d63384;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+
+    .mua-bio {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        height: 42px;
+        overflow: hidden;
+    }
+
+    .mua-meta, .mua-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .mua-stats {
+        margin-top: 4px;
+        font-weight: 600;
+    }
+
+</style>
+
+<!-- ====== SCRIPT ====== -->
+<script>
+    // RÚT GỌN MÔ TẢ
     document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".mua-profile-card .bio").forEach(bioEl => {
+        document.querySelectorAll(".mua-card .bio").forEach(bioEl => {
             const fullText = bioEl.textContent.trim();
             const words = fullText.split(/\s+/);
             const limit = 40;
@@ -196,7 +491,7 @@
                 bioEl.appendChild(seeMore);
 
                 seeMore.addEventListener("click", (e) => {
-                    e.stopPropagation(); // tránh trigger click card
+                    e.stopPropagation();
                     if (seeMore.textContent === "Xem thêm") {
                         bioEl.textContent = fullText + " ";
                         seeMore.textContent = "Thu gọn";
@@ -211,18 +506,16 @@
         });
     });
 
+    // GỢI Ý TÌM KIẾM
     function showSearchSuggestions() {
         const input = document.getElementById("searchInput");
         const suggestionsBox = document.getElementById("searchSuggestions");
         const term = input.value.toLowerCase();
 
         let history = JSON.parse(localStorage.getItem("muaSearchHistory") || "[]");
-        let uniqueTerms = [...new Set(history.map(h => h.term))]; 
+        let uniqueTerms = [...new Set(history.map(h => h.term))];
 
-        let filtered = uniqueTerms
-            .filter(t => t.toLowerCase().includes(term))
-            .slice(-5) 
-            .reverse();
+        let filtered = uniqueTerms.filter(t => t.toLowerCase().includes(term)).slice(-5).reverse();
 
         if (filtered.length === 0) {
             suggestionsBox.style.display = "none";
@@ -252,13 +545,15 @@
             document.getElementById("searchSuggestions").style.display = "none";
         }
     });
+
+    // BỘ LỌC
     function filterMua() {
         const input = document.getElementById("searchInput").value.toLowerCase();
         const selectedArea = document.getElementById("areaFilter").value.toLowerCase();
         const selectedPrice = document.getElementById("priceFilter").value;
         const selectedRating = document.getElementById("ratingFilter").value;
         const selectedExperience = document.getElementById("experienceFilter").value;
-        const cards = document.querySelectorAll(".mua-profile-card");
+        const cards = document.querySelectorAll(".mua-card");
 
         cards.forEach(card => {
             const name = card.getAttribute("data-name")?.toLowerCase() || "";
@@ -270,7 +565,6 @@
 
             const matchSearch = !input || name.includes(input) || bio.includes(input);
             const matchArea = !selectedArea || area === selectedArea;
-
             let matchPrice = true;
             if (selectedPrice === "low") matchPrice = price < 50;
             else if (selectedPrice === "mid") matchPrice = price >= 50 && price <= 100;
@@ -282,7 +576,6 @@
             card.style.display = (matchSearch && matchArea && matchPrice && matchRating && matchExperience) ? "block" : "none";
         });
 
-        // Lưu từ khóa tìm kiếm
         if (input) saveSearchHistory(input);
     }
 
@@ -291,65 +584,5 @@
         history.push({ term: term, date: new Date().toISOString() });
         if (history.length > 50) history = history.slice(-50);
         localStorage.setItem("muaSearchHistory", JSON.stringify(history));
-    }
-
-    // ==============================
-    // LỊCH SỬ BOOKING
-    // ==============================
-    function saveBookingHistory(muaId) {
-        let history = JSON.parse(localStorage.getItem("muaBookingHistory") || "[]");
-        history.push({ muaId: muaId, date: new Date().toISOString() });
-        if (history.length > 50) history = history.slice(-50);
-        localStorage.setItem("muaBookingHistory", JSON.stringify(history));
-    }
-
-    // ==============================
-    // GỢI Ý MUA DỰA TRÊN LỊCH SỬ
-    // ==============================
-    function recommendMua() {
-        const cards = document.querySelectorAll(".mua-profile-card");
-        let searchHistory = JSON.parse(localStorage.getItem("muaSearchHistory") || "[]");
-        let bookingHistory = JSON.parse(localStorage.getItem("muaBookingHistory") || "[]");
-
-        // Khởi tạo điểm
-        let scores = {};
-        cards.forEach(card => {
-            const id = card.getAttribute("data-muaid");
-            scores[id] = 0;
-        });
-
-        // +2 điểm cho booking
-        bookingHistory.forEach(entry => {
-            if (scores[entry.muaId] !== undefined) scores[entry.muaId] += 2;
-        });
-
-        // +1 điểm cho search trùng tên hoặc bio
-        searchHistory.forEach(entry => {
-            const term = entry.term.toLowerCase();
-            cards.forEach(card => {
-                const id = card.getAttribute("data-muaid");
-                const name = card.getAttribute("data-name").toLowerCase();
-                const bio = card.getAttribute("data-bio").toLowerCase();
-                if (name.includes(term) || bio.includes(term)) {
-                    scores[id] += 1;
-                }
-            });
-        });
-
-        // Sắp xếp theo điểm
-        let topIds = Object.entries(scores)
-            .sort((a, b) => b[1] - a[1])
-            .filter(x => x[1] > 0)
-            .map(x => x[0]);
-
-        // Hiển thị
-        if (topIds.length === 0) {
-            cards.forEach(c => c.style.display = "block"); // Không có lịch sử → hiển thị tất cả
-        } else {
-            cards.forEach(c => {
-                let id = c.getAttribute("data-muaid");
-                c.style.display = topIds.includes(id) ? "block" : "none";
-            });
-        }
     }
 </script>
