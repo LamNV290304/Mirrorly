@@ -308,6 +308,29 @@
             }
         </div>
     </section>
+    <!-- Form viết review -->
+    <form method="post" asp-page-handler="AddReview" asp-route-id="@Model.MuaProfile?.Muaid" class="review-form">
+        <h3>Viết đánh giá của bạn</h3>
+
+        <div class="form-group">
+            <label for="rating">Đánh giá sao</label>
+            <select id="rating" name="NewReview.Rating" class="form-control" required>
+                <option value="">-- Chọn số sao --</option>
+                <option value="1">⭐ 1 sao</option>
+                <option value="2">⭐⭐ 2 sao</option>
+                <option value="3">⭐⭐⭐ 3 sao</option>
+                <option value="4">⭐⭐⭐⭐ 4 sao</option>
+                <option value="5">⭐⭐⭐⭐⭐ 5 sao</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="comment">Nhận xét của bạn</label>
+            <textarea id="comment" name="NewReview.Comment" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Gửi đánh giá</button>
+    </form>
     <!-- Map Section -->
     <input type="hidden" id="address" value="@Model.MuaProfile?.AddressLine" />
 

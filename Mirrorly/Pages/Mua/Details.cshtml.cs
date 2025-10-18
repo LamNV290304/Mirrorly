@@ -17,6 +17,7 @@ namespace Mirrorly.Pages.Mua
         private readonly IWorkingHoursServices _workingHours;
         private readonly IMuaServices _muaServices;
         private readonly IBookingService _bookingService;
+        private readonly IBookingService _booking;
 
         public DetailsModel(IReviewServices review, ISeServices service, IPortfoServices portfo, IWorkingHoursServices workingHours, IMuaServices muaServices, IBookingService bookingService)
         {
@@ -34,6 +35,7 @@ namespace Mirrorly.Pages.Mua
         public List<PortfolioItem> Portfolios { get; set; }
         public List<WorkingHour> WorkingHours { get; set; }
         public Muaprofile? MuaProfile { get; set; }
+        [BindProperty]
         public Review NewReview { get; set; }
         public async Task OnGet(int id)
         {
@@ -44,7 +46,7 @@ namespace Mirrorly.Pages.Mua
             WorkingHours = _workingHours.GetWorkingHoursByMuaId(id);
             MuaProfile = _muaServices.GetMuaProfileById(id);
         }
-        public async Task<IActionResult> OnPostAsync(int id)
+        public async Task<IActionResult> OnPostAddReviewAsync(int id)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue)
@@ -62,21 +64,17 @@ namespace Mirrorly.Pages.Mua
                 await OnGet(id);
                 return Page();
             }
-
-            // Kiểm tra NewReview null trước khi gán thuộc tính
-            if (NewReview == null)
-            {
-                ModelState.AddModelError("", "Form gửi lên không hợp lệ.");
-                 await OnGet(id);
-                return Page();
-            }
-
+            ModelState.Remove("NewReview.Mua");
+            ModelState.Remove("NewReview.Booking");
+            ModelState.Remove("NewReview.Customer");
+            ModelState.Remove("Mua");
+            ModelState.Remove("Name");
+            ModelState.Remove("Currency");
             // Gán thông tin còn thiếu
-            NewReview.CustomerId = userId.Value;
-            NewReview.MuaId = id;
-            NewReview.BookingId = booking.BookingId;
+            NewReview.CustomerId = userId.Value; 
+            NewReview.MuaId = id; 
+            NewReview.BookingId = booking.BookingId; 
             NewReview.CreatedAt = DateTime.Now;
-
             if (!ModelState.IsValid)
             {
                 await OnGet(id);
