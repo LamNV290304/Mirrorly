@@ -19,12 +19,12 @@ namespace Mirrorly.Repositories
             _context.SaveChanges();
         }
 
-        public List<Review> getReviewsByServiceId(int id)
+        public List<Review> getReviewsByMuaId(int id)
         {
             return _context.Reviews
             .Include(r => r.Customer)
             .Include(r => r.Booking)
-            .Where(r => r.Booking.ServiceId == id)
+            .Where(r => r.Booking.MuaId == id)
             .OrderByDescending(r => r.CreatedAt)
             .ToList();
         }

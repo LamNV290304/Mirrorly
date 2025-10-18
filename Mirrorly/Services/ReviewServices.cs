@@ -20,7 +20,7 @@ namespace Mirrorly.Services
 
         public List<Review> getReviewsById(int muaId)
         {
-            return _reviewRepo.getReviewsByServiceId(muaId);
+            return _reviewRepo.getReviewsByMuaId(muaId);
         }
     }
 }
