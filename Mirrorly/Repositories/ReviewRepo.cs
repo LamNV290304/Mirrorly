@@ -19,8 +19,7 @@ namespace Mirrorly.Repositories
             _context.SaveChanges();
         }
 
-        // Toàn đã sửa của Vũ
-        public List<Review> getReviewsByServiceId(int muaId) 
+        public List<Review> getReviewsByMuaId(int muaId) 
         {
             return _context.Reviews
             .Include(r => r.Customer) 
