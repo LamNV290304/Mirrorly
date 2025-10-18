@@ -6,6 +6,8 @@ using Mirrorly.Services;
 using Mirrorly.Services.Interfaces;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CloudinaryDotNet; 
+using CloudinaryDotNet.Actions;
 
 namespace Mirrorly.Pages.Mua
 {
@@ -18,8 +20,16 @@ namespace Mirrorly.Pages.Mua
         private readonly IMuaServices _muaServices;
         private readonly IBookingService _bookingService;
         private readonly IBookingService _booking;
+        private readonly Cloudinary _cloudinary;
 
-        public DetailsModel(IReviewServices review, ISeServices service, IPortfoServices portfo, IWorkingHoursServices workingHours, IMuaServices muaServices, IBookingService bookingService)
+        public DetailsModel(
+            IReviewServices review,
+            ISeServices service,
+            IPortfoServices portfo,
+            IWorkingHoursServices workingHours,
+            IMuaServices muaServices,
+            IBookingService bookingService,
+            Cloudinary cloudinary) // Thêm tham số cloudinary
         {
             _review = review;
             _service = service;
@@ -27,7 +37,9 @@ namespace Mirrorly.Pages.Mua
             _workingHours = workingHours;
             _muaServices = muaServices;
             _bookingService = bookingService;
+            _cloudinary = cloudinary; // Gán giá trị
         }
+
         [BindProperty]
         public Service? Service { get; set; }
         public List<Review> Reviews { get; set; }
@@ -46,7 +58,7 @@ namespace Mirrorly.Pages.Mua
             WorkingHours = _workingHours.GetWorkingHoursByMuaId(id);
             MuaProfile = _muaServices.GetMuaProfileById(id);
         }
-        public async Task<IActionResult> OnPostAddReviewAsync(int id)
+        public async Task<IActionResult> OnPostAddReviewAsync(int id, IFormFile attachmentFile)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue)
@@ -64,6 +76,38 @@ namespace Mirrorly.Pages.Mua
                 await OnGet(id);
                 return Page();
             }
+
+            // XỬ LÝ UPLOAD ẢNH LÊN CLOUDINARY
+            if (attachmentFile != null && attachmentFile.Length > 0)
+            {
+                // Tạo một stream từ file được upload
+                await using var stream = attachmentFile.OpenReadStream();
+
+                // Cấu hình các thông số upload
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(attachmentFile.FileName, stream),
+                    Folder = "reviews" // Tạo một thư mục tên "reviews" trên Cloudinary để dễ quản lý
+                };
+
+                // Thực hiện upload
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                // Nếu upload thành công, lấy URL và gán vào review
+                if (uploadResult.Error == null)
+                {
+                    NewReview.Attachment = uploadResult.SecureUrl.ToString();
+                }
+                else
+                {
+                    // Có thể thêm log lỗi ở đây nếu cần
+                    ModelState.AddModelError(string.Empty, "Lỗi khi tải ảnh lên.");
+                    await OnGet(id);
+                    return Page();
+                }
+            }
+            // KẾT THÚC XỬ LÝ UPLOAD
+
             ModelState.Remove("NewReview.Mua");
             ModelState.Remove("NewReview.Booking");
             ModelState.Remove("NewReview.Customer");
