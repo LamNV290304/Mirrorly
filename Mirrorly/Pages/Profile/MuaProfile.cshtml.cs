@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Mirrorly.Services.Interfaces;
 using Mirrorly.Models;
+using Mirrorly.Services.Interfaces;
+using RestSharp;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace Mirrorly.Pages.Profile
 {
@@ -11,13 +13,15 @@ namespace Mirrorly.Pages.Profile
     {
         private readonly IProfileServices _profileServices;
         private readonly IAuthServices _authServices;
+        private readonly IConfiguration _configuration;
 
         public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices,
-            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices)
+            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices, IConfiguration configuration)
             : base(context, verificationServices, twoFactorServices)
         {
             _profileServices = profileServices;
             _authServices = authServices;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -38,6 +42,10 @@ namespace Mirrorly.Pages.Profile
 
         [BindProperty]
         public bool ProfilePublic { get; set; }
+
+        [BindProperty]
+        [Required(ErrorMessage = "Vui lòng chọn file ảnh")]
+        public IFormFile? ImageFile { get; set; }
 
         // Display Properties
         public string Email { get; set; } = "";
@@ -274,26 +282,42 @@ namespace Mirrorly.Pages.Profile
         }
 
         // Add Portfolio
-        public async Task<IActionResult> OnPostAddPortfolioAsync(string title, string description, string mediaUrl)
+        public async Task<IActionResult> OnPostAddPortfolioAsync(string title, string description)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue) return RedirectToPage("/Auth/Login");
 
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(mediaUrl))
+            if (string.IsNullOrWhiteSpace(title) || ImageFile == null)
             {
-                TempData["ErrorMessage"] = "Tiêu đề và URL hình ảnh là bắt buộc!";
+                TempData["ErrorMessage"] = "Tiêu đề và file ảnh là bắt buộc!";
                 return RedirectToPage();
             }
 
-            // Validate URL
-            if (!Uri.TryCreate(mediaUrl, UriKind.Absolute, out _))
+            // Validate file
+            if (!IsValidImageFile(ImageFile))
             {
-                TempData["ErrorMessage"] = "URL hình ảnh không hợp lệ!";
+                TempData["ErrorMessage"] = "File không phải ảnh hợp lệ (chỉ JPG, PNG, GIF)!";
                 return RedirectToPage();
             }
 
+            if (ImageFile.Length > 32 * 1024 * 1024) // 32MB
+            {
+                TempData["ErrorMessage"] = "File ảnh quá lớn (tối đa 32MB)!";
+                return RedirectToPage();
+            }
+
+            string? mediaUrl = null;
             try
             {
+                // Upload to ImgBB
+                mediaUrl = await UploadToImgBBAsync(ImageFile);
+                if (string.IsNullOrEmpty(mediaUrl))
+                {
+                    TempData["ErrorMessage"] = "Lỗi khi upload ảnh lên server!";
+                    return RedirectToPage();
+                }
+
+                // Save to DB
                 var portfolio = new PortfolioItem
                 {
                     Muaid = userId.Value,
@@ -308,12 +332,55 @@ namespace Mirrorly.Pages.Profile
 
                 TempData["SuccessMessage"] = $"Hình ảnh '{title}' đã được thêm vào portfolio!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi thêm hình ảnh.";
+                TempData["ErrorMessage"] = $"Có lỗi xảy ra khi thêm hình ảnh: {ex.Message}";
             }
 
             return RedirectToPage();
+        }
+
+        // Helper: Validate image file
+        private bool IsValidImageFile(IFormFile file)
+        {
+            if (file.ContentType.StartsWith("image/"))
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+                return allowedTypes.Contains(file.ContentType.ToLower());
+            }
+            return false;
+        }
+
+        // Helper: Upload to ImgBB
+        private async Task<string?> UploadToImgBBAsync(IFormFile file)
+        {
+            var apiKey = _configuration["ImgBB:ApiKey"];
+            if (string.IsNullOrEmpty(apiKey)) return null;
+
+            var client = new RestClient("https://api.imgbb.com");
+            var request = new RestRequest("/1/upload", Method.Post);
+
+            // Add parameters
+            request.AddParameter("key", apiKey);
+            request.AddParameter("expiration", 0); // Không hết hạn
+
+            // Đọc file thành byte array
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                var fileBytes = memoryStream.ToArray();
+
+                // Add file
+                request.AddFile("image", fileBytes, file.FileName, file.ContentType);
+            }
+
+            var response = await client.ExecuteAsync(request);
+            if (!response.IsSuccessful || response.Content == null) return null;
+
+            // Parse JSON response
+            var jsonDoc = JsonDocument.Parse(response.Content);
+            var url = jsonDoc.RootElement.GetProperty("data").GetProperty("url").GetString();
+            return url;
         }
 
         // Delete Portfolio
