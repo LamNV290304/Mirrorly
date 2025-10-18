@@ -217,11 +217,11 @@
     <nav>
         <a href="/Index" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")">TRANG CHỦ</a>
         @if (isLoggedIn) {
-            <a href="/Mua/MuaProfiles" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
+            <a href="/Mua/MuaProfiles" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">Thợ trang điểm</a>
         } 
         else
         {
-            <a href="/Auth/Login" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">MAKEUP ARTIST</a>
+            <a href="/Auth/Login" class="@(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Mua") == true ? "active" : "")">Thợ trang điểm</a>
 
         }
 
@@ -233,7 +233,7 @@
 
     <div class="right">
         <div class="search-box">
-            <input type="text" placeholder="Tìm kiếm Makeup Artist..." />
+            <input type="text" placeholder="Tìm kiếm thợ trang điểm..." />
         </div>
 
         @if (isLoggedIn)
