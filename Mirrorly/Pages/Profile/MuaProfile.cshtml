@@ -548,15 +548,15 @@
                 <!-- Add Portfolio Form -->
                 <div class="portfolio-form" id="add-portfolio-form">
                     <h4 style="color: #db2777; margin-bottom: 20px;">Thêm hình ảnh mới</h4>
-                    <form method="post" asp-page-handler="AddPortfolio">
+                    <form method="post" asp-page-handler="AddPortfolio" enctype="multipart/form-data">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Tiêu đề *</label>
                                 <input name="Title" class="form-control" required />
                             </div>
                             <div class="form-group">
-                                <label>URL hình ảnh *</label>
-                                <input name="MediaUrl" class="form-control" type="url" required />
+                                <label>Chọn file ảnh * (JPG, PNG, GIF - tối đa 32MB)</label>
+                                <input name="ImageFile" type="file" class="form-control" accept="image/*" required />
                             </div>
                             <div class="form-group form-group-full">
                                 <label>Mô tả</label>
