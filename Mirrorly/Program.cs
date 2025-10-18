@@ -1,5 +1,7 @@
 using WebCozyShop.Infrastructure;
 using Mirrorly.Middleware;
+using Mirrorly.Models;
+using Mirrorly.Services;
 
 namespace Mirrorly
 {
@@ -17,6 +19,9 @@ namespace Mirrorly
             builder.Services.AddThirdPartyIntegrations(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddSession(options =>
             {
