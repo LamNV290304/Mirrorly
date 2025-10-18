@@ -247,6 +247,15 @@
 
 <div class="profile-container">
     <!-- Services -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
     <section class="profile-section">
         <h2>Dịch vụ cung cấp</h2>
         <div class="services-grid">
