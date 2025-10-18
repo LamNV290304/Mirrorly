@@ -17,7 +17,6 @@ namespace Mirrorly.Pages.Mua
         private readonly IWorkingHoursServices _workingHours;
         private readonly IMuaServices _muaServices;
         private readonly IBookingService _bookingService;
-        private readonly IBookingService _booking;
 
         public DetailsModel(IReviewServices review, ISeServices service, IPortfoServices portfo, IWorkingHoursServices workingHours, IMuaServices muaServices, IBookingService bookingService)
         {
