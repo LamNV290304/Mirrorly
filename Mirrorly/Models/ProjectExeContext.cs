@@ -201,6 +201,9 @@ public partial class ProjectExeContext : DbContext
                 .HasDefaultValue("VND")
                 .IsFixedLength();
             entity.Property(e => e.Name).HasMaxLength(160);
+            entity.Property(e => e.ImageUrl)
+        .HasMaxLength(255)
+        .IsUnicode(false);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Services)
                 .HasForeignKey(d => d.CategoryId)
