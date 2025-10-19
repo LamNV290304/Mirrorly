@@ -14,14 +14,16 @@ namespace Mirrorly.Pages.Profile
         private readonly IProfileServices _profileServices;
         private readonly IAuthServices _authServices;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
         public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices,
-            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices, IConfiguration configuration)
+            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices, IConfiguration configuration, IWebHostEnvironment env)
             : base(context, verificationServices, twoFactorServices)
         {
             _profileServices = profileServices;
             _authServices = authServices;
             _configuration = configuration;
+            _env = env;
         }
 
         [BindProperty]
@@ -176,16 +178,35 @@ namespace Mirrorly.Pages.Profile
         }
 
         // Add Service
-        public async Task<IActionResult> OnPostAddServiceAsync(string serviceName, string description,
-            decimal basePrice, int durationMin, int? categoryId)
+        public async Task<IActionResult> OnPostAddServiceAsync(
+    string serviceName,
+    string description,
+    decimal basePrice,
+    int durationMin,
+    int? categoryId,
+    IFormFile? imageFile)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue) return RedirectToPage("/Auth/Login");
+            if (!userId.HasValue)
+                return RedirectToPage("/Auth/Login");
 
             if (string.IsNullOrWhiteSpace(serviceName) || basePrice <= 0)
             {
                 TempData["ErrorMessage"] = "Tên dịch vụ và giá là bắt buộc!";
                 return RedirectToPage();
+            }
+            string? imageUrl = null;
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadDir = Path.Combine(_env.WebRootPath, "uploads", "services");
+                Directory.CreateDirectory(uploadDir);
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+                var filePath = Path.Combine(uploadDir, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+                imageUrl = $"/uploads/services/{fileName}";
             }
 
             try
@@ -199,7 +220,8 @@ namespace Mirrorly.Pages.Profile
                     Currency = "VND",
                     DurationMin = durationMin > 0 ? durationMin : 90,
                     CategoryId = categoryId,
-                    Active = true
+                    Active = true,
+                    ImageUrl = imageUrl
                 };
 
                 _context.Services.Add(service);
@@ -207,17 +229,19 @@ namespace Mirrorly.Pages.Profile
 
                 TempData["SuccessMessage"] = $"Dịch vụ '{serviceName}' đã được thêm thành công!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "Có lỗi xảy ra khi thêm dịch vụ.";
             }
 
             return RedirectToPage();
         }
 
+
         // Update Service
         public async Task<IActionResult> OnPostUpdateServiceAsync(long serviceId, string serviceName,
-            string description, decimal basePrice, int durationMin, bool active)
+            string description, decimal basePrice, int durationMin, bool active, IFormFile? ImageFile)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue) return RedirectToPage("/Auth/Login");
@@ -239,12 +263,25 @@ namespace Mirrorly.Pages.Profile
                 service.DurationMin = durationMin;
                 service.Active = active;
 
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    var uploadDir = Path.Combine(_env.WebRootPath, "uploads", "services");
+                    Directory.CreateDirectory(uploadDir);
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(ImageFile.FileName)}";
+                    var filePath = Path.Combine(uploadDir, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(stream);
+                    }
+                    service.ImageUrl = $"/uploads/services/{fileName}";
+                }
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = $"Dịch vụ '{serviceName}' đã được cập nhật!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật dịch vụ.";
             }
 

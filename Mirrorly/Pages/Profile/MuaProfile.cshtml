@@ -419,7 +419,7 @@
                 <!-- Add Service Form -->
                 <div class="portfolio-form" id="add-service-form">
                     <h4 style="color: #db2777; margin-bottom: 20px;">Thêm dịch vụ mới</h4>
-                    <form method="post" asp-page-handler="AddService">
+                    <form method="post" asp-page-handler="AddService" enctype="multipart/form-data">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Tên dịch vụ *</label>
@@ -446,6 +446,10 @@
                             <div class="form-group form-group-full">
                                 <label>Mô tả dịch vụ</label>
                                 <textarea name="Description" class="form-control form-control-textarea"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Ảnh dịch vụ</label>
+                                <input type="file" name="ImageFile" class="form-control" accept="image/*" />
                             </div>
                         </div>
                         <div style="text-align: right;">
@@ -488,7 +492,7 @@
 
                             <!-- Edit Service Form (Hidden by default) -->
                             <div class="service-form" id="edit-service-@service.ServiceId">
-                                <form method="post" asp-page-handler="UpdateService">
+                                <form method="post" asp-page-handler="UpdateService" enctype="multipart/form-data">
                                     <input type="hidden" name="ServiceId" value="@service.ServiceId" />
                                     <div class="form-group">
                                         <label>Tên dịch vụ</label>
@@ -513,6 +517,19 @@
                                         <label>Mô tả</label>
                                         <textarea name="Description" class="form-control">@service.Description</textarea>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label>Ảnh dịch vụ</label>
+                                        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(service.ImageUrl))
+                                    {
+                                        <div class="form-group">
+                                            <label>Ảnh hiện tại:</label>
+                                            <img src="@service.ImageUrl" alt="Service Image" style="max-width: 200px; border-radius: 8px;" />
+                                        </div>
+                                    }
                                     <div style="text-align: right; margin-top: 15px;">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="cancelEditService(@service.ServiceId)">Hủy</button>
                                         <button type="submit" class="btn btn-primary btn-sm">Cập nhật</button>
