@@ -19,6 +19,10 @@ public partial class User
 
     public string? AvatarUrl { get; set; }
 
+    public string? Bank { get; set; }
+
+    public string? BankNumber { get; set; }
+
     public bool IsActive { get; set; }
 
     public bool IsEmailVerified { get; set; }

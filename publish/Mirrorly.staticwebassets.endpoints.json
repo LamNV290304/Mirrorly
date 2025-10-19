@@ -5251,51 +5251,6 @@
       ]
     },
     {
-      "Route": "uploads/QRcode.hecovg99jx.jpg",
-      "AssetFile": "uploads/QRcode.jpg",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "144461"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "image/jpeg"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"yeNEf3jfrtE8tM5jzmcCdUOhLdTfQr20VSIVX1ybqyM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 28 Sep 2025 11:41:57 GMT"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "hecovg99jx"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-yeNEf3jfrtE8tM5jzmcCdUOhLdTfQr20VSIVX1ybqyM="
-        },
-        {
-          "Name": "label",
-          "Value": "uploads/QRcode.jpg"
-        }
-      ]
-    },
-    {
       "Route": "uploads/QRcode.jpg",
       "AssetFile": "uploads/QRcode.jpg",
       "Selectors": [],
@@ -5310,7 +5265,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "144461"
+          "Value": "57504"
         },
         {
           "Name": "Content-Type",
@@ -5318,17 +5273,62 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"yeNEf3jfrtE8tM5jzmcCdUOhLdTfQr20VSIVX1ybqyM=\""
+          "Value": "\"ooIl/M6LGsuuXsFVcD5ePKRFlukqZIFNGFlodnOqzmQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 28 Sep 2025 11:41:57 GMT"
+          "Value": "Sat, 18 Oct 2025 18:20:03 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-yeNEf3jfrtE8tM5jzmcCdUOhLdTfQr20VSIVX1ybqyM="
+          "Value": "sha256-ooIl/M6LGsuuXsFVcD5ePKRFlukqZIFNGFlodnOqzmQ="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/QRcode.mu9inpkvn2.jpg",
+      "AssetFile": "uploads/QRcode.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "57504"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ooIl/M6LGsuuXsFVcD5ePKRFlukqZIFNGFlodnOqzmQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 18 Oct 2025 18:20:03 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "mu9inpkvn2"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ooIl/M6LGsuuXsFVcD5ePKRFlukqZIFNGFlodnOqzmQ="
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/QRcode.jpg"
         }
       ]
     },
