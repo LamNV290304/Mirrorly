@@ -1,5 +1,10 @@
+using CloudinaryDotNet;
+using dotenv.net;
+using Mirrorly.Middleware;
 using WebCozyShop.Infrastructure;
 using Mirrorly.Middleware;
+using Mirrorly.Models;
+using Mirrorly.Services;
 
 namespace Mirrorly
 {
@@ -7,7 +12,18 @@ namespace Mirrorly
     {
         public static void Main(string[] args)
         {
+            DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+
             var builder = WebApplication.CreateBuilder(args);
+
+            Account account = new Account(
+    Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME"),
+    Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY"),
+    Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET"));
+
+            Cloudinary cloudinary = new Cloudinary(account);
+            cloudinary.Api.Secure = true;
+            builder.Services.AddSingleton(cloudinary);
 
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -17,6 +33,9 @@ namespace Mirrorly
             builder.Services.AddThirdPartyIntegrations(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddSession(options =>
             {

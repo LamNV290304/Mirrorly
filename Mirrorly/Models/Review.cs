@@ -19,6 +19,8 @@ public partial class Review
 
     public DateTime CreatedAt { get; set; }
 
+    public string? Attachment { get; set; }
+
     public virtual Booking Booking { get; set; } = null!;
 
     public virtual CustomerProfile Customer { get; set; } = null!;

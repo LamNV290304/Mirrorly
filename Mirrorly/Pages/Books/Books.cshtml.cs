@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mirrorly.Models;
+using Mirrorly.Services;
 using Mirrorly.Services.Interfaces;
 
 namespace Mirrorly.Pages.Books
@@ -13,13 +14,15 @@ namespace Mirrorly.Pages.Books
         private readonly IAuthServices _authServices;
         private readonly IProfileServices _profileServices;
         private readonly ISeServices _seServices;
+        private readonly IEmailService _emailService;
 
-        public BookingModel(IBookingService bookingService, IAuthServices authServices, IProfileServices profileServices, ISeServices seServices)
+        public BookingModel(IBookingService bookingService, IAuthServices authServices, IProfileServices profileServices, ISeServices seServices, IEmailService emailService)
         {
             _bookingService = bookingService;
             _authServices = authServices;
             _profileServices = profileServices;
             _seServices = seServices;
+            _emailService = emailService;
         }
 
         [TempData]
@@ -97,6 +100,41 @@ namespace Mirrorly.Pages.Books
                 };
 
                 _bookingService.AddBooking(booking);
+                var service = await _seServices.GetServiceByIdAsync((int)bookingRequest.Service);
+                var mua = await _authServices.GetUserById(bookingRequest.Muaid);
+
+                string subject = $"[Mirrorly] Xác nhận đặt lịch Makeup - {service?.Name}";
+                string htmlContent = $@"
+        <h2>Tên khách hàng: {bookingRequest.Name},</h2>
+        <p>Đã đặt lịch make up <b>Mirrorly</b>.</p>
+        <p><b>Thông tin đặt lịch:</b></p>
+        <ul>
+            <li>💄 <b>Chuyên viên:</b> {mua?.FullName}</li>
+            <li>📅 <b>Ngày:</b> {bookingRequest.Date:dd/MM/yyyy}</li>
+            <li>⏰ <b>Giờ:</b> {bookingRequest.Time}</li>
+            <li>📍 <b>Địa chỉ:</b> {bookingRequest.Address}</li>
+            <li>💰 <b>Dịch vụ:</b> {service?.Name} - {service?.BasePrice:N0} đ</li>
+            <li>📝 <b>Ghi chú:</b> {bookingRequest.Notes}</li>
+        </ul>
+        <p>Cảm ơn bạn đã tin tưởng <b>Mirrorly</b> 💕<br/>Hẹn gặp bạn trong buổi makeup sắp tới!</p>
+        <hr/>
+        <p style='font-size:12px;color:gray;'>Mirrorly Booking System - DVAT</p>
+    ";
+
+                // 🔹 Gửi email xác nhận
+                await _emailService.SendEmailAsync(
+                    "mirrorly.love@gmail.com", // 🔸 chỗ này thay bằng email thực của user nếu có
+                    subject,
+                    htmlContent);
+
+                // 🔹 Gửi email cho MUA
+                if (!string.IsNullOrEmpty(mua?.Email))
+                {
+                    await _emailService.SendEmailAsync(
+                        mua.Email,
+                        $"[Mirrorly] Bạn có lịch mới với {bookingRequest.Name}",
+                        htmlContent);
+                }
                 //  StatusMessage = "✅ Đặt lịch thành công!";
                 return RedirectToPage("/Payment/QR", new { bookingId = booking.BookingId, success = true });
             }

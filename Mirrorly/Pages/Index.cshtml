@@ -492,6 +492,28 @@
     }
 
     }
+    /* Floating Support Button */
+    .support-btn {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: #db2777;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 14px 22px;
+        text-decoration: none;
+        box-shadow: 0 6px 18px rgba(219, 39, 119, 0.4);
+        transition: all 0.3s ease;
+        z-index: 9999;
+    }
+
+        .support-btn:hover {
+            background-color: #be185d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(219, 39, 119, 0.5);
+        }
+
 </style>
 
 @* =====================
@@ -685,7 +707,9 @@
         <a href="/Mua/MuaProfiles" class="btn-hero btn-primary-hero">Khám phá ngay</a>
     </div>
 }
-
+<a href="/Head/Support" class="support-btn" title="Liên hệ để được tư vấn miễn phí">
+    💬 Hỗ trợ 24/7
+</a>
 @* =====================
    Scripts
    ===================== *@

@@ -302,23 +302,30 @@
             {
                 <p>Chưa có đánh giá nào.</p>
             } else {
-            foreach (var review in Model.Reviews)
-            {
-                <h3>Đánh giá của @Model.Service?.Name</h3>
-                <div class="review-card">
-                    <div class="review-header">
-                        <strong>@review.Customer.DisplayName</strong>
-                        <span class="rating">⭐ @review.Rating</span>
-                    </div>
-                    <p>@review.Comment</p>
-                    <small>@review.CreatedAt.ToString("f")</small>
-                </div>
-            }
+            @foreach (var review in Model.Reviews)
+{
+    @*<h3>Đánh giá của @Model.Service?.Name</h3>*@ @*Dòng này có vẻ không cần thiết và lặp lại, bạn có thể cân nhắc xóa đi*@
+    <div class="review-card">
+        <div class="review-header">
+            <strong>@review.Customer.DisplayName</strong>
+            <span class="rating">⭐ @review.Rating</span>
+        </div>
+        <p>@review.Comment</p>
+
+        @if (!string.IsNullOrEmpty(review.Attachment))
+        {
+            <div class="review-attachment" style="margin-top: 10px;">
+                <img src="@review.Attachment" alt="Ảnh đính kèm" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+            </div>
+        }
+        <small>@review.CreatedAt.ToString("f")</small>
+    </div>
+}
             }
         </div>
     </section>
     <!-- Form viết review -->
-    <form method="post" asp-page-handler="AddReview" asp-route-id="@Model.MuaProfile?.Muaid" class="review-form">
+    <form method="post" enctype="multipart/form-data" asp-page-handler="AddReview" asp-route-id="@Model.MuaProfile?.Muaid" class="review-form">
         <h3>Viết đánh giá của bạn</h3>
 
         <div class="form-group">
@@ -336,6 +343,11 @@
         <div class="form-group">
             <label for="comment">Nhận xét của bạn</label>
             <textarea id="comment" name="NewReview.Comment" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="attachmentFile">Đính kèm 1 ảnh (tùy chọn)</label>
+            <input type="file" id="attachmentFile" name="attachmentFile" class="form-control" accept="image/*">
         </div>
 
         <button type="submit" class="btn-submit">Gửi đánh giá</button>
