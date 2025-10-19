@@ -56,6 +56,16 @@ namespace Mirrorly.Pages.Auth
         [Required(ErrorMessage = "Vui lòng chọn loại tài khoản")]
         public byte RoleId { get; set; }
 
+        [BindProperty]
+        [Display(Name = "Ngân hàng")]
+        public string? Bank { get; set; }
+
+        [BindProperty]
+        [Display(Name = "Số tài khoản")]
+        [RegularExpression(@"^\d{6,20}$", ErrorMessage = "Số tài khoản không hợp lệ")]
+        public string? BankNumber { get; set; }
+
+
         [TempData]
         public string? ErrorMessage { get; set; }
 
@@ -104,7 +114,9 @@ namespace Mirrorly.Pages.Auth
                 Username = Username,
                 Email = Email,
                 FullName = FullName,
-                PhoneNumber = PhoneNumber
+                PhoneNumber = PhoneNumber,
+                Bank = RoleId == 2 ? Bank : null,
+                BankNumber = RoleId == 2 ? BankNumber : null
             };
 
             var success = await _authServices.Register(user, Password, RoleId);

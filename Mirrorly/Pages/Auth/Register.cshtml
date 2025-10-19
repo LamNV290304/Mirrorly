@@ -131,7 +131,7 @@
         padding: 15px;
         background: #fdf2f8;
         border-radius: 8px;
-        cursor: default; /* Thêm dòng này */
+        cursor: default;
     }
 
         .terms-checkbox input[type="checkbox"] {
@@ -143,7 +143,7 @@
             font-size: 14px;
             line-height: 1.4;
             color: #be185d;
-            cursor: default; /* Thay đổi từ cursor: pointer thành cursor: default */
+            cursor: default;
         }
 
     .terms-link {
@@ -279,6 +279,60 @@
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
 
+        <div class="form-group" id="bankField" style="display:none;">
+            <label asp-for="Bank">Ngân hàng</label>
+            <select asp-for="Bank" class="form-control">
+                <option value="">-- Chọn ngân hàng --</option>
+                <option value="Vietcombank">Vietcombank - Ngân hàng TMCP Ngoại thương Việt Nam</option>
+                <option value="VietinBank">VietinBank - Ngân hàng TMCP Công Thương Việt Nam</option>
+                <option value="BIDV">BIDV - Ngân hàng TMCP Đầu tư và Phát triển Việt Nam</option>
+                <option value="Agribank">Agribank - Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam</option>
+                <option value="MB">MB - Ngân hàng TMCP Quân đội</option>
+                <option value="Techcombank">Techcombank - Ngân hàng TMCP Kỹ thương Việt Nam</option>
+                <option value="ACB">ACB - Ngân hàng TMCP Á Châu</option>
+                <option value="VPBank">VPBank - Ngân hàng TMCP Việt Nam Thịnh Vượng</option>
+                <option value="TPBank">TPBank - Ngân hàng TMCP Tiên Phong</option>
+                <option value="Sacombank">Sacombank - Ngân hàng TMCP Sài Gòn Thương Tín</option>
+                <option value="HDBank">HDBank - Ngân hàng TMCP Phát triển Thành phố Hồ Chí Minh</option>
+                <option value="VIB">VIB - Ngân hàng TMCP Quốc tế Việt Nam</option>
+                <option value="SHB">SHB - Ngân hàng TMCP Sài Gòn - Hà Nội</option>
+                <option value="Eximbank">Eximbank - Ngân hàng TMCP Xuất Nhập khẩu Việt Nam</option>
+                <option value="MSB">MSB - Ngân hàng TMCP Hàng Hải</option>
+                <option value="OCB">OCB - Ngân hàng TMCP Phương Đông</option>
+                <option value="SeABank">SeABank - Ngân hàng TMCP Đông Nam Á</option>
+                <option value="VietCapitalBank">VietCapitalBank - Ngân hàng TMCP Bản Việt</option>
+                <option value="SCB">SCB - Ngân hàng TMCP Sài Gòn</option>
+                <option value="VietBank">VietBank - Ngân hàng TMCP Việt Nam Thương Tín</option>
+                <option value="PVcomBank">PVcomBank - Ngân hàng TMCP Đại Chúng Việt Nam</option>
+                <option value="Oceanbank">Oceanbank - Ngân hàng TMCP Đại Dương</option>
+                <option value="NCB">NCB - Ngân hàng TMCP Quốc Dân</option>
+                <option value="ShinhanBank">ShinhanBank - Ngân hàng TNHH MTV Shinhan Việt Nam</option>
+                <option value="ABBank">ABBank - Ngân hàng TMCP An Bình</option>
+                <option value="VietABank">VietABank - Ngân hàng TMCP Việt Á</option>
+                <option value="NamABank">NamABank - Ngân hàng TMCP Nam Á</option>
+                <option value="PGBank">PGBank - Ngân hàng TMCP Xăng dầu Petrolimex</option>
+                <option value="BacABank">BacABank - Ngân hàng TMCP Bắc Á</option>
+                <option value="LienVietPostBank">LienVietPostBank - Ngân hàng TMCP Bưu Điện Liên Việt</option>
+                <option value="KienLongBank">KienLongBank - Ngân hàng TMCP Kiên Long</option>
+                <option value="Saigonbank">Saigonbank - Ngân hàng TMCP Sài Gòn Công Thương</option>
+                <option value="BaoVietBank">BaoVietBank - Ngân hàng TMCP Bảo Việt</option>
+                <option value="GPBank">GPBank - Ngân hàng TMCP Dầu khí Toàn Cầu</option>
+                <option value="VRB">VRB - Ngân hàng Liên doanh Việt - Nga</option>
+                <option value="CAKE">CAKE by VPBank - Ngân hàng số CAKE</option>
+                <option value="Timo">Timo - Ngân hàng số Timo by Ban Viet Bank</option>
+                <option value="ViettelMoney">ViettelMoney - Ví điện tử Viettel Money</option>
+                <option value="MoMo">MoMo - Ví điện tử MoMo</option>
+                <option value="ZaloPay">ZaloPay - Ví điện tử ZaloPay</option>
+            </select>
+            <span asp-validation-for="Bank" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" id="bankNumberField" style="display:none;">
+            <label asp-for="BankNumber">Số tài khoản</label>
+            <input asp-for="BankNumber" class="form-control" />
+            <span asp-validation-for="BankNumber" class="text-danger"></span>
+        </div>
+
         <div class="form-group">
             <label asp-for="Password">Mật khẩu</label>
             <input asp-for="Password" class="form-control" type="password" />
@@ -328,6 +382,8 @@
         const agreeCheckbox = document.getElementById('agreeTerms');
         const submitBtn = document.getElementById('submitBtn');
         const termsError = document.getElementById('termsError');
+        const bankField = document.getElementById('bankField');
+        const bankNumberField = document.getElementById('bankNumberField');
 
         // Role selection
         roleOptions.forEach(option => {
@@ -337,6 +393,9 @@
 
                 roleOptions.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
+
+                // Hiển thị hoặc ẩn trường ngân hàng
+                toggleBankFields(radio.value);
             });
         });
 
@@ -344,6 +403,7 @@
         const checkedRadio = document.querySelector('input[type="radio"]:checked');
         if (checkedRadio) {
             checkedRadio.closest('.role-option').classList.add('selected');
+            toggleBankFields(checkedRadio.value);
         }
 
         // Enable/disable submit button based on checkbox
@@ -360,6 +420,17 @@
                 agreeCheckbox.focus();
             }
         });
+
+        // Hàm ẩn/hiện trường ngân hàng
+        function toggleBankFields(roleValue) {
+            if (roleValue === "2") {
+                bankField.style.display = "block";
+                bankNumberField.style.display = "block";
+            } else {
+                bankField.style.display = "none";
+                bankNumberField.style.display = "none";
+            }
+        }
     });
 
     function showPolicy() {
