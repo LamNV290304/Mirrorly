@@ -22,6 +22,7 @@ public partial class Service
     public bool Active { get; set; }
 
     public int? CategoryId { get; set; }
+    public string? ImageUrl { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
