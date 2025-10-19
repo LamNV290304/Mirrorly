@@ -53,6 +53,7 @@ namespace Mirrorly.Repositories
                 existing.DurationMin = service.DurationMin;
                 existing.CategoryId = service.CategoryId;
                 existing.Active = service.Active;
+                existing.ImageUrl = service.ImageUrl;
                 await _context.SaveChangesAsync();
             }
         }

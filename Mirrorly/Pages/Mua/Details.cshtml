@@ -267,10 +267,10 @@
                 var limit = 40; 
                 var isLong = words.Length > limit;
                 var shortDesc = isLong ? string.Join(" ", words.Take(limit)) + "..." : desc;
-                    var imagePath = $"/uploads/services/service_{se.ServiceId}.jpg";
-                    var defaultImage = "/uploads/default-service.jpg";
-
                 <div class="service-card">
+                        <img src="@(string.IsNullOrEmpty(se.ImageUrl) ? "/uploads/dèault.jpg" : se.ImageUrl)"
+                             alt="@se.Name"
+                             class="service-image" />
                     <h3>@se.Name</h3>
 
                     <div class="description-wrapper">                       
