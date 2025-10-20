@@ -223,9 +223,28 @@
 
     .service-image {
         width: 100%;
-        height: 180px;
+        height: 220px; /* cao hơn một chút cho khung cân */
+        object-fit: cover; /* giữ tỉ lệ, cắt đều 2 bên */
+        object-position: center top; /* giữ phần đầu ảnh ở giữa */
+        border-radius: 16px 16px 0 0;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    /* Hiệu ứng hover nhẹ nhàng */
+    .service-card:hover .service-image {
+        transform: scale(1.05);
+        filter: brightness(1.05);
+    }
+
+    /* Ảnh trong phần review */
+    .review-attachment img {
+        max-width: 100%;
+        height: auto;
+        max-height: 250px; /* không để ảnh quá cao */
+        border-radius: 10px;
         object-fit: cover;
-        border-bottom: 3px solid #ffb6c1;
+        display: block;
+        margin: 0 auto;
     }
 
     .book-btn {
