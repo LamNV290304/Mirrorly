@@ -15,7 +15,7 @@ namespace Mirrorly.Repositories
 
         public List<Muaprofile> GetAll()
         {
-            return _context.Muaprofiles.Include(m => m.Services).Include(m => m.Reviews).Include(p => p.PortfolioItems).ToList();
+            return _context.Muaprofiles.Include(m => m.Services).Include(m => m.Reviews).Include(p => p.PortfolioItems).OrderByDescending(m => m.Muaid).ToList();
         }
 
         public Muaprofile? GetById(int id)
