@@ -193,8 +193,8 @@
             <th style="width: 40%;">User</th>
             <th>Role</th>
             <th>Trạng thái</th>
-            <th>Ngày tạo</th>
-            <th>Hoạt động cuối</th>
+            <th>Ngân hàng</th>
+            <th>Số tài khoản</th>
             <th style="width: 200px;">Actions</th>
         </tr>
     </thead>
@@ -233,8 +233,8 @@
                         }
                     </div>
                 </td>
-                <td>@DateTime.Now.AddDays(-new Random().Next(1, 365)).ToString("dd/MM/yyyy")</td>
-                <td>@DateTime.Now.AddDays(-new Random().Next(0, 30)).ToString("dd/MM")</td>
+                <td>@user.Bank</td>
+                <td>@user.BankNumber</td>
                 <td>
                     <div class="action-buttons">
                         <a href="/Admin/Users/Details/@user.UserId" class="btn btn-primary btn-sm">👁️ Xem</a>
