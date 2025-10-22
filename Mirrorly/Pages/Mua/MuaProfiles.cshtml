@@ -53,7 +53,7 @@
             var avgRating = (mua.Reviews != null && mua.Reviews.Any()) ? mua.Reviews.Average(r => r.Rating) : 0;
             var imgUrl = (mua.PortfolioItems != null && mua.PortfolioItems.Any())
             ? mua.PortfolioItems.First().MediaUrl
-            : "/uploads/default-avatar.jpg";
+            : "/uploads/avatardefault.jpg";
 
             <div class="mua-card"
                  data-area="@mua.AddressLine"

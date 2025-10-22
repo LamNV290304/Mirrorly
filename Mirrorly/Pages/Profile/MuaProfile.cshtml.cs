@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Mirrorly.Models;
@@ -15,15 +17,16 @@ namespace Mirrorly.Pages.Profile
         private readonly IAuthServices _authServices;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
-
+        private readonly Cloudinary _cloudinary;
         public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices,
-            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices, IConfiguration configuration, IWebHostEnvironment env)
+            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices, IConfiguration configuration, IWebHostEnvironment env, Cloudinary cloudinary)
             : base(context, verificationServices, twoFactorServices)
         {
             _profileServices = profileServices;
             _authServices = authServices;
             _configuration = configuration;
             _env = env;
+            _cloudinary = cloudinary;
         }
 
         [BindProperty]
@@ -196,17 +199,16 @@ namespace Mirrorly.Pages.Profile
                 return RedirectToPage();
             }
             string? imageUrl = null;
-            if (imageFile != null && imageFile.Length > 0)
+            if (ImageFile != null && ImageFile.Length > 0)
             {
-                var uploadDir = Path.Combine(_env.WebRootPath, "uploads", "services");
-                Directory.CreateDirectory(uploadDir);
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
-                var filePath = Path.Combine(uploadDir, fileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                var uploadParams = new ImageUploadParams
                 {
-                    await imageFile.CopyToAsync(stream);
-                }
-                imageUrl = $"/uploads/services/{fileName}";
+                    File = new FileDescription(ImageFile.FileName, ImageFile.OpenReadStream()),
+                    Folder = "mirrorly/services" // đặt folder tùy ý
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                imageUrl = uploadResult.SecureUrl?.ToString();
             }
 
             try
