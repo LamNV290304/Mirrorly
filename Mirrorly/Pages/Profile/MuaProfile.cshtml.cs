@@ -18,8 +18,11 @@ namespace Mirrorly.Pages.Profile
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
         private readonly Cloudinary _cloudinary;
+
         public MuaProfileModel(IProfileServices profileServices, IAuthServices authServices,
-            ProjectExeContext context, IVerificationServices verificationServices, ITwoFactorServices twoFactorServices, IConfiguration configuration, IWebHostEnvironment env, Cloudinary cloudinary)
+            ProjectExeContext context, IVerificationServices verificationServices,
+            ITwoFactorServices twoFactorServices, IConfiguration configuration,
+            IWebHostEnvironment env, Cloudinary cloudinary)
             : base(context, verificationServices, twoFactorServices)
         {
             _profileServices = profileServices;
@@ -49,7 +52,16 @@ namespace Mirrorly.Pages.Profile
         public bool ProfilePublic { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage = "Vui lòng chọn file ảnh")]
+        [Display(Name = "Ngân hàng")]
+        public string? Bank { get; set; }
+
+        [BindProperty]
+        [Display(Name = "Số tài khoản")]
+        [RegularExpression(@"^\d{6,20}$", ErrorMessage = "Số tài khoản không hợp lệ (6-20 chữ số)")]
+        public string? BankNumber { get; set; }
+
+        [BindProperty]
+        //[Required(ErrorMessage = "Vui lòng chọn file ảnh")]
         public IFormFile? ImageFile { get; set; }
 
         // Display Properties
@@ -91,6 +103,8 @@ namespace Mirrorly.Pages.Profile
 
             Email = user.Email;
             Username = user.Username;
+            Bank = user.Bank;
+            BankNumber = user.BankNumber;
 
             // Load related data
             await LoadRelatedDataAsync(CurrentUserId.Value);
@@ -135,6 +149,20 @@ namespace Mirrorly.Pages.Profile
                 ModelState.AddModelError("DisplayName", "Tên hiển thị là bắt buộc");
             }
 
+            // Validate bank number if bank is selected
+            if (!string.IsNullOrWhiteSpace(Bank) && string.IsNullOrWhiteSpace(BankNumber))
+            {
+                ModelState.AddModelError("BankNumber", "Vui lòng nhập số tài khoản");
+            }
+
+            if (!string.IsNullOrWhiteSpace(BankNumber))
+            {
+                if (!System.Text.RegularExpressions.Regex.IsMatch(BankNumber, @"^\d{6,20}$"))
+                {
+                    ModelState.AddModelError("BankNumber", "Số tài khoản không hợp lệ (6-20 chữ số)");
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 await LoadRelatedDataAsync(CurrentUserId!.Value);
@@ -143,6 +171,16 @@ namespace Mirrorly.Pages.Profile
 
             try
             {
+                // Update User table (Bank info)
+                var user = await _authServices.GetUserById(CurrentUserId.Value);
+                if (user != null)
+                {
+                    user.Bank = Bank;
+                    user.BankNumber = BankNumber;
+                    await _context.SaveChangesAsync();
+                }
+
+                // Update MUA Profile
                 var muaProfile = await _profileServices.GetMuaProfile(CurrentUserId.Value);
 
                 if (muaProfile == null)
@@ -182,12 +220,12 @@ namespace Mirrorly.Pages.Profile
 
         // Add Service
         public async Task<IActionResult> OnPostAddServiceAsync(
-    string serviceName,
-    string description,
-    decimal basePrice,
-    int durationMin,
-    int? categoryId,
-    IFormFile? imageFile)
+            string serviceName,
+            string description,
+            decimal basePrice,
+            int durationMin,
+            int? categoryId,
+            IFormFile? imageFile)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue)
@@ -198,6 +236,7 @@ namespace Mirrorly.Pages.Profile
                 TempData["ErrorMessage"] = "Tên dịch vụ và giá là bắt buộc!";
                 return RedirectToPage();
             }
+
             string? imageUrl = null;
             if (ImageFile != null && ImageFile.Length > 0)
             {
@@ -239,7 +278,6 @@ namespace Mirrorly.Pages.Profile
 
             return RedirectToPage();
         }
-
 
         // Update Service
         public async Task<IActionResult> OnPostUpdateServiceAsync(long serviceId, string serviceName,
